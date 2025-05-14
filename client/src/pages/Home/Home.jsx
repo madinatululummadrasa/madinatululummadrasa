@@ -5,7 +5,6 @@ import SpeechSection from '../../components/Home/SpeechSection/SpeechSection'
 import TeachersSection from '../../components/Home/TeachersSection/TeachersSection'
 import PhotoAndGallerySection from '../../components/Home/PhotoAndGallerySection/PhotoAndGallerySection'
 
-
 const Home = () => {
   return (
     <div>
