@@ -1,0 +1,68 @@
+{
+    "_id": "ObjectId('...')",
+    "studentId": "S123456",
+    "name": "John Doe",
+    "class": "10",
+    "section": "A",
+    "group": "Science",
+    "admissionDate": "2022-01-10",
+    "profileImageUrl": "https://...",
+    "contact": {
+      "phone": "0123456789",
+      "guardianName": "Jane Doe",
+      "address": "123 Main Street, Town"
+    },
+    "attendence": {
+      "2024": {
+        "january": { "presentDays": 24, "calendarDays": 31, "holidays": 7 },
+        "february": { "presentDays": 22, "calendarDays": 29, "holidays": 5 },
+        "march": { "presentDays": 25, "calendarDays": 31, "holidays": 6 },
+        "april": { "presentDays": 26, "calendarDays": 30, "holidays": 4 },
+        "may": { "presentDays": 23, "calendarDays": 31, "holidays": 6 },
+        "june": { "presentDays": 20, "calendarDays": 30, "holidays": 6 },
+        "july": { "presentDays": 27, "calendarDays": 31, "holidays": 4 },
+        "august": { "presentDays": 24, "calendarDays": 31, "holidays": 5 },
+        "september": { "presentDays": 26, "calendarDays": 30, "holidays": 4 },
+        "october": { "presentDays": 25, "calendarDays": 31, "holidays": 6 },
+        "november": { "presentDays": 24, "calendarDays": 30, "holidays": 5 },
+        "december": { "presentDays": 25, "calendarDays": 31, "holidays": 6 }
+      }
+    },
+    "documents": [
+      {
+        "name": "Birth Certificate",
+        "type": "pdf",
+        "url": "https://..."
+      },
+      {
+        "name": "Admission Form",
+        "type": "pdf",
+        "url": "https://..."
+      }
+    ],
+    "results": [
+      {
+        "term": "Midterm 2024",
+        "subjects": [
+          { "name": "Math", "marks": 85 },
+          { "name": "Physics", "marks": 78 }
+        ],
+        "totalGPA": 4.75
+      },
+      {
+        "term": "Final 2024",
+        "subjects": [
+          { "name": "Math", "marks": 90 },
+          { "name": "Physics", "marks": 82 }
+        ],
+        "totalGPA": 5.00
+      }
+    ],
+    "analytics": {
+      "averageGPA": 4.875,
+      "performanceFlags": ["Improving", "Good Attendance"]
+    }
+  }
+  
+
+  
