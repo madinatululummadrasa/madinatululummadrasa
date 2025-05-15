@@ -4,11 +4,13 @@ import CustomSlider from "./CustomSlider";
 
 const PhotoAndGallerySection = () => {
    const images = [
-  "https://source.unsplash.com/random/800x600?1",
-  "https://source.unsplash.com/random/800x600?2",
-  "https://source.unsplash.com/random/800x600?3",
-  "https://source.unsplash.com/random/800x600?4",
-  "https://source.unsplash.com/random/800x600?5",
+  "https://swiperjs.com/demos/images/nature-1.jpg",
+  "https://swiperjs.com/demos/images/nature-2.jpg",
+  "https://swiperjs.com/demos/images/nature-3.jpg",
+  "https://swiperjs.com/demos/images/nature-4.jpg",
+  "https://swiperjs.com/demos/images/nature-5.jpg",
+  "https://swiperjs.com/demos/images/nature-6.jpg",
+  "https://swiperjs.com/demos/images/nature-7.jpg",
 ];
     return (
         <div className="min-h-screen bg-gray-100">
