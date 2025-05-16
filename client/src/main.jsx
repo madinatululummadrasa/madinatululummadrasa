@@ -7,12 +7,19 @@ import { Toaster } from 'react-hot-toast'
 import 'react-date-range/dist/styles.css'
 import 'react-date-range/dist/theme/default.css'
 import { HelmetProvider } from 'react-helmet-async'
+import { FilteredResultsProvider } from './hooks/useFilteredResults'
+import React from 'react'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <HelmetProvider>
-    <AuthProvider>
-      <RouterProvider router={router} />
-      <Toaster />
-    </AuthProvider>
+  <React.StrictMode> <HelmetProvider>
+    <FilteredResultsProvider>
+
+      <AuthProvider>
+        <RouterProvider router={router} />
+        <Toaster />
+      </AuthProvider>
+    </FilteredResultsProvider>
+
   </HelmetProvider>
-)
+ </React.StrictMode>   ) 
+

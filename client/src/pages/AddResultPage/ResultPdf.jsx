@@ -1,27 +1,3 @@
-// 📄 ResultPdf.jsx
-
-/* eslint-disable react/prop-types */
-// useCodeComments()
-/**
- * 📄 ResultPdf.jsx
- *
- * 🔧 Purpose: Render a class-wise result PDF matching screenshot design with Bengali support.
- *
- * 🧩 Props:
- * - filteredResults (array): Student data including name, subjects, total, rank.
- * - subjects (array): Subject names to generate table columns.
- * - selectedClass, selectedYear, selectedExam (string): Metadata for the top section.
- *
- * 🛠️ Tools:
- * - @react-pdf/renderer for PDF generation.
- * - Custom Bengali font via CDN.
- *
- * 🎯 Best Practices:
- * - Dynamic subject columns.
- * - Responsive Bengali font.
- * - Screenshot-matching layout.
- */
-
 
 import {
     Document,
@@ -32,7 +8,7 @@ import {
     Font,
     Image,
 } from "@react-pdf/renderer";
-
+import logom from "../../../public/logom.jpg"; // Logo image
 // 📌 Register Bengali font
 Font.register({
     family: "NotoBengali",
@@ -99,7 +75,7 @@ const ResultPdf = ({
     <Document>
         <Page size="A4" style={styles.page}>
             {/* 🖼️ Logo */}
-            <Image src="../../../public/logom.jpg" style={styles.logo} />
+            <Image src={logom} style={styles.logo} />
 
             {/* 🏫 Title */}
             <Text style={styles.header}>মাদিনাতুল উলুম মাদরাসা </Text>
@@ -128,7 +104,7 @@ const ResultPdf = ({
 
                 {/* Data Rows */}
                 {filteredResults.map((student, index) => (
-                    console.log(student),
+                 
                     <View key={index} style={styles.tableRow}>
                          <Text style={{ ...styles.cell, width: 60 }}>{student.roll ?? ""}</Text> {/* New Column */}
                         <Text style={styles.nameColumn}>{student.name}</Text>

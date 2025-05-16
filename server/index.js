@@ -134,13 +134,6 @@ app.get("/routines/:id", async (req, res) => {
 });
 
 
-
-
-
-
-
-
-
     // Students API
     const studentRouter = studentRoutes(db); // passing db directly
     app.use('/students', studentRouter);
