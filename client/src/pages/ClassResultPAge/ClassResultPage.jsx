@@ -192,13 +192,17 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import ResultPdfGenerator from '../AddResultPage/ResultPdfGenerator';
+import { useFilteredResults } from '../../hooks/useFilteredResults';
+
 
 
 
 const ClassResultPage = () => {
   const [students, setStudents] = useState([]);
-  const [filteredResults, setFilteredResults] = useState([]);
-  console.log(filteredResults)
+  console.log(students)
+  // const [filteredResults, setFilteredResults] = useState([]);
+  const { filteredResults, setFilteredResults } = useFilteredResults();
+  console.log("the Filterdert ",filteredResults)
 
   const [selectedClass, setSelectedClass] = useState('');
   console.log(selectedClass)
@@ -284,6 +288,7 @@ const ClassResultPage = () => {
 
     setFilteredResults(rankedResults);
   }, [students, selectedClass, selectedSession, selectedExam, selectedYear]);
+
 
 
 
