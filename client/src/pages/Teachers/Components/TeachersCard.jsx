@@ -1,10 +1,11 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa6";
 
 
 const TeachersCard = ({ designation, address, joiningDate, name, phone, profileImageUrl, teachersId }) => {
-  console.log(teachersId, name, phone, address, profileImageUrl, designation, joiningDate)
+
   const navigate = useNavigate();
 
   return (

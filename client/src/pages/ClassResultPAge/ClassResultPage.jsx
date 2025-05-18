@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import ResultPdfGenerator from '../AddResultPage/ResultPdfGenerator';
 import { useFilteredResults } from '../../hooks/useFilteredResults';
+import UpdateRoll from '../../components/studentRollUpdate/UpdateRoll';
 
 
 
@@ -108,6 +109,7 @@ const ClassResultPage = () => {
   return (
     <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">ক্লাস ভিত্তিক ফলাফল</h1>
+      <UpdateRoll></UpdateRoll>
       <ResultPdfGenerator filteredResults={filteredResults}
         subjects={filteredResults[0]?.subjects.map(([subject]) => subject)}
         selectedClass={selectedClass}
