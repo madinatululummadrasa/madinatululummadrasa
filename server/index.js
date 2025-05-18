@@ -179,7 +179,33 @@ app.get("/routines/:id", async (req, res) => {
       }
     });
 
+// Update student roll
+app.put('/update-rolls', async (req, res) => {
+  const updates = req.body; // Array of { studentId, newRoll }
+console.log(updates);
+  try {
+    let modifiedCount = 0;
 
+    for (let item of updates) {
+      const result = await studentsCollection.updateOne(
+        { studentId: item.studentId },
+        { $set: { roll: item.newRoll } }
+      );
+      modifiedCount += result.modifiedCount;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `Updated ${modifiedCount} student roll(s)`
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: 'Error updating rolls',
+      error: err.message
+    });
+  }
+});
 
 
     // get next student id for adding new student form auto fillup
