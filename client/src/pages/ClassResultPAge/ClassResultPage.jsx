@@ -1,4 +1,6 @@
 
+import { useRef } from 'react';
+import { useReactToPrint } from 'react-to-print';
 
 import { useEffect, useState } from 'react';
 import axios from 'axios';
@@ -11,11 +13,12 @@ import UpdateRoll from '../../components/studentRollUpdate/UpdateRoll';
 
 
 const ClassResultPage = () => {
+  const printRef = useRef();
   const [students, setStudents] = useState([]);
   console.log(students)
   // const [filteredResults, setFilteredResults] = useState([]);
   const { filteredResults, setFilteredResults } = useFilteredResults();
-  console.log("the Filterdert ",filteredResults)
+  console.log("the Filterdert ", filteredResults)
 
   const [selectedClass, setSelectedClass] = useState('');
   console.log(selectedClass)
@@ -53,7 +56,7 @@ const ClassResultPage = () => {
               examNames.add(exam);
             });
           });
-        }); 
+        });
 
         const yearArray = Array.from(resultYears).sort();
         const examArray = Array.from(examNames).sort();
@@ -102,7 +105,12 @@ const ClassResultPage = () => {
     setFilteredResults(rankedResults);
   }, [students, selectedClass, selectedSession, selectedExam, selectedYear]);
 
-
+// // Print selected class result 
+//  const handlePrint = useReactToPrint({
+//     content: () => printRef.current,
+//     documentTitle: 'Class-Result',
+//     onAfterPrint: () => console.log('Print success'),
+//   });
 
 
 
@@ -110,12 +118,12 @@ const ClassResultPage = () => {
     <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">ক্লাস ভিত্তিক ফলাফল</h1>
       <UpdateRoll></UpdateRoll>
-      <ResultPdfGenerator filteredResults={filteredResults}
+      {/* <ResultPdfGenerator filteredResults={filteredResults}
         subjects={filteredResults[0]?.subjects.map(([subject]) => subject)}
         selectedClass={selectedClass}
         selectedExam={selectedExam}
         selectedYear={selectedYear}
-      ></ResultPdfGenerator>
+      ></ResultPdfGenerator> */}
       {/* Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <select value={selectedClass} onChange={e => setSelectedClass(e.target.value)} className="p-2 border rounded w-full">
@@ -144,43 +152,52 @@ const ClassResultPage = () => {
       </div>
 
       {/* Desktop Table View */}
-      <div   className="hidden md:block overflow-x-auto">
-
-          <table id="resultTable" className="w-full table-auto border text-sm sm:text-base">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="border p-2">পুরাতন রোল</th>
-                <th className="border p-2">নাম</th>
-                {filteredResults[0]?.subjects.map(([subject]) => (
-                  <th key={subject} className="border p-2">{subject}</th>
-                ))}
-                <th className="border p-2">মোট নম্বর</th>
-                <th className="border p-2">নতুন রোল</th>
-                <th className="border p-2">বিস্তারিত</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredResults.map(student => (
-                <tr key={student.studentId} className="hover:bg-gray-50">
-                  <td className="border p-2 text-center">{student.roll}</td>
-                  <td className="border p-2">{student.name}</td>
-                  {student.subjects.map(([subject, mark]) => (
-                    <td key={subject} className="border p-2 text-center">{mark}</td>
-                  ))}
-                  <td className="border p-2 text-center font-bold">{student.total}</td>
-                  <td className="border p-2 text-center font-semibold">{student.newRoll}</td>
-                  <td className="border p-2 text-center">
-                    <button
-                      onClick={() => navigate(`/students/${student.studentId}`)}
-                      className="text-blue-600 hover:underline font-medium"
-                    >
-                      বিস্তারিত দেখুন
-                    </button>
-                  </td>
-                </tr>
+        {/* Print Button */}
+  
+      <div   className="  print-section overflow-x-auto">
+        <div className='text-center mb-10'>
+        <h1 className='text-4xl '>মাদিনাতুল উলুম মাদরাসা </h1>
+        <p>রতনপুর, রামগঞ্জ, লক্ষ্মীপুর </p>
+        <p className='text-xl'>{selectedExam} পরীক্ষার  ফলাফল </p>
+        <p>শ্রেণি: {selectedClass},  <span>সেশন: {selectedSession}</span></p>
+        <p></p>
+     
+        </div>
+        <table id="resultTable" className="w-full table-auto border text-sm sm:text-base">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="border p-2">পুরাতন রোল</th>
+              <th className="border p-2">নাম</th>
+              {filteredResults[0]?.subjects.map(([subject]) => (
+                <th key={subject} className="border p-2">{subject}</th>
               ))}
-            </tbody>
-          </table>
+              <th className="border p-2">মোট নম্বর</th>
+              <th className="border p-2">নতুন রোল</th>
+              <th className="no-print border p-2">বিস্তারিত</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredResults.map(student => (
+              <tr key={student.studentId} className="hover:bg-gray-50">
+                <td className="border p-2 text-center">{student.roll}</td>
+                <td className="border p-2">{student.name}</td>
+                {student.subjects.map(([subject, mark]) => (
+                  <td key={subject} className="border p-2 text-center">{mark}</td>
+                ))}
+                <td className="border p-2 text-center font-bold">{student.total}</td>
+                <td className="border p-2 text-center font-semibold">{student.newRoll}</td>
+                <td  className="no-print border p-2 text-center">
+                  <button
+                    onClick={() => navigate(`/students/${student.studentId}`)}
+                    className="text-blue-600 hover:underline font-medium"
+                  >
+                    বিস্তারিত দেখুন
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* Mobile Card View */}
@@ -197,7 +214,7 @@ const ClassResultPage = () => {
                 ))}
               </ul>
             </div>
-            <div className="mb-1"><span className="font-semibold">মোট:</span> {student.total}</div>
+            <div id='print-section' className="mb-1"><span className="font-semibold">মোট:</span> {student.total}</div>
             <div className="mb-1"><span className="font-semibold">নতুন রোল:</span> {student.newRoll}</div>
             <button
               onClick={() => navigate(`/students/${student.studentId}`)}
