@@ -9,7 +9,7 @@ const ResultPdfGenerator = ({
   subjects,
   selectedClass,
   selectedExam,
-  selectedYear,
+  selectedYear, 
 }) => {
   return (
     <PDFDownloadLink

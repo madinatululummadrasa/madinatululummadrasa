@@ -21,3 +21,29 @@ html, body {
     animation: marquee 5s linear infinite;
   }
   
+  /* Add this in your main CSS file (e.g., index.css or App.css) */
+@media print {
+  .print-section {
+    display: block !important;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .print-section, .print-section * {
+    visibility: visible;
+  }
+
+  .print-section {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+  
+}
