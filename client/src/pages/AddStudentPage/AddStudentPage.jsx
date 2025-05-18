@@ -137,9 +137,9 @@ const AddStudentPage = () => {
 
         <select name="group" value={formData.group} onChange={handleChange} className="input input-bordered w-full p-2 border rounded">
           <option value="">শাখা নির্বাচন করুন</option>
-          <option value="nurani">নূরানি</option>
-          <option value="kitab">কিতাব</option>
-          <option value="hefz">হেফজ</option>
+          <option value="নূরানি">নূরানি</option>
+          <option value="কিতাব">কিতাব</option>
+          <option value="হেফজ">হেফজ</option>
         </select>
 
         <input type="date" name="admissionDate" value={formData.admissionDate} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
