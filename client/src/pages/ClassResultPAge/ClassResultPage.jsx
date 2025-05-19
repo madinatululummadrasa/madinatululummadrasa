@@ -112,7 +112,7 @@ const ClassResultPage = () => {
 //     onAfterPrint: () => console.log('Print success'),
 //   });
 
-
+const oldRolls = filteredResults.map(student => student.roll);
 
   return (
     <div className="p-4 max-w-7xl mx-auto">
@@ -177,9 +177,12 @@ const ClassResultPage = () => {
             </tr>
           </thead>
           <tbody>
+            
             {filteredResults.map(student => (
+
+              
               <tr key={student.studentId} className="hover:bg-gray-50">
-                <td className="border p-2 text-center">{student.roll}</td>
+                <td className="border p-2 text-center">{oldRolls}</td>
                 <td className="border p-2">{student.name}</td>
                 {student.subjects.map(([subject, mark]) => (
                   <td key={subject} className="border p-2 text-center">{mark}</td>
