@@ -1,20 +1,11 @@
-
-import { useRef } from 'react';
-
-
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-
-import { useFilteredResults } from '../../hooks/useFilteredResults';
-import UpdateRoll from '../../components/studentRollUpdate/UpdateRoll';
+import { useEffect, useState } from "react";
+import { useFilteredResults } from "../../hooks/useFilteredResults";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 
-
-
-const ClassResultPage = () => {
-
-  const [students, setStudents] = useState([]);
+const Results = () => {
+   const [students, setStudents] = useState([]);
   console.log(students)
   // const [filteredResults, setFilteredResults] = useState([]);
   const { filteredResults, setFilteredResults } = useFilteredResults();
@@ -124,8 +115,8 @@ const ClassResultPage = () => {
   }
   return (
     <div className="p-4 max-w-7xl mx-auto">
-      <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">ক্লাস ভিত্তিক ফলাফল for admins only</h1>
-      <UpdateRoll></UpdateRoll>
+      <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">ক্লাস ভিত্তিক ফলাফল for everyone</h1>
+     
       {/* <ResultPdfGenerator filteredResults={filteredResults}
         subjects={filteredResults[0]?.subjects.map(([subject]) => subject)}
         selectedClass={selectedClass}
@@ -186,7 +177,7 @@ const ClassResultPage = () => {
           </thead>
           <tbody>
 
-            {filteredResults.map((student, index) => (
+            {filteredResults.map((student) => (
 
 
               <tr key={student.studentId} className="hover:bg-gray-50">
@@ -240,4 +231,4 @@ const ClassResultPage = () => {
   );
 };
 
-export default ClassResultPage;
+export default Results;

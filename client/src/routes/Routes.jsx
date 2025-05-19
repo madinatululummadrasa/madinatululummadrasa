@@ -19,6 +19,7 @@ import AddNewThings from '../pages/Dashboard/AddNewThings'
 import AddTeachersPage from '../pages/Teachers/AddTeachersPage/AddTeachersPage'
 import TeachersList from '../pages/Teachers/TeachersList/TeachersList'
 import Speech from '../pages/Speech/Speech'
+import Results from '../pages/ClassResultPAge/Results'
 
 
 export const router = createBrowserRouter([
@@ -98,6 +99,10 @@ export const router = createBrowserRouter([
       {
         path: '/speech',
         element:<Speech/>,
+      },
+      {
+        path: '/results',
+        element:<Results></Results>,
       },
   
   

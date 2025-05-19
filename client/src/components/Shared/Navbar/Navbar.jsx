@@ -37,7 +37,8 @@ const menuItems = [
     label: 'পরীক্ষার ফলাফল',
     submenu: [
       { label: 'Add Result', link: '/add-results' },
-      { label: 'Result', link: '/class-results' },
+      { label: 'Admins Result', link: '/class-results' },
+      { label: 'Result', link: '/results' },
       { label: 'পাবলিক পরীক্ষা', link: '/results/public' },
     ],
   },
