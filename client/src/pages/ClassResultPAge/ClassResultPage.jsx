@@ -95,8 +95,8 @@ const ClassResultPage = () => {
       };
     }).filter(Boolean);
 
-    // resultsWithTotal.sort((a, b) => b.total - a.total);
-    resultsWithTotal.sort((a, b) => a.originalRoll - b.originalRoll); // ASCENDING roll
+    resultsWithTotal.sort((a, b) => b.total - a.total);
+
 
 
     const rankedResults = resultsWithTotal.map((student, index) => ({
