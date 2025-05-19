@@ -89,13 +89,15 @@ const ClassResultPage = () => {
       return {
         studentId: student.studentId,
         name: student.name,
-        roll: student.roll,
+       originalRoll: student.roll,
         subjects,
         total,
       };
     }).filter(Boolean);
 
-    resultsWithTotal.sort((a, b) => b.total - a.total);
+    // resultsWithTotal.sort((a, b) => b.total - a.total);
+    resultsWithTotal.sort((a, b) => a.originalRoll - b.originalRoll); // ASCENDING roll
+
 
     const rankedResults = resultsWithTotal.map((student, index) => ({
       ...student,
@@ -179,11 +181,11 @@ const oldRolls = filteredResults.map(student => student.roll);
           </thead>
           <tbody>
             
-            {filteredResults.map(student => (
+            {filteredResults.map((student,index) => (
 
               
               <tr key={student.studentId} className="hover:bg-gray-50">
-                <td className="border p-2 text-center">{oldRolls}</td>
+               <td className="border p-2 text-center">{student.originalRoll}</td>
                 <td className="border p-2">{student.name}</td>
                 {student.subjects.map(([subject, mark]) => (
                   <td key={subject} className="border p-2 text-center">{mark}</td>
