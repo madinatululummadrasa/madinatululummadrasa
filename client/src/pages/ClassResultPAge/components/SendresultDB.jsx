@@ -11,7 +11,8 @@ const SendresultDB = (FilteredResults) => {
                 filteredResults,
             })
 
-            if (response.ok) {
+            if (response.status === 200) {
+                // Handle success
                 console.log('Results sent to the database successfully');
             } else {
                 console.error('Failed to send results to the database');

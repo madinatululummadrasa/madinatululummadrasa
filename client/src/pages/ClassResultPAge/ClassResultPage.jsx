@@ -132,8 +132,8 @@ const ClassResultPage = () => {
       {/* Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <select value={selectedClass} onChange={e => setSelectedClass(e.target.value)} className="p-2 border rounded w-full">
-          {availableClasses.map(className => (
-            <option key={className} value={className}>ক্লাস {className}</option>
+          {availableClasses.map((className,index) => (
+            <option key={index+1} value={className}>ক্লাস {className}</option>
           ))}
         </select>
 
