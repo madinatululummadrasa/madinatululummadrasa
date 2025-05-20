@@ -149,7 +149,7 @@ const Results = () => {
           ))}
         </select>
       </div>
-
+          
       {/* Desktop Table View */}
       {/* Print Button */}
 
