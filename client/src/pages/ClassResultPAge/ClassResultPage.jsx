@@ -1,13 +1,9 @@
-
-import { useRef } from 'react';
-
-
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
 import { useFilteredResults } from '../../hooks/useFilteredResults';
 import UpdateRoll from '../../components/studentRollUpdate/UpdateRoll';
+import SendresultDB from './components/SendresultDB';
 
 
 
@@ -15,13 +11,13 @@ import UpdateRoll from '../../components/studentRollUpdate/UpdateRoll';
 const ClassResultPage = () => {
 
   const [students, setStudents] = useState([]);
-  console.log(students)
+
   // const [filteredResults, setFilteredResults] = useState([]);
   const { filteredResults, setFilteredResults } = useFilteredResults();
-  console.log("the Filterdert ", filteredResults)
+
 
   const [selectedClass, setSelectedClass] = useState('');
-  console.log(selectedClass)
+
   const [selectedSession, setSelectedSession] = useState('');
   const [selectedExam, setSelectedExam] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
@@ -33,7 +29,9 @@ const ClassResultPage = () => {
 
   const navigate = useNavigate();
 
-
+git add .
+git commit -m "misselinuous"
+git push
 
 
   useEffect(() => {
@@ -126,6 +124,7 @@ const ClassResultPage = () => {
     <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">ক্লাস ভিত্তিক ফলাফল for admins only</h1>
       <UpdateRoll></UpdateRoll>
+      <SendresultDB filteredResults={filteredResults }></SendresultDB>
       {/* <ResultPdfGenerator filteredResults={filteredResults}
         subjects={filteredResults[0]?.subjects.map(([subject]) => subject)}
         selectedClass={selectedClass}

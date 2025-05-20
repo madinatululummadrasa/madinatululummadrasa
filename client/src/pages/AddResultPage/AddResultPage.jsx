@@ -96,7 +96,7 @@ const AddResultPage = () => {
       }
     } catch (err) {
       console.error("Error submitting result:", err);
-      alert("❌ কিছু সমস্যা হয়েছে!");
+      alert("❌ কিছু সমস্যা হয়েছে!"); 
     }
   };
 
