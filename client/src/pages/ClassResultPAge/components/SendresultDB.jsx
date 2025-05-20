@@ -1,7 +1,7 @@
 
 import { axiosSecure } from '../../../hooks/useAxiosSecure';
 
-const SendresultDB = (FilteredResults) => {
+const SendresultDB = (FilteredResults,selectedExam,selectedYear) => {
 
     const { filteredResults } = FilteredResults;
     console.log("the Filterdert ", filteredResults)
