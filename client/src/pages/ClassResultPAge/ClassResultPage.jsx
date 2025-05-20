@@ -29,9 +29,7 @@ const ClassResultPage = () => {
 
   const navigate = useNavigate();
 
-git add .
-git commit -m "misselinuous"
-git push
+
 
 
   useEffect(() => {
