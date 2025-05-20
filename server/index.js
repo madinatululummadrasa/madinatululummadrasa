@@ -54,9 +54,10 @@ async function run() {
 
     const db = client.db('allNotice');
     const noticesCollection = db.collection('notices');
-    const studentsCollection = db.collection('students'); // ✅ Add this at the top inside run()
+    const studentsCollection = db.collection('students');
     const teachersCollection = db.collection('teachers');
     const routinesCollection = db.collection('routines');
+    const resultCollection = db.collection('results');
     // Auth APIs
     app.post('/jwt', async (req, res) => {
       const user = req.body;
@@ -108,30 +109,30 @@ async function run() {
 
 
 
- // POST /routines - Save a new routine
- app.post("/routines", async (req, res) => {
-  try {
-    const routine = req.body; // should match the payload you sent
-    const result = await routinesCollection.insertOne(routine);
-    res.send(result);
-  } catch (error) {
-    console.error("Routine POST error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
+    // POST /routines - Save a new routine
+    app.post("/routines", async (req, res) => {
+      try {
+        const routine = req.body; // should match the payload you sent
+        const result = await routinesCollection.insertOne(routine);
+        res.send(result);
+      } catch (error) {
+        console.error("Routine POST error:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+      }
+    });
 
-// Get all routine titles
-app.get("/routines", async (req, res) => {
-  const routines = await routinesCollection.find({}, { projection: { title: 1 } }).toArray();
-  res.send(routines);
-});
+    // Get all routine titles
+    app.get("/routines", async (req, res) => {
+      const routines = await routinesCollection.find({}, { projection: { title: 1 } }).toArray();
+      res.send(routines);
+    });
 
-// Get a specific routine by ID
-app.get("/routines/:id", async (req, res) => {
-  const id = req.params.id;
-  const routine = await routinesCollection.findOne({ _id: new ObjectId(id) });
-  res.send(routine);
-});
+    // Get a specific routine by ID
+    app.get("/routines/:id", async (req, res) => {
+      const id = req.params.id;
+      const routine = await routinesCollection.findOne({ _id: new ObjectId(id) });
+      res.send(routine);
+    });
 
 
     // Students API
@@ -179,33 +180,33 @@ app.get("/routines/:id", async (req, res) => {
       }
     });
 
-// Update student roll
-app.put('/update-rolls', async (req, res) => {
-  const updates = req.body; // Array of { studentId, newRoll }
-console.log(updates);
-  try {
-    let modifiedCount = 0;
+    // Update student roll
+    app.put('/update-rolls', async (req, res) => {
+      const updates = req.body; // Array of { studentId, newRoll }
+      console.log(updates);
+      try {
+        let modifiedCount = 0;
 
-    for (let item of updates) {
-      const result = await studentsCollection.updateOne(
-        { studentId: item.studentId },
-        { $set: { roll: item.newRoll } }
-      );
-      modifiedCount += result.modifiedCount;
-    }
+        for (let item of updates) {
+          const result = await studentsCollection.updateOne(
+            { studentId: item.studentId },
+            { $set: { roll: item.newRoll } }
+          );
+          modifiedCount += result.modifiedCount;
+        }
 
-    res.status(200).json({
-      success: true,
-      message: `Updated ${modifiedCount} student roll(s)`
+        res.status(200).json({
+          success: true,
+          message: `Updated ${modifiedCount} student roll(s)`
+        });
+      } catch (err) {
+        res.status(500).json({
+          success: false,
+          message: 'Error updating rolls',
+          error: err.message
+        });
+      }
     });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: 'Error updating rolls',
-      error: err.message
-    });
-  }
-});
 
 
     // get next student id for adding new student form auto fillup
@@ -246,10 +247,30 @@ console.log(updates);
     });
 
 
+    // Upload results to a newcollection
+    app.post('/upload-results', async (req, res) => {
+      const { filteredResults } = req.body;
+      console.log("Received results:", filteredResults);
+      try {
+        const result = await resultCollection.insertMany(filteredResults);
+        res.status(200).json({
+          success: true,
+          message: 'Results uploaded successfully',
+          data: result
+        });
+      } catch (error) {
+        console.error('Error uploading results:', error);
+        res.status(500).json({
+          success: false,
+          message: 'Error uploading results',
+          error: error.message
+        });
+      }
+    });
 
 
 
-    // update resu;t
+
     // Update result
     app.patch("/students/result/:studentId", async (req, res) => {
       const { studentId } = req.params;
