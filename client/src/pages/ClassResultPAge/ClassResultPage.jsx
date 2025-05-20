@@ -74,6 +74,7 @@ const ClassResultPage = () => {
     const filtered = students.filter(
       student => student.class === selectedClass && student.session === selectedSession
     );
+    console.log("the  ", filtered)
 
     const resultsWithTotal = filtered.map(student => {
       const resultData = student.results?.[selectedYear]?.[selectedExam];
@@ -122,7 +123,7 @@ const ClassResultPage = () => {
     <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">ক্লাস ভিত্তিক ফলাফল for admins only</h1>
       <UpdateRoll></UpdateRoll>
-      <SendresultDB filteredResults={filteredResults }></SendresultDB>
+      <SendresultDB filteredResults={filteredResults } selectedExam={selectedExam} selectedYear={selectedYear}></SendresultDB>
       {/* <ResultPdfGenerator filteredResults={filteredResults}
         subjects={filteredResults[0]?.subjects.map(([subject]) => subject)}
         selectedClass={selectedClass}
