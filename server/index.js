@@ -248,7 +248,7 @@ async function run() {
 
 
 app.post('/upload-results', async (req, res) => {
-   console.log("BODY:", req.body);
+  console.log("BODY:", req.body);
   const { results, exam, year } = req.body;
 
   if (!results || !exam || !year) {
@@ -264,19 +264,21 @@ app.post('/upload-results', async (req, res) => {
 
       return {
         updateOne: {
-          filter: { studentId }, // or use _id if that's what you're storing
+          filter: { studentId },
           update: {
-            $set: {
-              [`results.${year}.${exam}`]: {
+            $push: {
+              results: {
+                studentId,
                 name,
                 newRoll,
                 originalRoll,
-                studentId,
-                subjects
+                subjects,
+                exam,   // add exam from request body
+                year    // add year from request body
               }
             }
           },
-          upsert: true // create the student if not found
+          upsert: true
         }
       };
     });
@@ -285,12 +287,12 @@ app.post('/upload-results', async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: 'Results uploaded and nested successfully',
+      message: 'Results uploaded in flat array structure successfully',
       data: bulkResult
     });
 
   } catch (error) {
-    console.error('Error uploading nested results:', error);
+    console.error('Error uploading flat results:', error);
     res.status(500).json({
       success: false,
       message: 'Error uploading results',
