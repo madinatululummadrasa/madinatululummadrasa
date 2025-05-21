@@ -14,6 +14,24 @@ const ClassResultPage = () => {
 
   // const [filteredResults, setFilteredResults] = useState([]);
   const { filteredResults, setFilteredResults } = useFilteredResults();
+  console.log("the filtered results", filteredResults)
+
+  const resultData = filteredResults.map(student => {
+    const result = {};
+
+    student.subjects.forEach(([subjectName, mark]) => {
+      result[subjectName] = mark.toString(); // Convert mark to string if needed
+    });
+
+    return {
+      studentId: student.studentId,
+      name: student.name,            // Student's name
+      oldRoll: student.originalRoll, // Original roll number
+      newRoll: student.newRoll,      // New roll number after ranking
+      result: result                 // Subject-wise marks
+    };
+  });
+
 
 
   const [selectedClass, setSelectedClass] = useState('');
@@ -21,6 +39,8 @@ const ClassResultPage = () => {
   const [selectedSession, setSelectedSession] = useState('');
   const [selectedExam, setSelectedExam] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
+  console.log("the selected year", selectedYear)
+  console.log("the selected exam", selectedExam)
 
   const [availableClasses, setAvailableClasses] = useState([]);
   const [availableSessions, setAvailableSessions] = useState([]);
@@ -123,7 +143,7 @@ const ClassResultPage = () => {
     <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">ক্লাস ভিত্তিক ফলাফল for admins only</h1>
       <UpdateRoll></UpdateRoll>
-      <SendresultDB filteredResults={filteredResults } selectedExam={selectedExam} selectedYear={selectedYear}></SendresultDB>
+      <SendresultDB filteredResults={resultData} selectedExam={selectedExam} selectedYear={selectedYear}></SendresultDB>
       {/* <ResultPdfGenerator filteredResults={filteredResults}
         subjects={filteredResults[0]?.subjects.map(([subject]) => subject)}
         selectedClass={selectedClass}
@@ -133,8 +153,8 @@ const ClassResultPage = () => {
       {/* Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <select value={selectedClass} onChange={e => setSelectedClass(e.target.value)} className="p-2 border rounded w-full">
-          {availableClasses.map((className,index) => (
-            <option key={index+1} value={className}>ক্লাস {className}</option>
+          {availableClasses.map((className, index) => (
+            <option key={index + 1} value={className}>ক্লাস {className}</option>
           ))}
         </select>
 
