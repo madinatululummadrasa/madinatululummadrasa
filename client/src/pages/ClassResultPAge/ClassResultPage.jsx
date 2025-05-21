@@ -119,6 +119,7 @@ const ClassResultPage = () => {
 
 
  const resultData = filteredResults.map(student => {
+  console.log("the student", student)
     const result = {};
 
     student.subjects.forEach(([subjectName, mark]) => {
