@@ -16,23 +16,7 @@ const ClassResultPage = () => {
   const { filteredResults, setFilteredResults } = useFilteredResults();
   console.log("the filtered results", filteredResults)
 
-  const resultData = filteredResults.map(student => {
-    const result = {};
-
-    student.subjects.forEach(([subjectName, mark]) => {
-      result[subjectName] = mark.toString(); // Convert mark to string if needed
-    });
-
-    return {
-      studentId: student.studentId,
-      name: student.name,            // Student's name
-      oldRoll: student.originalRoll, // Original roll number
-      newRoll: student.newRoll,      // New roll number after ranking
-      result: result                 // Subject-wise marks
-    };
-  });
-
-
+ 
 
   const [selectedClass, setSelectedClass] = useState('');
 
@@ -130,6 +114,28 @@ const ClassResultPage = () => {
   //     documentTitle: 'Class-Result',
   //     onAfterPrint: () => console.log('Print success'),
   //   });
+
+
+
+
+ const resultData = filteredResults.map(student => {
+    const result = {};
+
+    student.subjects.forEach(([subjectName, mark]) => {
+      result[subjectName] = mark.toString(); // Convert mark to string if needed
+    });
+
+    return {
+      studentId: student.studentId,
+      name: student.name,            // Student's name
+      oldRoll: student.originalRoll, // Original roll number
+      newRoll: student.newRoll,      // New roll number after ranking
+      result: result                 // Subject-wise marks
+    };
+  });
+
+
+
 
   const oldRolls = filteredResults.map(student => student.roll);
 
