@@ -247,26 +247,58 @@ async function run() {
     });
 
 
-    // Upload results to a newcollection
-    app.post('/upload-results', async (req, res) => {
-      const { filteredResults } = req.body;
-      console.log("Received results:", filteredResults);
-      try {
-        const result = await resultCollection.insertMany(filteredResults);
-        res.status(200).json({
-          success: true,
-          message: 'Results uploaded successfully',
-          data: result
-        });
-      } catch (error) {
-        console.error('Error uploading results:', error);
-        res.status(500).json({
-          success: false,
-          message: 'Error uploading results',
-          error: error.message
-        });
-      }
+app.post('/upload-results', async (req, res) => {
+   console.log("BODY:", req.body);
+  const { results, exam, year } = req.body;
+
+  if (!results || !exam || !year) {
+    return res.status(400).json({
+      success: false,
+      message: 'Missing results, exam, or year in request body'
     });
+  }
+
+  try {
+    const bulkOps = results.map(result => {
+      const { studentId, name, newRoll, originalRoll, subjects } = result;
+
+      return {
+        updateOne: {
+          filter: { studentId }, // or use _id if that's what you're storing
+          update: {
+            $set: {
+              [`results.${year}.${exam}`]: {
+                name,
+                newRoll,
+                originalRoll,
+                studentId,
+                subjects
+              }
+            }
+          },
+          upsert: true // create the student if not found
+        }
+      };
+    });
+
+    const bulkResult = await resultCollection.bulkWrite(bulkOps);
+
+    res.status(200).json({
+      success: true,
+      message: 'Results uploaded and nested successfully',
+      data: bulkResult
+    });
+
+  } catch (error) {
+    console.error('Error uploading nested results:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error uploading results',
+      error: error.message
+    });
+  }
+});
+
 
 app.get('/results', async (req, res) => {
   try {
