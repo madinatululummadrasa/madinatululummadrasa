@@ -210,7 +210,7 @@ async function run() {
 
 
     // get next student id for adding new student form auto fillup
-    app.get("/students/next-id", async (req, res) => {
+ app.get("/students/next-id", async (req, res) => {
       try {
         const result = await studentsCollection.aggregate([
           {
@@ -247,59 +247,63 @@ async function run() {
     });
 
 
+    // Upload results
 app.post('/upload-results', async (req, res) => {
-  console.log("BODY:", req.body);
-  const { results, exam, year } = req.body;
+   
+    const { results, exam, year } = req.body;
 
-  if (!results || !exam || !year) {
-    return res.status(400).json({
-      success: false,
-      message: 'Missing results, exam, or year in request body'
-    });
-  }
+    if (!results || !exam || !year) {
+        return res.status(400).json({
+            success: false,
+            message: 'Missing results, exam, or year in request body'
+        });
+    }
 
-  try {
-    const bulkOps = results.map(result => {
-      const { studentId, name, newRoll, originalRoll, subjects } = result;
+    try {
+        const bulkOps = results.map(result => {
+            const { studentId, name, newRoll, oldRoll, result: subjects } = result;
 
-      return {
-        updateOne: {
-          filter: { studentId },
-          update: {
-            $push: {
-              results: {
-                studentId,
-                name,
-                newRoll,
-                originalRoll,
-                subjects,
-                exam,   // add exam from request body
-                year    // add year from request body
-              }
-            }
-          },
-          upsert: true
-        }
-      };
-    });
+            const updatePath = `resultsByYear.${year}.${exam}`;
 
-    const bulkResult = await resultCollection.bulkWrite(bulkOps);
+            return {
+                updateOne: {
+                    filter: { studentId: studentId },
+                    update: {
+                        $set: {
+                            // These fields will be set/updated if studentId exists or on creation
+                            name: name, // Ensure name is kept updated
+                            // You might also want to include class and session here if they are part of student schema
+                            // For instance: class: result.class, session: result.session
+                            [updatePath]: { // Dynamically set the nested path
+                                newRoll: newRoll,
+                                originalRoll: oldRoll,
+                                subjects: subjects // This is the object containing subject-wise marks
+                            }
+                        }
+                    },
+                    upsert: true // Create the document if it doesn't exist
+                }
+            };
+        });
 
-    res.status(200).json({
-      success: true,
-      message: 'Results uploaded in flat array structure successfully',
-      data: bulkResult
-    });
+        const bulkResult = await resultCollection.bulkWrite(bulkOps);
 
-  } catch (error) {
-    console.error('Error uploading flat results:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Error uploading results',
-      error: error.message
-    });
-  }
+        res.status(200).json({
+            success: true,
+            message: 'Results uploaded successfully with nested structure',
+            data: bulkResult
+        });
+
+    } catch (error) {
+        console.error('Error uploading results:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error uploading results',
+            error: error.message
+        });
+    }
 });
+
 
 
 app.get('/results', async (req, res) => {
