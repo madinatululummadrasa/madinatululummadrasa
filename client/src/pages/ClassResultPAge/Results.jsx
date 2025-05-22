@@ -6,13 +6,13 @@ import axios from "axios";
 
 const Results = () => {
    const [students, setStudents] = useState([]);
-  console.log(students)
+
   // const [filteredResults, setFilteredResults] = useState([]);
   const { filteredResults, setFilteredResults } = useFilteredResults();
-  console.log("the Filterdert ", filteredResults)
+
 
   const [selectedClass, setSelectedClass] = useState('');
-  console.log(selectedClass)
+
   const [selectedSession, setSelectedSession] = useState('');
   const [selectedExam, setSelectedExam] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
@@ -69,9 +69,11 @@ const Results = () => {
     const filtered = students.filter(
       student => student.class === selectedClass && student.session === selectedSession
     );
+ 
 
     const resultsWithTotal = filtered.map(student => {
-      const resultData = student.results?.[selectedYear]?.[selectedExam];
+      const resultData = student.detailedResults?.[selectedYear]?.[selectedExam]?.['subjects'];
+      console.log("the result ---data", resultData)
       if (!resultData) return null;
 
       const subjects = Object.entries(resultData);
@@ -98,21 +100,8 @@ const Results = () => {
     setFilteredResults(rankedResults);
   }, [students, selectedClass, selectedSession, selectedExam, selectedYear]);
 
-  // // Print selected class result 
-  //  const handlePrint = useReactToPrint({
-  //     content: () => printRef.current,
-  //     documentTitle: 'Class-Result',
-  //     onAfterPrint: () => console.log('Print success'),
-  //   });
 
-  const oldRolls = filteredResults.map(student => student.roll);
-
-  const name = filteredResults.map(student => student.name);
-
-  const newData = {
-    name: name,
-    oldRolls: oldRolls,
-  }
+ 
   return (
     <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">ক্লাস ভিত্তিক ফলাফল for everyone</h1>

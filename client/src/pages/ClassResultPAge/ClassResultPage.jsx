@@ -12,7 +12,7 @@ const ClassResultPage = () => {
 
   const [students, setStudents] = useState([]);
 
-  // const [filteredResults, setFilteredResults] = useState([]);
+
   const { filteredResults, setFilteredResults } = useFilteredResults();
   console.log("the filtered results", filteredResults)
 
@@ -138,14 +138,14 @@ const ClassResultPage = () => {
 
 
 
-  const oldRolls = filteredResults.map(student => student.roll);
+  // const oldRolls = filteredResults.map(student => student.roll);
 
-  const name = filteredResults.map(student => student.name);
+  // const name = filteredResults.map(student => student.name);
 
-  const newData = {
-    name: name,
-    oldRolls: oldRolls,
-  }
+  // // const newData = {
+  // //   name: name,
+  // //   oldRolls: oldRolls,
+  // // }
   return (
     <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">ক্লাস ভিত্তিক ফলাফল for admins only</h1>
@@ -211,7 +211,7 @@ const ClassResultPage = () => {
           </thead>
           <tbody>
 
-            {filteredResults.map((student, index) => (
+            {filteredResults.map((student) => (
 
 
               <tr key={student.studentId} className="hover:bg-gray-50">
