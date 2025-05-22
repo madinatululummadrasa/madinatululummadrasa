@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useFilteredResults } from '../../hooks/useFilteredResults';
 import UpdateRoll from '../../components/studentRollUpdate/UpdateRoll';
-import SendresultDB from './components/SendresultDB';
+
 
 
 
@@ -15,7 +15,7 @@ const Results = () => {
 
 
   const { filteredResults, setFilteredResults } = useFilteredResults();
-  console.log("the ___________filtered results", filteredResults)
+
 
 
 
@@ -84,7 +84,7 @@ const Results = () => {
     const resultsWithTotal = filtered.map(student => {
         // Access detailedResults instead of results
       const detailedResultData = student.detailedResults?.[selectedYear]?.[selectedExam];
-      console.log("the detailed result data from admin ", detailedResultData);
+      
 
       if (!detailedResultData || !detailedResultData.subjects) return null;
 
@@ -144,26 +144,13 @@ const Results = () => {
 
 
 
-
-  // const oldRolls = filteredResults.map(student => student.roll);
-
-  // const name = filteredResults.map(student => student.name);
-
-  // // const newData = {
-  // //   name: name,
-  // //   oldRolls: oldRolls,
-  // // }
   return (
     <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">ক্লাস ভিত্তিক ফলাফল for eveyrone only</h1>
-      <UpdateRoll></UpdateRoll>
-      <SendresultDB filteredResults={resultData} selectedExam={selectedExam} selectedYear={selectedYear}></SendresultDB>
-      {/* <ResultPdfGenerator filteredResults={filteredResults}
-        subjects={filteredResults[0]?.subjects.map(([subject]) => subject)}
-        selectedClass={selectedClass}
-        selectedExam={selectedExam}
-        selectedYear={selectedYear}
-      ></ResultPdfGenerator> */}
+      
+    <UpdateRoll></UpdateRoll>
+    
+     
       {/* Filters */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <select value={selectedClass} onChange={e => setSelectedClass(e.target.value)} className="p-2 border rounded w-full">
