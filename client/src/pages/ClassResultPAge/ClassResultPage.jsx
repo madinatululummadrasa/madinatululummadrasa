@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useFilteredResults } from '../../hooks/useFilteredResults';
-import UpdateRoll from '../../components/studentRollUpdate/UpdateRoll';
+
 import SendresultDB from './components/SendresultDB';
 
 
@@ -150,7 +150,7 @@ const ClassResultPage = () => {
   return (
     <div className="p-4 max-w-7xl mx-auto">
       <h1 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">ক্লাস ভিত্তিক ফলাফল for admins only</h1>
-      <UpdateRoll></UpdateRoll>
+    
       <SendresultDB filteredResults={resultData} selectedExam={selectedExam} selectedYear={selectedYear}></SendresultDB>
       {/* <ResultPdfGenerator filteredResults={filteredResults}
         subjects={filteredResults[0]?.subjects.map(([subject]) => subject)}
