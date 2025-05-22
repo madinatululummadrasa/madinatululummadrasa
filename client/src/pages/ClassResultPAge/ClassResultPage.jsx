@@ -14,9 +14,9 @@ const ClassResultPage = () => {
 
 
   const { filteredResults, setFilteredResults } = useFilteredResults();
-  console.log("the filtered results", filteredResults)
+  console.log("the ___________filtered results", filteredResults)
 
- 
+
 
   const [selectedClass, setSelectedClass] = useState('');
 
@@ -78,10 +78,11 @@ const ClassResultPage = () => {
     const filtered = students.filter(
       student => student.class === selectedClass && student.session === selectedSession
     );
-    console.log("the  ", filtered)
+    // console.log("the  ", filtered)
 
     const resultsWithTotal = filtered.map(student => {
       const resultData = student.results?.[selectedYear]?.[selectedExam];
+      console.log("the result data from admin ", resultData)
       if (!resultData) return null;
 
       const subjects = Object.entries(resultData);
@@ -118,8 +119,8 @@ const ClassResultPage = () => {
 
 
 
- const resultData = filteredResults.map(student => {
-  console.log("the student", student)
+  const resultData = filteredResults.map(student => {
+    console.log("the student", student)
     const result = {};
 
     student.subjects.forEach(([subjectName, mark]) => {
