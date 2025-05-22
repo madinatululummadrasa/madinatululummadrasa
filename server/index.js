@@ -261,9 +261,9 @@ app.post('/upload-results', async (req, res) => {
 
     try {
         const bulkOps = results.map(result => {
-            const { studentId, name, newRoll, oldRoll, result: subjects } = result;
+            const { studentId,  newRoll, oldRoll, result: subjects } = result;
 
-            const updatePath = `resultsByYear.${year}.${exam}`;
+            const updatePath = `detailedResults.${year}.${exam}`;
 
             return {
                 updateOne: {
@@ -271,7 +271,7 @@ app.post('/upload-results', async (req, res) => {
                     update: {
                         $set: {
                             // These fields will be set/updated if studentId exists or on creation
-                            name: name, // Ensure name is kept updated
+                           
                             // You might also want to include class and session here if they are part of student schema
                             // For instance: class: result.class, session: result.session
                             [updatePath]: { // Dynamically set the nested path
@@ -286,7 +286,7 @@ app.post('/upload-results', async (req, res) => {
             };
         });
 
-        const bulkResult = await resultCollection.bulkWrite(bulkOps);
+        const bulkResult = await studentsCollection.bulkWrite(bulkOps);
 
         res.status(200).json({
             success: true,

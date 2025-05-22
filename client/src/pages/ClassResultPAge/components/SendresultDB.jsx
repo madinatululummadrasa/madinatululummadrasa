@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { axiosSecure } from '../../../hooks/useAxiosSecure';
 import PropTypes from 'prop-types';
 
