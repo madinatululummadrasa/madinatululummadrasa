@@ -20,6 +20,7 @@ import AddTeachersPage from '../pages/Teachers/AddTeachersPage/AddTeachersPage'
 import TeachersList from '../pages/Teachers/TeachersList/TeachersList'
 import Speech from '../pages/Speech/Speech'
 import Results from '../pages/ClassResultPAge/Results'
+import UpdateStudentData from '../pages/UpdateStudentData/UpdateStudentData'
 
 
 export const router = createBrowserRouter([
@@ -103,6 +104,10 @@ export const router = createBrowserRouter([
       {
         path: '/results',
         element:<Results></Results>,
+      },
+      {
+        path: '/update-student',
+        element:<UpdateStudentData></UpdateStudentData>,
       },
   
   

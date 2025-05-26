@@ -5,28 +5,15 @@ import { useNavigate } from 'react-router-dom';
 import { useFilteredResults } from '../../hooks/useFilteredResults';
 import UpdateRoll from '../../components/studentRollUpdate/UpdateRoll';
 
-
-
-
-
 const Results = () => {
-
   const [students, setStudents] = useState([]);
-
-
   const { filteredResults, setFilteredResults } = useFilteredResults();
-
-
-
-
   const [selectedClass, setSelectedClass] = useState('');
-
   const [selectedSession, setSelectedSession] = useState('');
   const [selectedExam, setSelectedExam] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   console.log("the selected year", selectedYear)
   console.log("the selected exam", selectedExam)
-
   const [availableClasses, setAvailableClasses] = useState([]);
   const [availableSessions, setAvailableSessions] = useState([]);
   const [availableYears, setAvailableYears] = useState([]);

@@ -31,6 +31,7 @@ const menuItems = [
       { label: 'ভর্তি তথ্য', link: '/students/admission' },
       { label: 'Add Students', link: '/add-student' },
       { label: 'Add Attendence', link: '/students/attendance' },
+      { label: 'Update Student', link: '/update-student' },
     ],
   },
   {
