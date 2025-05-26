@@ -7,7 +7,9 @@ const UpdateStudentData = () => {
 
 
 
+    const currentYear = new Date().getFullYear();
 
+    const [year, setYear] = useState(currentYear);
     const [selectedYear, setSelectedYear] = useState(currentYear.toString());
     const [selectedClass, setSelectedClass] = useState("");
     const [searchRoll, setSearchRoll] = useState("");
@@ -44,6 +46,25 @@ const UpdateStudentData = () => {
                     searchRoll={searchRoll}
                     setSearchRoll={setSearchRoll}
                 />
+
+                <div className="mb-6">
+                    <label className="block mb-2 font-medium">একজন ছাত্র নির্বাচন করুন:</label>
+                    <select
+                        value={selectedStudent?._id || ""}
+                        onChange={(e) => {
+                            const student = students.find((s) => s._id === e.target.value);
+                            setSelectedStudent(student);
+                        }}
+                        className="w-full border px-3 py-2 rounded"
+                    >
+                        <option value="">-- ছাত্র নির্বাচন করুন --</option>
+                        {filteredStudents.map((student) => (
+                            <option key={student._id} value={student._id}>
+                                {student.name} (রোল: {student.roll}, ক্লাস: {student.class})
+                            </option>
+                        ))}
+                    </select>
+                </div>
                 {
                     students.map((student) => (
                         <div key={student.studentId} className="p-4 border rounded mb-4">
