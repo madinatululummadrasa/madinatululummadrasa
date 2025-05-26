@@ -304,6 +304,26 @@ app.post('/upload-results', async (req, res) => {
     }
 });
 
+app.put('/students/:studentId', async (req, res) => {
+  const { studentId } = req.params;
+  const updateData = req.body;
+
+  try {
+    const result = await studentsCollection.updateOne(
+      { studentId },
+      { $set      : updateData },
+      { upsert: true } // Create if not exists    
+    );
+    if (result.matchedCount === 0 && result.upsertedCount === 0) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+    res.status(200).json({ message: 'Student updated successfully', result });
+  } catch (error) {
+    console.error('Error updating student:', error);
+    res.status(500).json({ error: 'Failed to update student' });
+  }
+});
+
 
 
 app.get('/results', async (req, res) => {
