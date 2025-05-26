@@ -308,18 +308,76 @@ app.put('/students/:studentId', async (req, res) => {
   const { studentId } = req.params;
   const updateData = req.body;
 
+  const finalUpdateData = {};
+  if (updateData.name !== undefined) {
+    finalUpdateData.name = updateData.name;
+  }
+  if (updateData.roll !== undefined) {
+    finalUpdateData.roll = updateData.roll;
+  }
+  if (updateData.class !== undefined) { // Make sure to include 'class' if it's meant to be updated
+    finalUpdateData.class = updateData.class;
+  }
+
+  if (updateData.session !== undefined) {
+    finalUpdateData.session = updateData.session;
+  }
+  if (updateData.group !== undefined) {
+
+    finalUpdateData.group = updateData.group;
+  }
+  if (updateData.admissionDate !== undefined) {
+    finalUpdateData.admissionDate = updateData.admissionDate;
+  }
+  if (updateData.phone !== undefined) {
+    finalUpdateData.phone = updateData.phone;
+  }
+  if (updateData.guardianName !== undefined) {
+
+    finalUpdateData.guardianName = updateData.guardianName;
+  } 
+  if (updateData.address !== undefined) {
+    finalUpdateData.address = updateData.address;
+   }
+  // if (updateData.profileImageUrl !== undefined) {
+  //   finalUpdateData.profileImageUrl = updateData.profileImageUrl;
+  // }
+  // if (updateData.documents !== undefined) {
+  //   finalUpdateData.documents = updateData.documents; // Assuming documents is an array of objects
+  // }
+  // if (updateData.birthCertificatePdfRaw !== undefined) {
+  //   finalUpdateData.birthCertificatePdfRaw = updateData.birthCertificatePdfRaw;
+  // }
+  // if (updateData.admissionPdfRaw !== undefined) {
+  //   finalUpdateData.admissionPdfRaw = updateData.admissionPdfRaw;
+  // }
+ 
+  // Add other fields here if they can be updated, e.g., session, etc.
+
   try {
     const result = await studentsCollection.updateOne(
-      { studentId },
-      { $set      : updateData },
-      { upsert: true } // Create if not exists    
+      { _id: new ObjectId(studentId) }, // <--- THIS IS THE KEY FIX: Filter by _id
+      { $set: finalUpdateData },
+      { upsert: false } // Change to false if you only want to update existing documents
+                       // If you want to insert if not found, keep it true but ensure your client
+                       // sends all necessary data for a new student if upsert is intended.
+                       // For an 'update' endpoint, typically upsert: false is desired.
     );
-    if (result.matchedCount === 0 && result.upsertedCount === 0) {
+
+    if (result.matchedCount === 0) { // Check if a document was found to update
       return res.status(404).json({ message: 'Student not found' });
     }
+    
+    // Check if anything was actually modified
+    if (result.modifiedCount === 0 && result.upsertedCount === 0) {
+        return res.status(200).json({ message: 'No changes made to student data or student not found and not upserted', result });
+    }
+
+
     res.status(200).json({ message: 'Student updated successfully', result });
   } catch (error) {
     console.error('Error updating student:', error);
+    // More specific error handling could be added here, e.g., for invalid ObjectId
     res.status(500).json({ error: 'Failed to update student' });
   }
 });
