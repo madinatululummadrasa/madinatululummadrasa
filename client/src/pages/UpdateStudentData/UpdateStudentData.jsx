@@ -65,19 +65,13 @@ const UpdateStudentData = () => {
                         ))}
                     </select>
                 </div>
-                {selectedStudent && (
-                    <div className="bg-white p-4 rounded shadow-md">
-                        <h2 className="text-xl font-semibold mb-4">ছাত্রের তথ্য</h2>
-                        <p><strong>নাম:</strong> {selectedStudent.name}</p>
-                        <p><strong>রোল:</strong> {selectedStudent.roll}</p>
-                        <p><strong>ক্লাস:</strong> {selectedStudent.class}</p>
-                        <p><strong>সেশন:</strong> {selectedStudent.session}</p>
-                        <p><strong>শাখা:</strong> {selectedStudent.group}</p>
-                        <p><strong>ফোন:</strong> {selectedStudent.phone}</p>
-                        <p><strong>অভিভাবকের নাম:</strong> {selectedStudent.guardianName}</p>
-                        <p><strong>ঠিকানা:</strong> {selectedStudent.address}</p>
-                    </div>
-                )}
+               <input
+                    type="text"
+                    placeholder="Name"
+                    value={selectedStudent?.name || ""}
+                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, name: e.target.value }))}
+                    className="input input-bordered w-full mb-4 p-2 border rounded"
+                  />
 
             </Container>
         </div>
