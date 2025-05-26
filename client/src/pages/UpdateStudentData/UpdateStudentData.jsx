@@ -65,21 +65,20 @@ const UpdateStudentData = () => {
                         ))}
                     </select>
                 </div>
-                {
-                    students.map((student) => (
-                        <div key={student.studentId} className="p-4 border rounded mb-4">
-                            <h2 className="text-xl font-bold">{student.name}</h2>
-                            <p><strong>Class:</strong> {student.class}</p>
-                            <p><strong>Roll:</strong> {student.roll}</p>
-                            <p><strong>Session:</strong> {student.session}</p>
-                            <p><strong>Group:</strong> {student.group}</p>
-                            <p><strong>Admission Date:</strong> {new Date(student.admissionDate).toLocaleDateString()}</p>
-                            <p><strong>Phone:</strong> {student.phone}</p>
-                            <p><strong>Guardian Name:</strong> {student.guardianName}</p>
-                            <p><strong>Address:</strong> {student.address}</p>
-                        </div>
-                    ))
-                }
+                {selectedStudent && (
+                    <div className="bg-white p-4 rounded shadow-md">
+                        <h2 className="text-xl font-semibold mb-4">ছাত্রের তথ্য</h2>
+                        <p><strong>নাম:</strong> {selectedStudent.name}</p>
+                        <p><strong>রোল:</strong> {selectedStudent.roll}</p>
+                        <p><strong>ক্লাস:</strong> {selectedStudent.class}</p>
+                        <p><strong>সেশন:</strong> {selectedStudent.session}</p>
+                        <p><strong>শাখা:</strong> {selectedStudent.group}</p>
+                        <p><strong>ফোন:</strong> {selectedStudent.phone}</p>
+                        <p><strong>অভিভাবকের নাম:</strong> {selectedStudent.guardianName}</p>
+                        <p><strong>ঠিকানা:</strong> {selectedStudent.address}</p>
+                    </div>
+                )}
+
             </Container>
         </div>
     );
