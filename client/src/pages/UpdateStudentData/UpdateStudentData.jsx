@@ -33,7 +33,27 @@ const UpdateStudentData = () => {
     });
 
 
+    const handleUpdateStudent = async () => {
+        if (!selectedStudent) {
+            alert("দয়া করে একটি ছাত্র নির্বাচন করুন।");
+            return;
+        }
+        try {
 
+
+            const response = await axiosSecure.put(`/students/${selectedStudent._id}`, selectedStudent);
+            if (response.data.modifiedCount > 0) {
+                alert("✅ ছাত্রের তথ্য সফলভাবে আপডেট হয়েছে!");
+                setSelectedStudent(null); // Clear selection after update
+            } else {
+                alert("❌ ছাত্রের তথ্য আপডেট করা যায়নি।");
+            }
+        } catch (error) {
+            console.error("❌ Error updating student:", error);
+            alert("❌ আপডেট করতে সমস্যা হয়েছে!");
+        }
+
+    }
     return (
         <div>
             <Container>
@@ -65,14 +85,30 @@ const UpdateStudentData = () => {
                         ))}
                     </select>
                 </div>
-               <input
+                <input
                     type="text"
                     placeholder="Name"
                     value={selectedStudent?.name || ""}
                     onChange={(e) => setSelectedStudent((prev) => ({ ...prev, name: e.target.value }))}
                     className="input input-bordered w-full mb-4 p-2 border rounded"
-                  />
+                />
 
+                <input
+                    type="text"
+                    placeholder="Roll"
+                    value={selectedStudent?.roll || ""}
+                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, roll: e.target.value }))}
+                    className="input input-bordered w-full mb-4 p-2 border rounded"
+                />
+                <input
+                    type="text"
+                    placeholder="Class"
+                    value={selectedStudent?.class || ""}
+                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, class: e.target.value }))}
+                    className="input input-bordered w-full mb-4 p-2 border rounded"
+                />
+
+                <button onClick={() => handleUpdateStudent}>Update</button>
             </Container>
         </div>
     );
