@@ -164,7 +164,32 @@ async function run() {
       const all = await studentsCollection.find().toArray();
       res.send(all);
     });
+    // get next student id for adding new student form auto fillup
+app.get("/students/next-id", async (req, res) => {
 
+  try {
+    const students = await studentsCollection.find({}, { projection: { studentId: 1 } }).toArray();
+
+    if (!students || students.length === 0) {
+      // 🟢 No students in DB yet, start with M01
+      return res.json({ nextId: 'M01' });
+    }
+
+    const numbers = students.map(s => {
+      const match = s.studentId.match(/\d+/);
+      return match ? parseInt(match[0], 10) : 0;
+    });
+
+    const max = numbers.length ? Math.max(...numbers) : 0;
+    const nextNumber = max + 1;
+    const nextId = 'M' + String(nextNumber).padStart(2, '0');
+
+    res.json({ nextId });
+  } catch (err) {
+    console.error('Error generating next studentId:', err);
+    res.status(500).json({ error: 'Something went wrong' });
+  }
+});
     // get students
     app.get("/students/:studentId", async (req, res) => {
       try {
@@ -208,43 +233,7 @@ async function run() {
       }
     });
 
-
-    // get next student id for adding new student form auto fillup
- app.get("/students/next-id", async (req, res) => {
-      try {
-        const result = await studentsCollection.aggregate([
-          {
-            $match: {
-              studentId: { $regex: "^[0-9]{3}$" } // only 3-digit numeric strings
-            }
-          },
-          {
-            $addFields: {
-              numericId: { $toInt: "$studentId" }
-            }
-          },
-          {
-            $sort: { numericId: -1 }
-          },
-          {
-            $limit: 1
-          }
-        ]).toArray();
-
-        if (!result.length) {
-          return res.json({ nextId: "001" }); // Start from 001 if nothing found
-        }
-
-        const lastIdNumber = result[0].numericId;
-        const nextId = String(lastIdNumber + 1).padStart(3, "0");
-
-        res.json({ nextId });
-
-      } catch (error) {
-        console.error("Error in /students/next-id:", error);
-        res.status(500).json({ error: "Server error" });
-      }
-    });
+  console.log("📥 GET /students/next-id hit"); // Add this line for confirmation
 
 
     // Upload results

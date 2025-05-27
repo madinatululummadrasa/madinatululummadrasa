@@ -16,14 +16,14 @@ const UpdateStudentData = () => {
     const [searchRoll, setSearchRoll] = useState("");
     const [selectedStudent, setSelectedStudent] = useState(null);
 
-
+console.log("selected Students:", selectedStudent);
 
     const [students, setStudents] = useState([]);
     useEffect(() => {
         AxiosSecure.get("/students")
             .then((res) => setStudents(res.data))
             .catch((err) => console.error("Error fetching students:", err));
-    }, []);
+    }, [AxiosSecure]);
 
 
     const filteredStudents = students.filter((student) => {
@@ -67,203 +67,156 @@ const UpdateStudentData = () => {
 
 
     return (
-        <div>
-            <Container>
+     <div className="py-8 px-4">
+  <Container>
+    <div className="mb-6">
+      <StudentFilterBar
+        selectedYear={selectedYear}
+        setSelectedYear={setSelectedYear}
+        selectedClass={selectedClass}
+        setSelectedClass={setSelectedClass}
+        searchRoll={searchRoll}
+        setSearchRoll={setSearchRoll}
+      />
+    </div>
 
-                <StudentFilterBar
-                    selectedYear={selectedYear}
-                    setSelectedYear={setSelectedYear}
-                    selectedClass={selectedClass}
-                    setSelectedClass={setSelectedClass}
-                    searchRoll={searchRoll}
-                    setSearchRoll={setSearchRoll}
-                />
+    <div className="bg-white rounded-xl shadow-md p-6 transition-all duration-300">
+      <h2 className="text-xl font-semibold mb-4 text-gray-800">🔍 ছাত্র নির্বাচন করুন</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+        <select
+          value={selectedStudent?._id || ""}
+          onChange={(e) => {
+            const student = students.find((s) => s._id === e.target.value);
+            setSelectedStudent(student);
+          }}
+          className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="">-- ছাত্র নির্বাচন করুন --</option>
+          {filteredStudents.map((student, index) => (
+            <option key={index} value={student._id}>
+              {student.name} (শ্রেণি: {student.class}||রোল: {student.roll} )
+            </option>
+          ))}
+        </select>
+      </div>
 
-                <div className="mb-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <label className="block mb-2 font-medium">একজন ছাত্র নির্বাচন করুন:</label>
-                    <select
-                        value={selectedStudent?._id || ""}
-                        onChange={(e) => {
-                            const student = students.find((s) => s._id === e.target.value);
-                            setSelectedStudent(student);
-                        }}
-                        className="w-full border px-3 py-2 rounded"
-                    >
-                        <option value="">-- ছাত্র নির্বাচন করুন --</option>
-                        {filteredStudents.map((student, index) => (
-                            <option key={index} value={student._id}>
-                                {student.name} (রোল: {student.roll}, ক্লাস: {student.class})
-                            </option>
-                        ))}
-                    </select>
-                </div>
-                <input
-                    type="text"
-                    placeholder="Name"
-                    value={selectedStudent?.name || ""}
-                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, name: e.target.value }))}
-                    className="input input-bordered w-1/3 mb-4 p-2 border rounded"
-                />
+      <h2 className="text-lg font-medium mb-3 text-gray-700">📝 ছাত্র তথ্য</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {[
+          { label: "Name", key: "name" },
+          { label: "Roll", key: "roll" },
+          { label: "Class", key: "class", type: "select", options: ["শিশু", "প্রথম", "দ্বিতীয়", "তৃতীয়", "চতুর্থ", "পঞ্চম", "হেফজ"] },
+          { label: "Session", key: "session" },
+          { label: "Group", key: "group" },
+          { label: "Admission Date", key: "admissionDate", type: "date" },
+          { label: "Phone", key: "phone" },
+          { label: "Guardian Name", key: "guardianName" },
+          { label: "Address", key: "address" }
+        ].map(({ label, key, type, options }) => (
+          <div key={key}>
+            <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>
+            {type === "select" ? (
+              <select
+                value={selectedStudent?.[key] || ""}
+                onChange={(e) => setSelectedStudent((prev) => ({ ...prev, [key]: e.target.value }))}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">-- {label} --</option>
+                {options.map((option, i) => (
+                  <option key={i} value={option}>{option}</option>
+                ))}
+              </select>
+            ) : (
+              <input
+                type={type || "text"}
+                value={selectedStudent?.[key] || ""}
+                onChange={(e) => setSelectedStudent((prev) => ({ ...prev, [key]: e.target.value }))}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+            )}
+          </div>
+        ))}
+      </div>
 
-                <input
-                    type="text"
-                    placeholder="Roll"
-                    value={selectedStudent?.roll || ""}
-                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, roll: e.target.value }))}
-                    className="input input-bordered w-1/3 mb-4 p-2 border rounded"
-                />
-                
+      <h2 className="text-lg font-medium mt-6 mb-3 text-gray-700">📎 ডকুমেন্ট আপলোড</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+        {[
+          { label: "Profile Image", key: "profileImage", accept: "image/*" },
+          { label: "Admission PDF", key: "admissionPdf", accept: "application/pdf" },
+          { label: "Birth Certificate PDF", key: "birthCertificatePdf", accept: "application/pdf" }
+        ].map(({ label, key, accept }) => (
+          <div key={key}>
+            <label className="block text-sm font-medium text-gray-600 mb-1">{label}</label>
+            <input
+              type="file"
+              accept={accept}
+              onChange={(e) => {
+                const file = e.target.files[0];
+                if (file) {
+                  const reader = new FileReader();
+                  reader.onloadend = () => {
+                    setSelectedStudent((prev) => ({ ...prev, [key]: reader.result }));
+                  };
+                  reader.readAsDataURL(file);
+                }
+              }}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+        ))}
+      </div>
 
-                <select
-                    placeholder="Class"
-                    value={selectedStudent?.class || ""}
-                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, class: e.target.value }))}
-                   className="input input-bordered w-1/3 mb-4 p-2 border rounded">
-                    <option value="">ক্লাস নির্বাচন করুন</option>
-                    <option value="শিশু">শিশু</option>
-                    <option value="প্রথম"> প্রথম</option>
-                    <option value="দ্বিতীয়"> দ্বিতীয়</option>
-                    <option value="তৃতীয়"> তৃতীয় </option>
-                    <option value="চতুর্থ"> চতুর্থ </option>
-                    <option value="পঞ্চম"> পঞ্চম</option>
-                    <option value="হেফজ"> হেফজ</option>
-                </select>
+      <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {selectedStudent?.profileImage && (
+          <div>
+            <label className="block text-sm font-medium mb-1">Current Profile Image:</label>
+            <img
+              src={selectedStudent.profileImage}
+              alt="Profile"
+              className="w-32 h-32 object-cover rounded border"
+            />
+          </div>
+        )}
+        {selectedStudent?.admissionPdf && (
+          <div>
+            <label className="block text-sm font-medium mb-1">Admission PDF:</label>
+            <a
+              href={selectedStudent.admissionPdf}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
+              View Admission PDF
+            </a>
+          </div>
+        )}
+        {selectedStudent?.birthCertificatePdf && (
+          <div>
+            <label className="block text-sm font-medium mb-1">Birth Certificate:</label>
+            <a
+              href={selectedStudent.birthCertificatePdf}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 underline"
+            >
+              View Birth Certificate
+            </a>
+          </div>
+        )}
+      </div>
 
+      <div className="mt-8 text-right">
+        <button
+          onClick={handleUpdateStudent}
+          className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition duration-200"
+        >
+          ✅ তথ্য আপডেট করুন
+        </button>
+      </div>
+    </div>
+  </Container>
+</div>
 
-
-                <input
-                    type="text"
-                    placeholder="Session"
-                    value={selectedStudent?.session || ""}
-                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, session: e.target.value }))}
-                    className="input input-bordered w-1/3 mb-4 p-2 border rounded"
-                />
-                <input
-                    type="text"
-                    placeholder="Group"
-                    value={selectedStudent?.group || ""}
-                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, group: e.target.value }))}
-                    className="input input-bordered w-1/3 mb-4 p-2 border rounded"
-                />
-                <input
-                    type="date"
-                    placeholder="Admission Date"
-                    value={selectedStudent?.admissionDate || ""}
-                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, admissionDate: e.target.value }))}
-                    className="input input-bordered w-1/3 mb-4 p-2 border rounded"
-                />
-                <input
-                    type="text"
-                    placeholder="Phone"
-                    value={selectedStudent?.phone || ""}
-                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, phone: e.target.value }))}
-                    className="input input-bordered w-1/3 mb-4 p-2 border rounded"
-                />
-                <input
-                    type="text"
-                    placeholder="Guardian Name"
-                    value={selectedStudent?.guardianName || ""}
-                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, guardianName: e.target.value }))}
-                    className="input input-bordered w-1/3 mb-4 p-2 border rounded"
-                />
-                <input
-                    type="text"
-                    placeholder="Address"
-                    value={selectedStudent?.address || ""}
-                    onChange={(e) => setSelectedStudent((prev) => ({ ...prev, address: e.target.value }))}
-                    className="input input-bordered w-1/3 mb-4 p-2 border rounded"
-                />
-               <h2>Image</h2>
-                <input
-                    type="file"
-                    accept="image/*"
-                    placeholder='fgjh'
-                    onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                                setSelectedStudent((prev) => ({ ...prev, profileImage: reader.result }));
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    }}
-                    className="input input-bordered w-1/3 mb-4 p-2 border rounded"
-                />
-                <h1>Admission Pdf</h1>
-                <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                                setSelectedStudent((prev) => ({ ...prev, admissionPdf: reader.result }));
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    }}
-                    className="input input-bordered w-1/3 mb-4 p-2 border rounded"
-                />
-                <h1>Birth Certificate</h1>
-                <input
-                    type="file"
-                    accept="application/pdf"
-                    onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                            const reader = new FileReader();
-                            reader.onloadend = () => {
-                                setSelectedStudent((prev) => ({ ...prev, birthCertificatePdf: reader.result }));
-                            };
-                            reader.readAsDataURL(file);
-                        }
-                    }}
-                    className="input input-bordered w-1/3 mb-4 p-2 border rounded"
-                />
-                <div className="mb-4">
-                    <label className="block mb-2 font-medium">Profile Image:</label>
-                    {selectedStudent?.profileImage && (
-                        <img
-                            src={selectedStudent.profileImage}
-                            alt="Profile"
-                            className="w-32 h-32 object-cover rounded mb-2"
-                        />
-                    )}
-                </div>
-                <div className="mb-4">
-                    <label className="block mb-2 font-medium">Admission PDF:</label>
-                    {selectedStudent?.admissionPdf && (
-                        <a
-                            href={selectedStudent.admissionPdf}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 underline"
-                        >
-                            View Admission PDF
-                        </a>
-                    )}
-                </div>
-                <div className="mb-4">
-                    <label className="block mb-2 font-medium">Birth Certificate PDF:</label>
-                    {selectedStudent?.birthCertificatePdf && (
-                        <a
-                            href={selectedStudent.birthCertificatePdf}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-500 underline"
-                        >
-                            View Birth Certificate PDF
-                        </a>
-                    )}
-                </div>
-
-
-
-                <button onClick={() => handleUpdateStudent()}>Update</button>
-            </Container>
-        </div>
     );
 };
 

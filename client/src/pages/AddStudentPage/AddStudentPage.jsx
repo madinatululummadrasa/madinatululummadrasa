@@ -1,10 +1,15 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { imageUpload } from "../../assets/utility/index"; // make sure this path is correct
+import axios from "axios";
 
 const AddStudentPage = () => {
   const AxiosSecure = useAxiosSecure();
-
+useEffect(() => {
+  axios.get('http://localhost:8000/students/next-id')
+    .then(res => console.log(res.data))
+    .catch(err => console.error(err));
+}, []);
   const [formData, setFormData] = useState({
     studentId: "",
     name: "",
@@ -15,6 +20,7 @@ const AddStudentPage = () => {
     admissionDate: "",
     profileImage: null,
     phone: "",
+    gender: "",
     guardianName: "",
     address: "",
     admissionPdf: null,
@@ -45,8 +51,8 @@ const AddStudentPage = () => {
       const profileImageUrl = formData.profileImage ? await imageUpload(formData.profileImage) : "";
       const admissionPdfRaw = formData.admissionPdf ? await uploadFileToDrive(formData.admissionPdf) : "";
       const birthCertificatePdfRaw = formData.birthCertificatePdf ? await uploadFileToDrive(formData.birthCertificatePdf) : "";
-  
-      
+
+
       const documents = [];
 
       if (birthCertificatePdfRaw) {
@@ -56,7 +62,7 @@ const AddStudentPage = () => {
           url: birthCertificatePdfRaw,
         });
       }
-      
+
       if (admissionPdfRaw) {
         documents.push({
           name: "Admission Form",
@@ -75,6 +81,7 @@ const AddStudentPage = () => {
         group: formData.group,
         admissionDate: formData.admissionDate,
         phone: formData.phone,
+        gender: formData.gender,
         guardianName: formData.guardianName,
         address: formData.address,
         profileImageUrl,
@@ -94,6 +101,7 @@ const AddStudentPage = () => {
           admissionDate: "",
           profileImage: null,
           phone: "",
+          gender: "",
           guardianName: "",
           address: "",
           admissionPdf: null,
@@ -113,18 +121,27 @@ const AddStudentPage = () => {
       <h1 className="text-2xl font-semibold text-center mb-6">নতুন ছাত্র যুক্ত করুন</h1>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input type="text" name="studentId" placeholder="আইডি" value={formData.studentId} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
+       
         <input type="text" name="name" placeholder="নাম" value={formData.name} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
+
+        <select name="gender" value={formData.gender} onChange={handleChange} className="input input-bordered w-full p-2 border rounded">
+          <option value="">লিঙ্গ নির্বাচন করুন</option>
+          <option value="ছাত্র">ছাত্র</option>
+          <option value="ছাত্রী">ছাত্রী</option>
+        </select>
+
 
         <select name="class" value={formData.class} onChange={handleChange} className="input input-bordered w-full p-2 border rounded">
           <option value="">ক্লাস নির্বাচন করুন</option>
           <option value="শিশু">শিশু</option>
           <option value="প্রথম"> প্রথম</option>
-        <option value="দ্বিতীয়"> দ্বিতীয়</option>
-        <option value="তৃতীয়"> তৃতীয় </option>
-        <option value="চতুর্থ"> চতুর্থ </option>
-        <option value="পঞ্চম"> পঞ্চম</option>
-        <option value="হেফজ"> হেফজ</option>
+          <option value="দ্বিতীয়"> দ্বিতীয়</option>
+          <option value="তৃতীয়"> তৃতীয় </option>
+          <option value="চতুর্থ"> চতুর্থ </option>
+          <option value="পঞ্চম"> পঞ্চম</option>
+          <option value="হেফজ"> হেফজ</option>
         </select>
+
 
         <input type="number" name="roll" placeholder="রোল নাম্বার" value={formData.roll} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
 
