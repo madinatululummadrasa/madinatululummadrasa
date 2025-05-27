@@ -4,12 +4,22 @@ import { imageUpload } from "../../assets/utility/index"; // make sure this path
 import axios from "axios";
 
 const AddStudentPage = () => {
+  const [nextId, setNextId] = useState("");
+
+
   const AxiosSecure = useAxiosSecure();
-useEffect(() => {
-  axios.get('http://localhost:8000/students/next-id')
-    .then(res => console.log(res.data))
-    .catch(err => console.error(err));
-}, []);
+  useEffect(() => {
+    axios.get('http://localhost:8000/students/next-id')
+      .then(res => setNextId(res.data.nextId))
+      .catch(err => console.error(err));
+  }, []);
+
+  // // Initialize form data with nextId
+  // useEffect(() => { 
+  //   setFormData((prev) => ({ ...prev, studentId: nextId }));
+  // }, [nextId]);
+
+
   const [formData, setFormData] = useState({
     studentId: "",
     name: "",
@@ -120,8 +130,8 @@ useEffect(() => {
     <div className="max-w-4xl mx-auto px-4 py-6">
       <h1 className="text-2xl font-semibold text-center mb-6">নতুন ছাত্র যুক্ত করুন</h1>
       <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input type="text" name="studentId" placeholder="আইডি" value={formData.studentId} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
-       
+        <input type="text" name="studentId" placeholder="আইডি" value={nextId} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
+
         <input type="text" name="name" placeholder="নাম" value={formData.name} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
 
         <select name="gender" value={formData.gender} onChange={handleChange} className="input input-bordered w-full p-2 border rounded">
