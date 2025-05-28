@@ -3,7 +3,7 @@ import Container from "../../components/Shared/Container";
 import StudentCard from "./components/StudentCard";
 import StudentFilterBar from "./components/StudentFilterBar";
 import axios from "axios";
-
+import defaultImage from "../../assets/images/defaultImg.jpg"; // Default image for profile
 const StudentListPage = () => {
   const [students, setStudents] = useState([]);
   console.log(students)
@@ -51,7 +51,7 @@ const StudentListPage = () => {
             roll={student.roll}
             studentId={student.studentId}
             year={student.admissionDate}
-            profileImage={student.profileImageUrl}
+            profileImage={student.profileImageUrl || defaultImage} // Use default image if not available
           />
         ))}
         {filteredStudents.length === 0 && (

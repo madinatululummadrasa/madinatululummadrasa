@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { imageUpload } from "../../assets/utility/index"; // make sure this path is correct
@@ -5,37 +6,39 @@ import axios from "axios";
 
 const AddStudentPage = () => {
   const [nextId, setNextId] = useState("");
-
-
   const AxiosSecure = useAxiosSecure();
-  useEffect(() => {
-    axios.get('http://localhost:8000/students/next-id')
-      .then(res => setNextId(res.data.nextId))
-      .catch(err => console.error(err));
-  }, []);
-
-  // // Initialize form data with nextId
-  // useEffect(() => { 
-  //   setFormData((prev) => ({ ...prev, studentId: nextId }));
-  // }, [nextId]);
-
 
   const [formData, setFormData] = useState({
-    studentId: "",
+    studentId: "", // Will be auto-generated
     name: "",
     roll: "",
     class: "",
     session: "",
     group: "",
     admissionDate: "",
-    profileImage: null,
+    profileImage: null, // File object for image
     phone: "",
     gender: "",
     guardianName: "",
     address: "",
-    admissionPdf: null,
-    birthCertificatePdf: null,
+    admissionPdf: null, // File object for PDF
+    birthCertificatePdf: null, // File object for PDF
   });
+
+  // Fetch next available student ID on component mount
+  useEffect(() => {
+    axios.get('http://localhost:8000/students/next-id')
+      .then(res => {
+        const generatedId = res.data.nextId;
+        setNextId(generatedId);
+        // Set formData.studentId only once when nextId is fetched
+        setFormData((prev) => ({ ...prev, studentId: generatedId }));
+      })
+      .catch(err => {
+        console.error('Error fetching next student ID:', err);
+        // Optionally, handle error by disabling form or showing message
+      });
+  }, []); // Empty dependency array means this runs only once on mount
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,39 +51,56 @@ const AddStudentPage = () => {
   };
 
   const uploadFileToDrive = async (file) => {
-    const fileForm = new FormData();
-    fileForm.append("file", file);
-    const { data } = await AxiosSecure.post("/upload-google-drive", fileForm);
-    return data.pdfUrl;
+    if (!file) return ""; // Handle cases where file is null
+    try {
+      const fileForm = new FormData();
+      fileForm.append("file", file);
+      const { data } = await AxiosSecure.post("/upload-google-drive", fileForm);
+      return data.pdfUrl; // Assuming your backend returns { pdfUrl: "..." }
+    } catch (error) {
+      console.error("Error uploading file to Google Drive:", error);
+      // Handle file upload error gracefully (e.g., show user a message)
+      return "";
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Basic validation before submission
+    if (!formData.name || !formData.class || !formData.roll || !formData.session || !formData.studentId) {
+      alert("অনুগ্রহ করে নাম, ক্লাস, রোল, সেশন এবং আইডি পূরণ করুন।");
+      return;
+    }
+
     try {
-      const profileImageUrl = formData.profileImage ? await imageUpload(formData.profileImage) : "";
-      const admissionPdfRaw = formData.admissionPdf ? await uploadFileToDrive(formData.admissionPdf) : "";
-      const birthCertificatePdfRaw = formData.birthCertificatePdf ? await uploadFileToDrive(formData.birthCertificatePdf) : "";
+      // Upload image and PDFs
+      const profileImageUrl = formData.profileImage
+        ? await imageUpload(formData.profileImage)
+        : "";
+      const admissionPdfUrl = formData.admissionPdf
+        ? await uploadFileToDrive(formData.admissionPdf)
+        : "";
+      const birthCertificatePdfUrl = formData.birthCertificatePdf
+        ? await uploadFileToDrive(formData.birthCertificatePdf)
+        : "";
 
-
+      // Construct documents array
       const documents = [];
-
-      if (birthCertificatePdfRaw) {
+      if (birthCertificatePdfUrl) {
         documents.push({
           name: "Birth Certificate",
           type: "pdf",
-          url: birthCertificatePdfRaw,
+          url: birthCertificatePdfUrl,
         });
       }
-
-      if (admissionPdfRaw) {
+      if (admissionPdfUrl) {
         documents.push({
           name: "Admission Form",
           type: "pdf",
-          url: admissionPdfRaw,
+          url: admissionPdfUrl,
         });
       }
-
 
       const newStudent = {
         studentId: formData.studentId,
@@ -94,15 +114,17 @@ const AddStudentPage = () => {
         gender: formData.gender,
         guardianName: formData.guardianName,
         address: formData.address,
-        profileImageUrl,
-        documents
+        profileImageUrl, // Make sure your backend schema expects this name
+        documents,       // Array of documents
       };
 
       const res = await AxiosSecure.post("/students", newStudent);
+
       if (res.data.insertedId || res.data.acknowledged) {
         alert("✅ ছাত্র যুক্ত হয়েছে!");
+        // Reset form data and re-fetch next ID for the new student
         setFormData({
-          studentId: "",
+          studentId: "", // Will be updated by nextId fetch
           name: "",
           roll: "",
           class: "",
@@ -117,6 +139,10 @@ const AddStudentPage = () => {
           admissionPdf: null,
           birthCertificatePdf: null,
         });
+        // Re-fetch next ID to update the studentId field for the next entry
+        axios.get('http://localhost:8000/students/next-id')
+          .then(res => setNextId(res.data.nextId))
+          .catch(err => console.error(err));
       } else {
         alert("❌ ছাত্র যুক্ত করা যায়নি।");
       }
@@ -127,75 +153,253 @@ const AddStudentPage = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-6">
-      <h1 className="text-2xl font-semibold text-center mb-6">নতুন ছাত্র যুক্ত করুন</h1>
-      <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <input type="text" name="studentId" placeholder="আইডি" value={nextId} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
+    <div className="min-h-screen bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg transition-all duration-300 ease-in-out hover:shadow-xl">
+        <h1 className="text-3xl font-extrabold text-gray-900 text-center mb-8">
+          নতুন ছাত্র যুক্ত করুন
+        </h1>
+        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-        <input type="text" name="name" placeholder="নাম" value={formData.name} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
+          {/* Student ID (Auto-generated & Readonly) */}
+          <div>
+            <label htmlFor="studentId" className="block text-sm font-medium text-gray-700 mb-1">শিক্ষার্থী আইডি</label>
+            <input
+              type="text"
+              id="studentId"
+              name="studentId"
+              placeholder="আইডি স্বয়ংক্রিয়ভাবে তৈরি হবে"
+              value={formData.studentId}
+              readOnly // Make it read-only
+              className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3 focus:ring-indigo-500 focus:border-indigo-500 bg-gray-50 cursor-not-allowed"
+            />
+          </div>
 
-        <select name="gender" value={formData.gender} onChange={handleChange} className="input input-bordered w-full p-2 border rounded">
-          <option value="">লিঙ্গ নির্বাচন করুন</option>
-          <option value="ছাত্র">ছাত্র</option>
-          <option value="ছাত্রী">ছাত্রী</option>
-        </select>
+          {/* Name */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">নাম</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="শিক্ষার্থীর সম্পূর্ণ নাম"
+              value={formData.name}
+              onChange={handleChange}
+              className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+              required // Add required attribute for basic HTML validation
+            />
+          </div>
 
+          {/* Gender */}
+          <div>
+            <label htmlFor="gender" className="block text-sm font-medium text-gray-700 mb-1">লিঙ্গ</label>
+            <select
+              id="gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm transition-all duration-200 ease-in-out"
+              required
+            >
+              <option value="">লিঙ্গ নির্বাচন করুন</option>
+              <option value="ছাত্র">ছাত্র</option>
+              <option value="ছাত্রী">ছাত্রী</option>
+            </select>
+          </div>
 
-        <select name="class" value={formData.class} onChange={handleChange} className="input input-bordered w-full p-2 border rounded">
-          <option value="">ক্লাস নির্বাচন করুন</option>
-          <option value="শিশু">শিশু</option>
-          <option value="প্রথম"> প্রথম</option>
-          <option value="দ্বিতীয়"> দ্বিতীয়</option>
-          <option value="তৃতীয়"> তৃতীয় </option>
-          <option value="চতুর্থ"> চতুর্থ </option>
-          <option value="পঞ্চম"> পঞ্চম</option>
-          <option value="হেফজ"> হেফজ</option>
-        </select>
+          {/* Class */}
+          <div>
+            <label htmlFor="class" className="block text-sm font-medium text-gray-700 mb-1">ক্লাস</label>
+            <select
+              id="class"
+              name="class"
+              value={formData.class}
+              onChange={handleChange}
+              className="mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm transition-all duration-200 ease-in-out"
+              required
+            >
+              <option value="">ক্লাস নির্বাচন করুন</option>
+              <option value="শিশু">শিশু</option>
+              <option value="প্রথম">প্রথম</option>
+              <option value="দ্বিতীয়">দ্বিতীয়</option>
+              <option value="তৃতীয়">তৃতীয়</option>
+              <option value="চতুর্থ">চতুর্থ</option>
+              <option value="পঞ্চম">পঞ্চম</option>
+              <option value="হেফজ">হেফজ</option>
+            </select>
+          </div>
 
+          {/* Roll Number */}
+          <div>
+            <label htmlFor="roll" className="block text-sm font-medium text-gray-700 mb-1">রোল নাম্বার</label>
+            <input
+              type="number"
+              id="roll"
+              name="roll"
+              placeholder="রোল নাম্বার"
+              value={formData.roll}
+              onChange={handleChange}
+              className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+              required
+            />
+          </div>
 
-        <input type="number" name="roll" placeholder="রোল নাম্বার" value={formData.roll} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
+          {/* Session */}
+          <div>
+            <label htmlFor="session" className="block text-sm font-medium text-gray-700 mb-1">সেশন</label>
+            <select
+              id="session"
+              name="session"
+              value={formData.session}
+              onChange={handleChange}
+              className="mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm transition-all duration-200 ease-in-out"
+              required
+            >
+              <option value="">সেশন নির্বাচন করুন</option>
+              {/* Generate dynamic years up to current year + a few future years */}
+              {Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i - 1).map((year) => (
+                <option key={year} value={year}>{year}</option>
+              ))}
+            </select>
+          </div>
 
-        <select name="session" value={formData.session} onChange={handleChange} className="input input-bordered w-full p-2 border rounded">
-          <option value="">সেশন নির্বাচন করুন</option>
-          {[2025, 2026, 2027, 2028, 2029, 2030].map((year) => (
-            <option key={year} value={year}>{year}</option>
-          ))}
-        </select>
+          {/* Group */}
+          <div>
+            <label htmlFor="group" className="block text-sm font-medium text-gray-700 mb-1">শাখা</label>
+            <select
+              id="group"
+              name="group"
+              value={formData.group}
+              onChange={handleChange}
+              className="mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm transition-all duration-200 ease-in-out"
+            >
+              <option value="">শাখা নির্বাচন করুন</option>
+              <option value="নূরানি">নূরানি</option>
+              <option value="কিতাব">কিতাব</option>
+              <option value="হেফজ">হেফজ</option>
+            </select>
+          </div>
 
-        <select name="group" value={formData.group} onChange={handleChange} className="input input-bordered w-full p-2 border rounded">
-          <option value="">শাখা নির্বাচন করুন</option>
-          <option value="নূরানি">নূরানি</option>
-          <option value="কিতাব">কিতাব</option>
-          <option value="হেফজ">হেফজ</option>
-        </select>
+          {/* Admission Date */}
+          <div>
+            <label htmlFor="admissionDate" className="block text-sm font-medium text-gray-700 mb-1">ভর্তির তারিখ</label>
+            <input
+              type="date"
+              id="admissionDate"
+              name="admissionDate"
+              value={formData.admissionDate}
+              onChange={handleChange}
+              className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+            />
+          </div>
 
-        <input type="date" name="admissionDate" value={formData.admissionDate} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
+          {/* Phone */}
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">ফোন নম্বর</label>
+            <input
+              type="text"
+              id="phone"
+              name="phone"
+              placeholder="ফোন নম্বর"
+              value={formData.phone}
+              onChange={handleChange}
+              className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+            />
+          </div>
 
-        <div className="md:col-span-2">
-          <label className="block mb-1 text-sm">প্রোফাইল ছবি</label>
-          <input type="file" name="profileImage" accept="image/*" onChange={handleFileChange} className="input input-bordered w-full p-2 border rounded" />
-        </div>
+          {/* Guardian Name */}
+          <div>
+            <label htmlFor="guardianName" className="block text-sm font-medium text-gray-700 mb-1">অভিভাবকের নাম</label>
+            <input
+              type="text"
+              id="guardianName"
+              name="guardianName"
+              placeholder="অভিভাবকের নাম"
+              value={formData.guardianName}
+              onChange={handleChange}
+              className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+            />
+          </div>
 
-        <input type="text" name="phone" placeholder="ফোন নম্বর" value={formData.phone} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
-        <input type="text" name="guardianName" placeholder="অভিভাবকের নাম" value={formData.guardianName} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
-        <input type="text" name="address" placeholder="ঠিকানা" value={formData.address} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
+          {/* Address */}
+          <div className="md:col-span-2"> {/* Make address span full width on medium screens */}
+            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">ঠিকানা</label>
+            <textarea
+              id="address"
+              name="address"
+              placeholder="পূর্ণ ঠিকানা"
+              value={formData.address}
+              onChange={handleChange}
+              rows="3"
+              className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out resize-y"
+            ></textarea>
+          </div>
 
-        <div className="md:col-span-2">
-          <label className="block mb-1 text-sm">ভর্তি ফর্ম (PDF)</label>
-          <input type="file" name="admissionPdf" accept="application/pdf" onChange={handleFileChange} className="input input-bordered w-full p-2 border rounded" />
-        </div>
+          {/* Profile Image Upload */}
+          <div>
+            <label htmlFor="profileImage" className="block text-sm font-medium text-gray-700 mb-1">প্রোফাইল ছবি</label>
+            <input
+              type="file"
+              id="profileImage"
+              name="profileImage"
+              accept="image/*"
+              alt="Profile Image"
+              onChange={handleFileChange}
+              className="mt-1 block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-indigo-50 file:text-indigo-700
+                hover:file:bg-indigo-100 transition duration-150 ease-in-out"
+            />
+          </div>
 
-        <div className="md:col-span-2">
-          <label className="block mb-1 text-sm">জন্ম সনদ (PDF)</label>
-          <input type="file" name="birthCertificatePdf" accept="application/pdf" onChange={handleFileChange} className="input input-bordered w-full p-2 border rounded" />
-        </div>
+          {/* Admission PDF Upload */}
+          <div>
+            <label htmlFor="admissionPdf" className="block text-sm font-medium text-gray-700 mb-1">ভর্তি ফর্ম (PDF)</label>
+            <input
+              type="file"
+              id="admissionPdf"
+              name="admissionPdf"
+              accept="application/pdf"
+              onChange={handleFileChange}
+              className="mt-1 block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-indigo-50 file:text-indigo-700
+                hover:file:bg-indigo-100 transition duration-150 ease-in-out"
+            />
+          </div>
 
-        <div className="md:col-span-2 text-center mt-4">
-          <button type="submit" className="w-full bg-green-600 text-white py-2 rounded-md hover:bg-green-700 transition">
-            সাবমিট করুন
-          </button>
-        </div>
-      </form>
+          {/* Birth Certificate PDF Upload */}
+          <div>
+            <label htmlFor="birthCertificatePdf" className="block text-sm font-medium text-gray-700 mb-1">জন্ম সনদ (PDF)</label>
+            <input
+              type="file"
+              id="birthCertificatePdf"
+              name="birthCertificatePdf"
+              accept="application/pdf"
+              onChange={handleFileChange}
+              className="mt-1 block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-full file:border-0
+                file:text-sm file:font-semibold
+                file:bg-indigo-50 file:text-indigo-700
+                hover:file:bg-indigo-100 transition duration-150 ease-in-out"
+            />
+          </div>
+
+          {/* Submit Button */}
+          <div className="md:col-span-2 text-center mt-6">
+            <button
+              type="submit"
+              className="w-full sm:w-auto px-8 py-3 bg-green-600 text-white font-semibold rounded-md shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition duration-300 ease-in-out transform hover:scale-105"
+            >
+              সাবমিট করুন
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

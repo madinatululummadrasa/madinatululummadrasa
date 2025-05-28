@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from 'react';
 import Container from '../../components/Shared/Container';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
