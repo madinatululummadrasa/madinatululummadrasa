@@ -25,8 +25,8 @@ const StudentDetailsPage = () => {
                 // Results
                 // Ensure results is an object before Object.keys
                 const resultYears = studentData?.results && typeof studentData.results === 'object'
-                                    ? Object.keys(studentData.results).sort((a,b) => b - a) // Sort years descending
-                                    : [];
+                    ? Object.keys(studentData.results).sort((a, b) => b - a) // Sort years descending
+                    : [];
                 if (resultYears.length) {
                     setAvailableYears(resultYears);
                     setSelectedYear(resultYears[0]); // Select the most recent year
@@ -35,8 +35,8 @@ const StudentDetailsPage = () => {
                 // Attendance
                 // Ensure attendence is an object before Object.keys
                 const attendanceYears = studentData?.attendence && typeof studentData.attendence === 'object'
-                                        ? Object.keys(studentData.attendence).sort((a, b) => b - a) // Sort years descending
-                                        : [];
+                    ? Object.keys(studentData.attendence).sort((a, b) => b - a) // Sort years descending
+                    : [];
                 if (attendanceYears.length) {
                     setAvailableAttendanceYears(attendanceYears);
                     setSelectedAttendanceYear(attendanceYears[0]); // Select the most recent year
@@ -249,8 +249,8 @@ const StudentDetailsPage = () => {
                                         .map(([termName, resultData], index) => {
                                             // Ensure resultData is an object for subjects
                                             const subjects = typeof resultData === 'object' && resultData !== null
-                                                            ? resultData
-                                                            : {};
+                                                ? resultData
+                                                : {};
                                             const subjectEntries = Object.entries(subjects);
                                             const total = subjectEntries.reduce((sum, [, mark]) => sum + Number(mark || 0), 0);
                                             const avg = subjectEntries.length ? total / subjectEntries.length : 0;
