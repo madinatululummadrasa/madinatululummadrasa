@@ -55,7 +55,7 @@ const StudentDetailsPage = () => {
 
     const {
         name, class: studentClass, roll, studentId: sid, session, group, admissionDate,
-        profileImageUrl, guardianName, address, phone, attendence, documents, results,
+        profileImageUrl, guardianName, FathersName, mothersName, address, phone, attendence, documents, results,
     } = student;
 
     return (
@@ -74,7 +74,11 @@ const StudentDetailsPage = () => {
                     <h1 className="mt-6 text-3xl sm:text-4xl font-extrabold tracking-tight">
                         {name || "নাম দেওয়া হয়নি"}
                     </h1>
-                    <p className="text-blue-200 text-lg sm:text-xl mt-2">শিক্ষার্থীর প্রোফাইল</p>
+                   <div className="flex  items-center gap-6 ">
+                     <p className="text-blue-200 font-semibold text-lg sm:text-xl mt-2">আইডি : {sid}</p>
+                    <p className="text-blue-200 text-lg sm:text-xl mt-2">শ্রেণি: {studentClass}</p>
+                    <p className="text-blue-200 text-lg sm:text-xl mt-2">রোল: {roll}</p>
+                   </div>
                 </div>
 
                 {/* Main Content Area */}
@@ -83,22 +87,25 @@ const StudentDetailsPage = () => {
                     {/* Academic Info */}
                     <SectionTitle title="একাডেমিক তথ্য" icon="📚" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-gray-800">
-                        <InfoItem label="আইডি" value={sid} />
-                        <InfoItem label="শ্রেণি" value={studentClass} />
-                        <InfoItem label="রোল" value={roll} />
-                        <InfoItem label="সেশন" value={session} />
-                        <InfoItem label="গ্রুপ" value={group} />
-                        <InfoItem label="ভর্তির তারিখ" value={admissionDate} />
+                        <InfoItemRow label="আইডি" value={sid} />
+                        <InfoItemRow label="শ্রেণি" value={studentClass} />
+                        <InfoItemRow label="রোল" value={roll} />
+                        <InfoItemRow label="সেশন" value={session} />
+                        <InfoItemRow label="গ্রুপ" value={group} />
+                        <InfoItemRow label="ভর্তির তারিখ" value={admissionDate} />
                     </div>
 
                     {/* Contact Info */}
                     <SectionTitle title="যোগাযোগ" icon="📞" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 text-gray-800">
-                        <InfoItem label="অভিভাবক" value={guardianName} />
-                        <InfoItem label="ফোন" value={phone} />
-                        <InfoItem label="ঠিকানা" value={address} />
-                    </div>
 
+                        <InfoItem label="পিতার নাম" value={FathersName} />
+                        <InfoItem label="মাতার নাম" value={mothersName} />
+                        <InfoItem label="অভিভাবক" value={guardianName} />
+                        <InfoItem label="অভিভাবকের ফোন নম্বর" value={phone} />
+
+                    </div>
+                    <InfoItem label="ঠিকানা" value={address} />
                     {/* Attendance Section */}
                     <SectionTitle title="উপস্থিতি" icon="🗓️" />
                     <div className="bg-gray-50 p-6 rounded-lg border border-gray-200 shadow-inner">
@@ -326,6 +333,12 @@ export default StudentDetailsPage;
 // Helper components for better readability and reusability
 const InfoItem = ({ label, value }) => (
     <div className="bg-blue-50 p-4 rounded-lg shadow-sm border border-blue-100 flex flex-col items-center text-center transition-transform duration-200 ease-in-out hover:scale-105">
+        <p className="font-semibold text-blue-700 text-sm mb-1">{label}</p>
+        <p className="text-gray-800 text-lg font-medium">{value || "তথ্য নেই"}</p>
+    </div>
+);
+const InfoItemRow = ({ label, value }) => (
+    <div className="bg-blue-50 p-4 rounded-lg shadow-sm border border-blue-100 flex flex-row items-center justify-center text-center transition-transform duration-200 ease-in-out hover:scale-105">
         <p className="font-semibold text-blue-700 text-sm mb-1">{label}</p>
         <p className="text-gray-800 text-lg font-medium">{value || "তথ্য নেই"}</p>
     </div>
