@@ -296,6 +296,7 @@ app.post('/upload-results', async (req, res) => {
 app.put('/students/:studentId', async (req, res) => {
   const { studentId } = req.params;
   const updateData = req.body;
+  console.log("Update Data:", updateData); // Log the incoming update data for debugging
 
   const finalUpdateData = {};
   if (updateData.name !== undefined) {
@@ -328,6 +329,10 @@ app.put('/students/:studentId', async (req, res) => {
   if (updateData.address !== undefined) {
     finalUpdateData.address = updateData.address;
    }
+
+   if (updateData.studentId !== undefined) {
+    finalUpdateData.studentId = updateData.studentId;   
+  }
   // if (updateData.profileImageUrl !== undefined) {
   //   finalUpdateData.profileImageUrl = updateData.profileImageUrl;
   // }

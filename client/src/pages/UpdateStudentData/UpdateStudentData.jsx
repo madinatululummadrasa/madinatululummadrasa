@@ -104,6 +104,7 @@ console.log("selected Students:", selectedStudent);
       <h2 className="text-lg font-medium mb-3 text-gray-700">📝 ছাত্র তথ্য</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
         {[
+          { label: "Student ID", key: "studentId" },
           { label: "Name", key: "name" },
           { label: "Roll", key: "roll" },
           { label: "Class", key: "class", type: "select", options: ["শিশু", "প্রথম", "দ্বিতীয়", "তৃতীয়", "চতুর্থ", "পঞ্চম", "হেফজ"] },

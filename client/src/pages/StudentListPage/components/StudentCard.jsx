@@ -6,7 +6,7 @@ const StudentCard = ({ name, className, roll, profileImage, studentId }) => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center ">
       <div className="animatedCard bg-white shadow-lg rounded-2xl p-6 mx-auto text-center w-full max-w-[280px] hover:shadow-xl transition-all duration-300 flex flex-col items-center justify-between">
 
         <img

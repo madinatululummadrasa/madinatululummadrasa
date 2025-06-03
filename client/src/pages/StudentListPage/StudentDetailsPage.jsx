@@ -74,8 +74,8 @@ const StudentDetailsPage = () => {
                     <h1 className="mt-6 text-3xl sm:text-4xl font-extrabold tracking-tight">
                         {name || "নাম দেওয়া হয়নি"}
                     </h1>
-                   <div className="flex  items-center gap-6 ">
-                     <p className="text-blue-200 font-semibold text-lg sm:text-xl mt-2">আইডি : {sid}</p>
+                   <div className="flex  items-center gap-6  ">
+                     <p className="text-blue-200  text-lg sm:text-xl mt-2">আইডি : {sid}</p>
                     <p className="text-blue-200 text-lg sm:text-xl mt-2">শ্রেণি: {studentClass}</p>
                     <p className="text-blue-200 text-lg sm:text-xl mt-2">রোল: {roll}</p>
                    </div>
@@ -87,9 +87,7 @@ const StudentDetailsPage = () => {
                     {/* Academic Info */}
                     <SectionTitle title="একাডেমিক তথ্য" icon="📚" />
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-gray-800">
-                        <InfoItemRow label="আইডি" value={sid} />
-                        <InfoItemRow label="শ্রেণি" value={studentClass} />
-                        <InfoItemRow label="রোল" value={roll} />
+                    
                         <InfoItemRow label="সেশন" value={session} />
                         <InfoItemRow label="গ্রুপ" value={group} />
                         <InfoItemRow label="ভর্তির তারিখ" value={admissionDate} />
@@ -338,8 +336,8 @@ const InfoItem = ({ label, value }) => (
     </div>
 );
 const InfoItemRow = ({ label, value }) => (
-    <div className="bg-blue-50 p-4 rounded-lg shadow-sm border border-blue-100 flex flex-row items-center justify-center text-center transition-transform duration-200 ease-in-out hover:scale-105">
-        <p className="font-semibold text-blue-700 text-sm mb-1">{label}</p>
+    <div className="bg-blue-50 p-4 rounded-lg shadow-sm border border-blue-100 flex flex-row items-center gap-2 justify-center text-center transition-transform duration-200 ease-in-out hover:scale-105">
+        <p className="font-semibold text-blue-700 text-lg ">{label}:-</p>
         <p className="text-gray-800 text-lg font-medium">{value || "তথ্য নেই"}</p>
     </div>
 );

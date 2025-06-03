@@ -1,3 +1,4 @@
+/* eslint-disable no-irregular-whitespace */
 import { useEffect, useState } from "react";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import StudentFilterBar from "../StudentListPage/components/StudentFilterBar";
@@ -17,16 +18,16 @@ const classSubjectMap = {
   // Add more classes as needed
 };
 
-  
+
 const subjectByExam = {
- 
-  "প্রথম সাময়িক": ["বাংলা", "ইংরেজি", "গণিত", "হাদিস-কালিমা", "আদিয়ায়ে-সালাহ","কুরআন-মাজিদ"  ],
 
-  "দ্বিতীয় সাময়িক": ["বাংলা", "ইংরেজি", "গণিত", "হাদিস-কালিমা", "আদিয়ায়ে-সালাহ","কুরআন-মাজিদ"  ],
+  "প্রথম সাময়িক": ["কুরআন-মাজিদ", "হাদিস-কালিমা", "বাংলা", "ইংরেজি", "গণিত", "আদিয়ায়ে-সালাহ" ],
 
-  "বার্ষিক পরিক্ষা ": ["বাংলা", "ইংরেজি", "গণিত", "হাদিস-কালিমা", "আদিয়ায়ে-সালাহ","কুরআন-মাজিদ"  ],
-  
-}; 
+  "দ্বিতীয় সাময়িক": ["বাংলা", "ইংরেজি", "গণিত", "হাদিস-কালিমা", "আদিয়ায়ে-সালাহ", "কুরআন-মাজিদ"],
+
+  "বার্ষিক পরিক্ষা ": ["বাংলা", "ইংরেজি", "গণিত", "হাদিস-কালিমা", "আদিয়ায়ে-সালাহ", "কুরআন-মাজিদ"],
+
+};
 // Bengali labels for UI display
 const subjectLabels = {
   Bangla: "বাংলা",
@@ -49,7 +50,7 @@ const AddResultPage = () => {
   const [exam, setExam] = useState("1st Terminal");
   const [marks, setMarks] = useState({});
   const [selectedClass, setSelectedClass] = useState("");
-  
+
   const [searchRoll, setSearchRoll] = useState("");
 
   const subjects = subjectByExam[exam] || [];
@@ -64,10 +65,25 @@ const AddResultPage = () => {
   useEffect(() => {
     const filtered = students.filter((student) => {
       const matchClass = selectedClass ? student.class == selectedClass : true;
-      const matchRoll = searchRoll ? student.roll == searchRoll : true;
+
+      // Convert both to numbers for a proper numerical comparison
+      const studentRollNum = parseInt(student.roll);
+      const searchRollNum = parseInt(searchRoll);
+
+      const matchRoll = searchRoll
+        ? studentRollNum === searchRollNum
+        : true;
       return matchClass && matchRoll;
+
+
     });
-    setFilteredStudents(filtered);
+    // Sort the filtered students by roll number
+    const sortedFiltered = [...filtered].sort((a, b) => {
+      return parseInt(a.roll) - parseInt(b.roll);
+
+    });
+    setFilteredStudents(sortedFiltered);
+
   }, [students, selectedClass, searchRoll]);
 
   const handleMarkChange = (subject, value) => {
@@ -96,7 +112,7 @@ const AddResultPage = () => {
       }
     } catch (err) {
       console.error("Error submitting result:", err);
-      alert("❌ কিছু সমস্যা হয়েছে!"); 
+      alert("❌ কিছু সমস্যা হয়েছে!");
     }
   };
 
