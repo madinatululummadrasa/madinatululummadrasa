@@ -1,0 +1,322 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+
+.siam-login {
+    font-family: 'Montserrat', sans-serif;
+    background: linear-gradient(to right, #4CAF50, #2196F3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+    overflow: hidden; /* Important to hide overflow during transitions */
+}
+
+.siam-login h1 {
+    font-weight: bold;
+    margin: 0;
+    color: #333;
+}
+
+.siam-login p {
+    font-size: 14px;
+    font-weight: 100;
+    line-height: 20px;
+    letter-spacing: 0.5px;
+    margin: 20px 0 30px;
+}
+
+.siam-login span {
+    font-size: 12px;
+    color: #777;
+}
+
+.siam-login a {
+    color: #333;
+    font-size: 14px;
+    text-decoration: none;
+    margin: 15px 0;
+}
+
+.siam-login button {
+    border-radius: 20px;
+    border: 1px solid #007aff;
+    background-color: #007aff;
+    color: #FFFFFF;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 12px 45px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: transform 80ms ease-in;
+    cursor: pointer;
+}
+
+.siam-login button:active {
+    transform: scale(0.95);
+}
+
+.siam-login button:focus {
+    outline: none;
+}
+
+.siam-login button.ghost {
+    background-color: transparent;
+    border-color: #FFFFFF;
+}
+
+.siam-login form {
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 50px;
+    height: 100%;
+    text-align: center;
+}
+
+.siam-login input {
+    background-color: #eee;
+    border: none;
+    padding: 12px 15px;
+    margin: 8px 0;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.siam-login .container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25),
+                0 10px 10px rgba(0, 0, 0, 0.22);
+    position: relative;
+    overflow: hidden;
+    width: 768px;
+    max-width: 100%;
+    min-height: 480px; /* Base height for desktop */
+    display: flex;
+}
+
+.siam-login .form-container {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    transition: all 0.6s ease-in-out;
+    width: 50%;
+}
+
+.siam-login .sign-in-container {
+    left: 0;
+    z-index: 2;
+}
+
+.siam-login .sign-up-container {
+    left: 0;
+    opacity: 0;
+    z-index: 1;
+}
+
+.siam-login .container.right-panel-active .sign-in-container {
+    transform: translateX(100%);
+}
+
+.siam-login .container.right-panel-active .sign-up-container {
+    transform: translateX(100%);
+    opacity: 1;
+    z-index: 5;
+}
+
+.siam-login .overlay-container {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+    transition: transform 0.6s ease-in-out;
+    z-index: 100;
+}
+
+.siam-login .overlay {
+    background: linear-gradient(to right, #2072ca, #007aff);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0 0;
+    color: #FFFFFF;
+    position: relative;
+ 
+    left: -100%;
+    height: 100%;
+    width: 200%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+
+.siam-login .overlay-panel {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    padding: 0 40px;
+    text-align: center;
+    top: 0;
+    height: 100%;
+    width: 50%;
+    transform: translateX(0);
+    transition: transform 0.6s ease-in-out;
+}
+
+.siam-login .overlay-left {
+    transform: translateX(-20%);
+}
+
+.siam-login .overlay-right {
+    right: 0;
+    transform: translateX(0);
+}
+
+.siam-login .container.right-panel-active .overlay-container {
+    transform: translateX(-100%);
+}
+
+.siam-login .container.right-panel-active .overlay {
+    transform: translateX(50%);
+}
+
+.siam-login .container.right-panel-active .overlay-left {
+    transform: translateX(0);
+}
+
+.siam-login .container.right-panel-active .overlay-right {
+    transform: translateX(20%);
+}
+
+.siam-login .social-container {
+    margin: 20px 0;
+}
+
+.siam-login .social-container a {
+    border: 1px solid #DDDDDD;
+    border-radius: 50%;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 5px;
+    height: 40px;
+    width: 40px;
+    transition: all 0.3s ease;
+}
+
+.siam-login .social-container a:hover {
+    background-color: #eee;
+    color: #007aff;
+}
+
+/* Mobile Toggler Buttons (hidden on desktop) */
+.siam-login .mobile-toggler {
+    display: none; /* Hidden by default */
+    margin-top: 20px;
+    width: 100%;
+    justify-content: center;
+    gap: 10px;
+}
+
+.siam-login .mobile-toggler button {
+    flex: 1;
+    max-width: 150px; /* Limit button width */
+}
+
+/* Responsive: Mobile and Tablet (vertical animation) */
+@media (max-width: 800px) {
+    .siam-login {
+        padding: 0; /* Remove overall padding to maximize container space */
+    }
+
+    .siam-login .container {
+        flex-direction: column;
+        width: 100%;
+        max-width: 400px; /* Constrain max-width for better look on tablets */
+        min-height: 550px; /* A bit more height for vertical content */
+        height: auto;
+        box-shadow: none;
+        border-radius: 0; /* Remove border-radius for full screen width */
+    }
+
+    .siam-login .form-container {
+        position: absolute; /* Keep absolute for stacking and transforming */
+        width: 100%;
+        height: 100%; /* Forms take full height of the container */
+        padding: 20px;
+        transition: transform 0.6s ease-in-out; /* Apply transition for vertical slide */
+        /* Reset left and opacity for mobile */
+        left: 0;
+        opacity: 1;
+        top: 0;
+    }
+
+    .siam-login .sign-in-container {
+        transform: translateY(0);
+        z-index: 2; /* Ensure sign-in is on top by default */
+    }
+
+    .siam-login .sign-up-container {
+        transform: translateY(100%); /* Start below the sign-in form */
+        z-index: 1;
+        /* Temporarily hide for better visual */
+        /* display: none; */ /* Will be handled by transform translateY and z-index */
+    }
+
+    /* When right-panel-active, sign-in slides down, sign-up slides up */
+    .siam-login .container.right-panel-active .sign-in-container {
+        transform: translateY(100%); /* Sign-in slides down */
+        z-index: 1; /* Move behind sign-up */
+    }
+
+    .siam-login .container.right-panel-active .sign-up-container {
+        transform: translateY(0); /* Sign-up slides into view */
+        z-index: 2; /* Bring sign-up to front */
+    }
+
+    .siam-login .overlay-container {
+        /* On mobile, overlay becomes a small header at the top, or is dynamically managed */
+        /* For this vertical slide, we'll re-purpose it or simulate its behavior */
+        display: none; /* Keep the original overlay hidden for now */
+    }
+
+    /* We need to re-implement the overlay content as part of the forms
+       or a separate section that appears/disappears with the forms.
+       Let's stick to simple form toggling for now.
+    */
+
+    .siam-login .mobile-toggler {
+        display: flex; /* Show the mobile toggler buttons */
+        position: fixed; /* Fix at the bottom */
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: #ffffff; /* Add background to buttons */
+        padding: 10px 20px;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000; /* Ensure it's above everything */
+        box-sizing: border-box;
+    }
+
+    .siam-login .mobile-toggler button {
+        border-radius: 5px; /* Adjust button style for mobile */
+        padding: 10px 20px;
+    }
+}
+
+/* Further adjustments for very small screens */
+@media (max-width: 480px) {
+    .siam-login .container {
+        min-height: 500px;
+    }
+    .siam-login form {
+        padding: 0 15px;
+    }
+}

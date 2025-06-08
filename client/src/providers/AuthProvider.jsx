@@ -8,7 +8,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signOut,
+  signOut, 
   updateProfile,
 } from 'firebase/auth'
 import auth from '../firebase/firebase.config'
