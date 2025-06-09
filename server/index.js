@@ -5,12 +5,12 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const multer = require('multer');
 const express = require('express');
-/* siam */
+
 const uploadGoogleDriveRoute = require('./routes/UploadGoogleDrive');
 const uploadPdfToDrive = require('./utils/GooglePdfUploader');
 const studentRoutes = require('./routes/students');
 const teachersRoutes = require('./routes/teachers');
-/* commetn */
+
 dotenv.config();
 
 const app = express();
@@ -333,20 +333,7 @@ app.put('/students/:studentId', async (req, res) => {
    if (updateData.studentId !== undefined) {
     finalUpdateData.studentId = updateData.studentId;   
   }
-  // if (updateData.profileImageUrl !== undefined) {
-  //   finalUpdateData.profileImageUrl = updateData.profileImageUrl;
-  // }
-  // if (updateData.documents !== undefined) {
-  //   finalUpdateData.documents = updateData.documents; // Assuming documents is an array of objects
-  // }
-  // if (updateData.birthCertificatePdfRaw !== undefined) {
-  //   finalUpdateData.birthCertificatePdfRaw = updateData.birthCertificatePdfRaw;
-  // }
-  // if (updateData.admissionPdfRaw !== undefined) {
-  //   finalUpdateData.admissionPdfRaw = updateData.admissionPdfRaw;
-  // }
  
-  // Add other fields here if they can be updated, e.g., session, etc.
 
   try {
     const result = await studentsCollection.updateOne(
