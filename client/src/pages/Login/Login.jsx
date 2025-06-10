@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useState } from 'react';
+import axios from 'axios';
 import './siam.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Social from './component/Social';
@@ -17,6 +18,10 @@ const Login = () => {
     const { createUser, signInWithGoogle, signIn, updateUserProfile, loading, setLoading } = useAuth();
 
 
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const getJwt = async (email) => {
+        await axios.post(`${API_URL}/jwt`, { email }, { withCredentials: true });
+    };
 
 
     const handleSignUpClick = () => {
@@ -38,6 +43,7 @@ const Login = () => {
         try {
             setLoading(true);
             await signIn(email, password);
+            await getJwt(email); // ✅ Get JWT
             toast.success('User logged in successfully');
             navigate('/');
             setLoading(false);
@@ -60,6 +66,7 @@ const Login = () => {
             const data = await imageUpload(image);
             const result = await createUser(email, password);
             await updateUserProfile(name, data);
+            await getJwt(email); // ✅ Get JWT after signup
             toast.success('User created successfully');
             navigate('/');
             setLoading(false);

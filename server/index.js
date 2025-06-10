@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 const multer = require('multer');
 const express = require('express');
+const bcrypt = require('bcrypt');
 
 const uploadGoogleDriveRoute = require('./routes/UploadGoogleDrive');
 const uploadPdfToDrive = require('./utils/GooglePdfUploader');
@@ -15,6 +16,11 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 8000;
+
+
+
+const SECRET_KEY = 'your_secret_key';
+
 
 // Middleware
 const corsOptions = {
@@ -37,16 +43,16 @@ const client = new MongoClient(uri, {
 });
 
 // Token middleware
-const verifyToken = async (req, res, next) => {
-  const token = req.cookies?.token;
-  if (!token) return res.status(401).send({ message: 'unauthorized access' });
+// const verifyToken = async (req, res, next) => {
+//   const token = req.cookies?.token;
+//   if (!token) return res.status(401).send({ message: 'unauthorized access' });
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-    if (err) return res.status(401).send({ message: 'unauthorized access' });
-    req.user = decoded;
-    next();
-  });
-};
+//   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+//     if (err) return res.status(401).send({ message: 'unauthorized access' });
+//     req.user = decoded;
+//     next();
+//   });
+// };
 
 async function run() {
   try {
@@ -59,15 +65,78 @@ async function run() {
     const routinesCollection = db.collection('routines');
     const resultCollection = db.collection('results');
     // Auth APIs
-    app.post('/jwt', async (req, res) => {
-      const user = req.body;
-      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '365d' });
-      res.cookie('token', token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-      }).send({ success: true });
-    });
+    // app.post('/jwt', async (req, res) => {
+    //   const user = req.body;
+    //   const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '365d' });
+    //   res.cookie('token', token, {
+    //     httpOnly: true,
+    //     secure: process.env.NODE_ENV === 'production',
+    //     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
+    //   }).send({ success: true });
+    // });
+
+
+
+
+// Store users (in-memory for now)
+const users = [];
+
+
+// Signup Route
+app.post('/api/signup', (req, res) => {
+  const { username, password } = req.body;
+
+  // Check if user exists
+  const existingUser = users.find(u => u.username === username);
+  if (existingUser) {
+    return res.status(400).json({ message: 'Username already exists' });
+  }
+
+  // Hash password and save user
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  const newUser = { id: Date.now(), username, password: hashedPassword };
+  users.push(newUser);
+
+  res.json({ message: 'Signup successful', user: { id: newUser.id, username } });
+});
+
+// Login Route
+app.post('/api/login', (req, res) => {
+  const { username, password } = req.body;
+
+  const user = users.find(u => u.username === username);
+  if (!user) return res.status(401).json({ message: 'User not found' });
+
+  const validPassword = bcrypt.compareSync(password, user.password);
+  if (!validPassword) return res.status(401).json({ message: 'Invalid password' });
+
+  const token = jwt.sign({ id: user.id, username: user.username }, SECRET_KEY, { expiresIn: '1h' });
+
+  res.json({ message: 'Login successful', token });
+});
+
+
+// Middleware to verify token
+function verifyToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader?.split(' ')[1];
+
+  if (!token) return res.status(403).json({ message: 'Token required' });
+
+  jwt.verify(token, SECRET_KEY, (err, user) => {
+    if (err) return res.status(403).json({ message: 'Invalid token' });
+    req.user = user;
+    next();
+  });
+}
+
+// Protected route
+app.get('/api/protected', verifyToken, (req, res) => {
+  res.json({ message: 'This is protected data', user: req.user });
+});
+
+
+
 
     app.get('/logout', async (req, res) => {
       res.clearCookie('token', {
