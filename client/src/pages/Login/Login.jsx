@@ -8,9 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { imageUpload } from '../../assets/utility';
 import { toast } from 'react-hot-toast'
+import { useEffect } from 'react';
 
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faGoogle, faFacebookF, faGithub, faLinkedinIn } from '@fortawesome/free-brands-svg-icons';
 
 const Login = () => {
     const [isRightPanelActive, setIsRightPanelActive] = useState(false);
@@ -18,9 +17,16 @@ const Login = () => {
     const { createUser, signInWithGoogle, signIn, updateUserProfile, loading, setLoading } = useAuth();
 
 
-    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
     const getJwt = async (email) => {
-        await axios.post(`${API_URL}/jwt`, { email }, { withCredentials: true });
+        const res = await axios.post(`${API_URL}/jwt`, { email }, { withCredentials: true });
+        const { token } = res.data;
+        localStorage.setItem("newUserToken", token); // ✅ Store it manually
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Set it in Axios header
+        console.log('JWT set in localStorage and Axios header:', token);
+        // You can also set it in a context or state if needed
+        return token; // Return the token if needed
+
     };
 
 
@@ -43,7 +49,7 @@ const Login = () => {
         try {
             setLoading(true);
             await signIn(email, password);
-            await getJwt(email); // ✅ Get JWT
+            // await getJwt(email); // ✅ Get JWT
             toast.success('User logged in successfully');
             navigate('/');
             setLoading(false);
@@ -66,7 +72,17 @@ const Login = () => {
             const data = await imageUpload(image);
             const result = await createUser(email, password);
             await updateUserProfile(name, data);
-            await getJwt(email); // ✅ Get JWT after signup
+
+            const response = await axios.post(`${API_URL}/users`, {
+                name,
+                email,
+                image: data,
+                role: 'guest'
+            }, { withCredentials: true });
+            console.log(response.data);
+            await axios.post('/jwt', { email }, { withCredentials: true }); // ⬅️ this triggers the route
+
+            // await getJwt(email); // ✅ Get JWT after signup
             toast.success('User created successfully');
             navigate('/');
             setLoading(false);

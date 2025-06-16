@@ -21,6 +21,7 @@ import TeachersList from '../pages/Teachers/TeachersList/TeachersList'
 import Speech from '../pages/Speech/Speech'
 import Results from '../pages/ClassResultPAge/Results'
 import UpdateStudentData from '../pages/UpdateStudentData/UpdateStudentData'
+import PrivateRoute from './PrivateRoute'
 
 
 export const router = createBrowserRouter([
@@ -31,88 +32,88 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '/',
-        element: <Home />,
+        // Wrap your Home component (and any other default protected routes) with PrivateRoute
+        element: <Home />
       },
       {
         path: '/notice',
-        element: <NoticePage></NoticePage>,
+        element: <NoticePage />,
       },
       {
         path: '/notice-details/:id',
-        element: <NoticeDetails></NoticeDetails>,
+        element: <NoticeDetails />,
       },
       {
         path: '/notice-upload',
-        element: <NoticeUploadPage></NoticeUploadPage>,
+        element: <PrivateRoute><NoticeUploadPage /></PrivateRoute>,
       },
       {
         path: '/student-list',
-        element: <StudentListPage/>,
+        element: <StudentListPage />,
       },
       {
         path: '/add-student',
-        element: <AddStudentPage></AddStudentPage>,
+        element: <PrivateRoute><AddStudentPage /></PrivateRoute>,
       },
       {
         path: '/students/:studentId',
-        element: <StudentDetailsPage></StudentDetailsPage>,
+        element: <StudentDetailsPage />,
       },
-  
+
       {
         path: '/students/attendance/:studentId',
-        element: <AddAttendancePage></AddAttendancePage>,
+        element: <PrivateRoute><AddAttendancePage /></PrivateRoute>,
       },
       {
         path: '/students/attendance',
-        element: <AddAttendancePage></AddAttendancePage>,
+        element: <PrivateRoute><AddAttendancePage /></PrivateRoute>,
       },
       {
         path: '/add-results',
-        element: <AddResultPage/>,
+        element: <PrivateRoute><AddResultPage /></PrivateRoute>,
       },
-  
+
       {
         path: '/class-results',
-        element: <ClassResultPage/>,
+        element: <PrivateRoute><ClassResultPage /></PrivateRoute>,
       },
-  
+
       {
         path: '/routine-make',
-        element:<RoutineBuilder></RoutineBuilder>,
+        element:<RoutineBuilder />,
       },
       {
         path: '/jonobal/teachers-details/:teachersId',
-        element:<TeachersDetailsPage/>,
+        element:<PrivateRoute><TeachersDetailsPage /></PrivateRoute>,
       },
       {
         path: '/teachers',
-        element:<TeachersList></TeachersList>,
+        element:<PrivateRoute><TeachersList /></PrivateRoute>,
       },
       {
-        path: 'add-new-things',
-        element:<AddNewThings></AddNewThings>,
+        path: 'add-new-things', // Relative path within Main
+        element:<PrivateRoute><AddNewThings /></PrivateRoute>,
       },
       {
-        path: 'add-teachers',
-        element:<AddTeachersPage/>,
+        path: 'add-teachers', // Relative path within Main
+        element:<PrivateRoute><AddTeachersPage /></PrivateRoute>,
       },
-  
+
       {
         path: '/speech',
-        element:<Speech/>,
+        element:<PrivateRoute><Speech /></PrivateRoute>,
       },
       {
         path: '/results',
-        element:<Results></Results>,
+        element:<PrivateRoute><Results /></PrivateRoute>,
       },
       {
         path: '/update-student',
-        element:<UpdateStudentData></UpdateStudentData>,
+        element:<PrivateRoute><UpdateStudentData /></PrivateRoute>,
       },
-  
-  
     ],
   },
+  // The login route should NOT be wrapped by PrivateRoute, as it's the destination for unauthenticated users
   { path: '/login', element: <Login /> },
- 
-])
+
+]);

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FaSignInAlt, FaBars, FaTimes } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Container from '../Container';
+import useAuth from '../../../hooks/useAuth';
 
 const menuItems = [
   {
@@ -13,7 +14,7 @@ const menuItems = [
       { label: 'নোটিশ দেখুন', link: '/notice' },
       { label: 'নতুন  যুক্ত করুন ', link: '/add-new-things' },
       { label: 'স্কুল পরিচালকদের বানী ', link: '/speech' },
-     
+
     ],
   },
   {
@@ -48,14 +49,17 @@ const menuItems = [
 const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+const { user, logOut } = useAuth();
+  console.log('Navbar: User state:', user);
+  
 
   return (
     <Container>
       <nav className="bg-white font-bengali text-base shadow md:px-6 py-2 rounded-md z-50 mt-6">
         <div className="flex items-center justify-between">
           {/* Logo + Branding */}
-          <div  className="flex items-center space-x-3 font-bengali text-base leading-relaxed tracking-wide">
-            <img  src="/logom.jpg" alt="logo" className="w-16 h-16 object-contain" />
+          <div className="flex items-center space-x-3 font-bengali text-base leading-relaxed tracking-wide">
+            <img src="/logom.jpg" alt="logo" className="w-16 h-16 object-contain" />
             <div>
               <h1 className="text-lg font-bold">মাদিনাতুল উলুম মাদরাসা</h1>
               <p className="text-xs text-gray-500 -mt-1">কুরআন শিক্ষার আলো</p>
@@ -123,12 +127,34 @@ const Navbar = () => {
           </ul>
 
           {/* Login Button */}
-          <Link to="/login">
-            <button className="hidden md:flex items-center bg-green-500 text-white px-4 py-1 rounded-full space-x-2 font-bengali text-base leading-relaxed tracking-wide">
-              <FaSignInAlt />
-              <span>Login</span>
-            </button>
-          </Link>
+          {/* User Profile or Login */}
+          {user ? (
+            <div className="relative group ml-4">
+              <img
+                src={user.photoURL || '/default-user.png'}
+                alt="Profile"
+                className="w-10 h-10 rounded-full border object-cover cursor-pointer"
+              />
+
+              <div className="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md border z-50 opacity-0 group-hover:opacity-100 invisible group-hover:visible transition duration-200">
+                <div className="px-4 py-2 text-sm font-semibold text-gray-800 border-b">{user.displayName || user.email}</div>
+                <button
+                  onClick={logOut}
+                  className="w-full px-4 py-2 text-left text-red-600 hover:bg-red-50 text-sm"
+                >
+                  লগ আউট
+                </button>
+              </div>
+            </div>
+          ) : (
+            <Link to="/login">
+              <button className="hidden md:flex items-center bg-green-500 text-white px-4 py-1 rounded-full space-x-2 font-bengali text-base leading-relaxed tracking-wide">
+                <FaSignInAlt />
+                <span>Login</span>
+              </button>
+            </Link>
+          )}
+
         </div>
 
         {/* Mobile Menu Items */}
