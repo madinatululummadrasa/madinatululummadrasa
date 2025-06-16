@@ -147,7 +147,23 @@ async function run() {
       res.send(result);
     });
 
+// Get a single user by email
+app.get('/users/:email', async (req, res) => {
+  const email = req.params.email;
 
+  try {
+    const user = await usersCollection.findOne({ email }); // ✅ findOne returns a single document, not a cursor
+
+    if (!user) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+
+    res.send(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).send({ message: 'Server error' });
+  }
+});
     // // JWT Route for Firebase Authenticated Users
     app.post('/jwt', async (req, res) => {
       const { email } = req.body;

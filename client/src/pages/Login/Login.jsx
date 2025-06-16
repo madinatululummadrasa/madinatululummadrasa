@@ -11,11 +11,12 @@ import { toast } from 'react-hot-toast'
 import { useEffect } from 'react';
 
 
+
 const Login = () => {
     const [isRightPanelActive, setIsRightPanelActive] = useState(false);
     const navigate = useNavigate()
     const { createUser, signInWithGoogle, signIn, updateUserProfile, loading, setLoading } = useAuth();
-
+ 
 
     const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
     const getJwt = async (email) => {

@@ -5,6 +5,7 @@ import { AuthContext } from '../providers/AuthProvider';
 
 const PrivateRoute = ({ children }) => {
   const { user, loading, isAuthChecked } = useContext(AuthContext);
+  console.log('PrivateRoute: user, loading, isAuthChecked', user, loading, isAuthChecked);
 
   // Log current state to debug
 // console.log(`PrivateRoute: user=${user?.email || 'null'}, loading=${loading}, isAuthChecked=${isAuthChecked}`);

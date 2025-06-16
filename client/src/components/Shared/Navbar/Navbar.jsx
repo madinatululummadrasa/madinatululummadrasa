@@ -50,7 +50,7 @@ const Navbar = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 const { user, logOut } = useAuth();
-  console.log('Navbar: User state:', user);
+  
   
 
   return (
