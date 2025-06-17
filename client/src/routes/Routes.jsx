@@ -15,13 +15,18 @@ import AddResultPage from '../pages/AddResultPage/AddResultPage'
 import ClassResultPage from '../pages/ClassResultPAge/ClassResultPage'
 import RoutineBuilder from '../pages/Routine/RoutineBuilder'
 import TeachersDetailsPage from '../pages/Teachers/TeachersDetails/TeachersDetailsPage'
-import AddNewThings from '../pages/Dashboard/AddNewThings'
+
 import AddTeachersPage from '../pages/Teachers/AddTeachersPage/AddTeachersPage'
 import TeachersList from '../pages/Teachers/TeachersList/TeachersList'
 import Speech from '../pages/Speech/Speech'
 import Results from '../pages/ClassResultPAge/Results'
 import UpdateStudentData from '../pages/UpdateStudentData/UpdateStudentData'
 import PrivateRoute from './PrivateRoute'
+import AdminRoute from './AdminRoute'
+
+import Overview from '../pages/Dashboard/Admin/Overview'
+import DashboardLayout from '../pages/Dashboard/DashboardLayout'
+
 
 
 export const router = createBrowserRouter([
@@ -75,41 +80,47 @@ export const router = createBrowserRouter([
 
       {
         path: '/class-results',
-        element: <PrivateRoute><ClassResultPage /></PrivateRoute>,
+        element: <AdminRoute><ClassResultPage /></AdminRoute>,
       },
 
       {
         path: '/routine-make',
-        element:<RoutineBuilder />,
+        element: <RoutineBuilder />,
       },
       {
         path: '/jonobal/teachers-details/:teachersId',
-        element:<PrivateRoute><TeachersDetailsPage /></PrivateRoute>,
+        element: <PrivateRoute><TeachersDetailsPage /></PrivateRoute>,
       },
       {
         path: '/teachers',
-        element:<PrivateRoute><TeachersList /></PrivateRoute>,
+        element: <PrivateRoute><TeachersList /></PrivateRoute>,
       },
-      {
-        path: 'add-new-things', // Relative path within Main
-        element:<PrivateRoute><AddNewThings /></PrivateRoute>,
-      },
+    {
+  path: '/dashboard',
+  element: <PrivateRoute><DashboardLayout /></PrivateRoute>, // ✅ use layout
+  children: [
+    { index: true, element: <Overview /> }, // ✅ default dashboard component
+    { path: 'users', element: <TeachersList /> },
+    { path: 'users/add', element: <AddTeachersPage /> },
+    { path: 'settings', element: <Speech /> },
+  ],
+},
       {
         path: 'add-teachers', // Relative path within Main
-        element:<PrivateRoute><AddTeachersPage /></PrivateRoute>,
+        element: <PrivateRoute><AddTeachersPage /></PrivateRoute>,
       },
 
       {
         path: '/speech',
-        element:<PrivateRoute><Speech /></PrivateRoute>,
+        element: <PrivateRoute><Speech /></PrivateRoute>,
       },
       {
         path: '/results',
-        element:<PrivateRoute><Results /></PrivateRoute>,
+        element: <PrivateRoute><Results /></PrivateRoute>,
       },
       {
         path: '/update-student',
-        element:<PrivateRoute><UpdateStudentData /></PrivateRoute>,
+        element: <PrivateRoute><UpdateStudentData /></PrivateRoute>,
       },
     ],
   },

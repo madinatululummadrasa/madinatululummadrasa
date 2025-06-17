@@ -12,7 +12,7 @@ const menuItems = [
       { label: 'ইতিহাস', link: '/porichiti/itihash' },
       { label: 'নোটিশ আপলোড ', link: '/notice-upload' },
       { label: 'নোটিশ দেখুন', link: '/notice' },
-      { label: 'নতুন  যুক্ত করুন ', link: '/add-new-things' },
+      { label: 'Dashboard ', link: '/dashboard' },
       { label: 'স্কুল পরিচালকদের বানী ', link: '/speech' },
 
     ],
