@@ -114,9 +114,7 @@ const AddTeachersPage = () => {
         <div className=" mx-auto flex border px-4 py-6">
 
 
-            <div>
-                <h2>fdgjsdioj</h2>
-            </div>
+          
 
             <div className="max-w-4xl mx-auto border px-4 py-6">
                 <h1 className="text-2xl font-semibold text-center mb-6">নতুন শিক্ষক যুক্ত করুন</h1>

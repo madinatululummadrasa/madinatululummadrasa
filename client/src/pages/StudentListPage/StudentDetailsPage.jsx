@@ -16,6 +16,8 @@ const StudentDetailsPage = () => {
     const [availableAttendanceYears, setAvailableAttendanceYears] = useState([]);
     const [selectedAttendanceYear, setSelectedAttendanceYear] = useState("");
 
+
+
     useEffect(() => {
         axios.get(`http://localhost:8000/students/${studentId}`)
             .then(res => {

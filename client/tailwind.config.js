@@ -12,6 +12,7 @@ export default {
       },
       fontFamily: {
         bengali: ['"Noto Sans Bengali"', 'sans-serif'],
+        segoe: ['"Segoe UI"', 'Tahoma', 'Geneva', 'Verdana', 'sans-serif'],
       },
     }
   },

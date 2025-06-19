@@ -26,6 +26,9 @@ import AdminRoute from './AdminRoute'
 
 import Overview from '../pages/Dashboard/Admin/Overview'
 import DashboardLayout from '../pages/Dashboard/DashboardLayout'
+import ManageUsers from '../pages/Dashboard/Admin/user/ManageUsers'
+import AddNewUser from '../pages/Dashboard/Admin/user/AddNewUser'
+import NoticeTable from '../pages/Notice/Component/NoticeTable'
 
 
 
@@ -95,16 +98,29 @@ export const router = createBrowserRouter([
         path: '/teachers',
         element: <PrivateRoute><TeachersList /></PrivateRoute>,
       },
-    {
-  path: '/dashboard',
-  element: <PrivateRoute><DashboardLayout /></PrivateRoute>, // ✅ use layout
-  children: [
-    { index: true, element: <Overview /> }, // ✅ default dashboard component
-    { path: 'users', element: <TeachersList /> },
-    { path: 'users/add', element: <AddTeachersPage /> },
-    { path: 'settings', element: <Speech /> },
-  ],
-},
+      {
+        path: '/dashboard',
+        element: <PrivateRoute><DashboardLayout /></PrivateRoute>,
+        children: [
+          { index: true, element: <Overview /> }, // 
+          { path: 'users', element: <ManageUsers></ManageUsers> },
+          { path: 'users/add', element: <AddNewUser /> },
+          { path: 'notice-upload', element: <NoticeUploadPage></NoticeUploadPage> },
+          { path: 'notice', element: <NoticeTable></NoticeTable> },
+          { path: 'teachers', element: <TeachersList></TeachersList> },
+          { path: 'add-teachers', element: <AddTeachersPage></AddTeachersPage> },
+          { path: 'routine-make', element: <RoutineBuilder /> },
+          { path: 'add-attendence', element: <AddAttendancePage /> },
+          { path: 'student-list', element: <StudentListPage /> },
+          { path: "students/:studentId", element: <StudentDetailsPage /> },
+          { path: "jonobal/teachers-details/:teachersId", element: <TeachersDetailsPage /> },
+          { path: "results", element: <Results /> },
+          { path: "class-results", element: <ClassResultPage /> },
+          { path: "add-results", element: <AddResultPage /> },
+          { path: 'settings', element: <Speech /> },
+
+        ],
+      },
       {
         path: 'add-teachers', // Relative path within Main
         element: <PrivateRoute><AddTeachersPage /></PrivateRoute>,

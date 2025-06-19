@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaArrowRight } from "react-icons/fa6";
 
 
-const TeachersCard = ({ designation, address, joiningDate, name, phone, profileImageUrl, teachersId }) => {
+const TeachersCard = ({ designation, detailLink,address, joiningDate, name, phone, profileImageUrl, teachersId }) => {
 
   const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const TeachersCard = ({ designation, address, joiningDate, name, phone, profileI
         </div>
 
         <button
-          onClick={() => navigate(`/jonobal/teachers-details/${teachersId}`)}
+          onClick={() => navigate(detailLink)}
           className="mt-auto px-2 py-2 bg-[#e6f4f0] flex  text-[#019267] text-sm font-medium rounded-2xl hover:bg-[#019267] hover:text-white ease-in transition-all duration-4 00"
         >
           <span className="flex gap-[4px] justify-center items-center"> বিস্তারিত দেখুন <FaArrowRight /></span>

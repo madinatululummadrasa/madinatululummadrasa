@@ -3,12 +3,11 @@ import { useState } from 'react';
 import axios from 'axios';
 import './siam.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import Social from './component/Social';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import { imageUpload } from '../../assets/utility';
 import { toast } from 'react-hot-toast'
-import { useEffect } from 'react';
+
 
 
 

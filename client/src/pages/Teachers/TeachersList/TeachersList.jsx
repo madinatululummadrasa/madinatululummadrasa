@@ -2,12 +2,14 @@ import React, { useEffect } from 'react';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import TeachersCard from '../Components/TeachersCard';
 import Container from '../../../components/Shared/Container';
+import { useLocation } from 'react-router-dom';
 
 const TeachersList = () => {
     const axiosSecure = useAxiosSecure();
-
+const location = useLocation();
+const isDashboard = location.pathname.startsWith("/dashboard");
     const [teachers, setTeachers] = React.useState([]);
-    console.log(teachers)
+
   
 
     // ✅ Fetch teachers data from MongoDB
@@ -40,6 +42,8 @@ const TeachersList = () => {
                         profileImageUrl={teacher.profileImageUrl}
                         teachersId={teacher.teachersId}
                         group={teacher.group}
+                        detailLink={`${isDashboard ? "/dashboard" : ""}/jonobal/teachers-details/${teacher.teachersId}`}
+                        
                     />
                 ))}
             </div>

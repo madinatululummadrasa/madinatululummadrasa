@@ -164,6 +164,43 @@ app.get('/users/:email', async (req, res) => {
     res.status(500).send({ message: 'Server error' });
   }
 });
+
+
+
+    // Get all users
+    app.get('/users', async (req, res) => {
+      try {
+        const users = await usersCollection.find().toArray(); // ✅ Use find() to get all users
+        res.send(users);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).send({ message: 'Server error' });
+      }
+    });
+
+
+    app.patch('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, email, role } = req.body;
+
+  const updateFields = {};
+  if (name) updateFields.name = name;
+  if (email) updateFields.email = email;
+  if (role) updateFields.role = role;
+
+  const result = await usersCollection.updateOne(
+    { _id: new ObjectId(id) },
+    { $set: updateFields }
+  );
+
+  if (result.modifiedCount > 0) {
+    res.send({ success: true });
+  } else {
+    res.status(400).send({ message: "No change made" });
+  }
+});
+
+
     // // JWT Route for Firebase Authenticated Users
     app.post('/jwt', async (req, res) => {
       const { email } = req.body;
