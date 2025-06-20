@@ -19,7 +19,6 @@ const ManageUsers = () => {
             return res.data;
         }
     });
-  
 
     const { mutate: updateUser } = useMutation({
         mutationFn: async ({ userId, updatedData }) => {
@@ -69,6 +68,7 @@ const ManageUsers = () => {
                     {users.map((user) => {
                         const isEditing = editingUserId === user._id;
                         const isExpanded = expandedLogs === user._id;
+                        const imagelink = user.image || 'https://i.ibb.co/3y0f1bH/user.png'; // Fallback image
 
                         return (
                             <div
@@ -79,7 +79,7 @@ const ManageUsers = () => {
                                 <div className="flex items-center justify-between gap-4 flex-wrap">
                                     <div className="flex items-center gap-4">
                                         <img
-                                            src={users[0].image || "/default-profile.png"}
+                                            src={imagelink}
                                             alt="User"
                                             className="w-14 h-14 rounded-full border object-cover"
                                         />

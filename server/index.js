@@ -24,27 +24,45 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 })
 
-// NEW: Firebase ID Token verification middleware
-const verifyFirebaseToken = async (req, res, next) => {
+// // NEW: Firebase ID Token verification middleware
+// const verifyFirebaseToken = async (req, res, next) => {
+//   const authHeader = req.headers.authorization;
+
+//   if (!authHeader || !authHeader.startsWith('Bearer ')) {
+//     return res.status(401).send({ message: 'Unauthorized: No token provided or invalid format' });
+//   }
+
+//   const idToken = authHeader.split(' ')[1];
+
+//   try {
+//     const decodedToken = await admin.auth().verifyIdToken(idToken);
+//     req.user = decodedToken; // Attach decoded Firebase user info
+//     next();
+//   } catch (error) {
+//     console.error('Error verifying Firebase ID token:', error.message);
+//     if (error.code === 'auth/id-token-expired') {
+//       return res.status(401).send({ message: 'Unauthorized: Session expired. Please log in again.' });
+//     }
+//     return res.status(403).send({ message: 'Unauthorized: Invalid token' });
+//   }
+// };
+
+
+
+const verifyJwt = (req, res, next) => {
   const authHeader = req.headers.authorization;
-
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).send({ message: 'Unauthorized: No token provided or invalid format' });
+    return res.status(401).send({ message: 'Unauthorized' });
   }
 
-  const idToken = authHeader.split(' ')[1];
-
-  try {
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    req.user = decodedToken; // Attach decoded Firebase user info
-    next();
-  } catch (error) {
-    console.error('Error verifying Firebase ID token:', error.message);
-    if (error.code === 'auth/id-token-expired') {
-      return res.status(401).send({ message: 'Unauthorized: Session expired. Please log in again.' });
+  const token = authHeader.split(' ')[1];
+  jwt.verify(token, 'your_secret_key', (err, decoded) => {
+    if (err) {
+      return res.status(403).send({ message: 'Forbidden' });
     }
-    return res.status(403).send({ message: 'Unauthorized: Invalid token' });
-  }
+    req.user = decoded;
+    next();
+  });
 };
 
 
@@ -82,30 +100,31 @@ async function run() {
     const usersCollection = db.collection('users');
 
 
-    app.get('/api/profile', verifyFirebaseToken, async (req, res) => {
-      console.log('Accessing protected profile route for Firebase user:', req.user.email, 'UID:', req.user.uid);
+    // app.get('/api/profile', verifyFirebaseToken, async (req, res) => {
+    //   console.log('Accessing protected profile route for Firebase user:', req.user.email, 'UID:', req.user.uid);
 
-      // Attempt to find the user in your MongoDB collection
-      const userInDb = await usersCollection.findOne({ email: req.user.email });
+    //   // Attempt to find the user in your MongoDB collection
+    //   const userInDb = await usersCollection.findOne({ email: req.user.email });
 
-      if (!userInDb) {
-        // If the Firebase authenticated user doesn't exist in your DB, you might:
-        // 1. Create a new user entry in your DB here.
-        // 2. Return a specific message that the user is authenticated via Firebase
-        //    but their profile data isn't in your local database yet.
-        console.log('Firebase user found, but no matching entry in local DB.');
-        return res.status(200).json({
-          message: 'Firebase user authenticated, but no local profile data found.',
-          firebaseUser: { uid: req.user.uid, email: req.user.email, name: req.user.name || req.user.displayName || 'N/A' },
-        });
-      }
+    //   if (!userInDb) {
+    //     // If the Firebase authenticated user doesn't exist in your DB, you might:
+    //     // 1. Create a new user entry in your DB here.
+    //     // 2. Return a specific message that the user is authenticated via Firebase
+    //     //    but their profile data isn't in your local database yet.
+    //     console.log('Firebase user found, but no matching entry in local DB.');
+    //     return res.status(200).json({
+    //       message: 'Firebase user authenticated, but no local profile data found.',
+    //       firebaseUser: { uid: req.user.uid, email: req.user.email, name: req.user.name || req.user.displayName || 'N/A' },
+    //     });
+    //   }
 
-      res.json({
-        message: 'Protected data for Firebase authenticated user',
-        firebaseUser: { uid: req.user.uid, email: req.user.email, name: req.user.name || req.user.displayName || 'N/A' },
-        dbUser: { _id: userInDb._id, username: userInDb.username, email: userInDb.email } // Example data from your DB
-      });
-    });
+    //   res.json({
+    //     message: 'Protected data for Firebase authenticated user',
+    //     firebaseUser: { uid: req.user.uid, email: req.user.email, name: req.user.name || req.user.displayName || 'N/A' },
+    //     dbUser: { _id: userInDb._id, username: userInDb.username, email: userInDb.email } // Example data from your DB
+    //   });
+    // });
+
 
     // imgBB image upload 
     app.post('/upload-img', upload.single('image'), async (req, res) => {
@@ -267,21 +286,21 @@ app.get('/users/:email', async (req, res) => {
     }
 
     // Protected route - NOW USE verifyFirebaseToken
-    app.get('/api/profile', verifyFirebaseToken, async (req, res) => {
-      // req.user will contain decoded Firebase ID token info (uid, email, displayName etc.)
-      console.log('Accessing protected profile route for Firebase user:', req.user.email);
-      const userInDb = await usersCollection.findOne({ email: req.user.email }); // Assuming 'usersCollection' stores email
-      if (!userInDb) {
-        // Optional: Create a user entry in your DB if it doesn't exist, linked by Firebase UID/email
-        console.log('Firebase user not found in local DB, consider creating entry.');
-        return res.status(404).json({ message: 'User data not found in DB for Firebase user.' });
-      }
-      res.json({
-        message: 'Protected data for Firebase authenticated user',
-        firebaseUser: { uid: req.user.uid, email: req.user.email, name: req.user.name || req.user.displayName },
-        dbUser: { id: userInDb._id, username: userInDb.username, email: userInDb.email } // Assuming your DB user also has email
-      });
-    });
+    // app.get('/api/profile', verifyFirebaseToken, async (req, res) => {
+    //   // req.user will contain decoded Firebase ID token info (uid, email, displayName etc.)
+    //   console.log('Accessing protected profile route for Firebase user:', req.user.email);
+    //   const userInDb = await usersCollection.findOne({ email: req.user.email }); // Assuming 'usersCollection' stores email
+    //   if (!userInDb) {
+    //     // Optional: Create a user entry in your DB if it doesn't exist, linked by Firebase UID/email
+    //     console.log('Firebase user not found in local DB, consider creating entry.');
+    //     return res.status(404).json({ message: 'User data not found in DB for Firebase user.' });
+    //   }
+    //   res.json({
+    //     message: 'Protected data for Firebase authenticated user',
+    //     firebaseUser: { uid: req.user.uid, email: req.user.email, name: req.user.name || req.user.displayName },
+    //     dbUser: { id: userInDb._id, username: userInDb.username, email: userInDb.email } // Assuming your DB user also has email
+    //   });
+    // });
 
     app.get('/logout', async (req, res) => {
       res.clearCookie('token', {
@@ -305,7 +324,7 @@ app.get('/users/:email', async (req, res) => {
     });
 
     // Notices API
-    app.post('/notices', verifyFirebaseToken, async (req, res) => {
+    app.post('/notices',  async (req, res) => {
       try {
         const result = await noticesCollection.insertOne(req.body);
         res.send(result);
@@ -351,7 +370,7 @@ app.get('/users/:email', async (req, res) => {
 
     // Students API
     const studentRouter = studentRoutes(db); // passing db directly
-    app.use('/students', verifyFirebaseToken, studentRouter);
+    app.use('/students',  studentRouter);
 
     // Techers API
     const teachersRouter = teachersRoutes(db); // passing db directly
@@ -405,7 +424,7 @@ app.get('/users/:email', async (req, res) => {
       }
     });
     // get students
-    app.get("/students/:studentId", verifyFirebaseToken, async (req, res) => {
+    app.get("/students/:studentId",  async (req, res) => {
       try {
         const { studentId } = req.params;
         const student = await studentsCollection.findOne({ studentId }); // ✅ use custom field
@@ -420,7 +439,7 @@ app.get('/users/:email', async (req, res) => {
     });
 
     // Update student roll
-    app.put('/update-rolls', verifyFirebaseToken, async (req, res) => {
+    app.put('/update-rolls', verifyJwt, async (req, res) => {
       const updates = req.body; // Array of { studentId, newRoll }
       console.log(updates);
       try {
@@ -451,7 +470,7 @@ app.get('/users/:email', async (req, res) => {
 
 
     // Upload results
-    app.post('/upload-results', verifyFirebaseToken, async (req, res) => {
+    app.post('/upload-results', verifyJwt, async (req, res) => {
 
       const { results, exam, year } = req.body;
 

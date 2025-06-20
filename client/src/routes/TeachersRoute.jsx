@@ -1,11 +1,16 @@
-import React from 'react';
+import PropTypes from 'prop-types'
 
-const TeachersRoute = () => {
-    return (
-        <div>
-            
-        </div>
-    );
+import LoadingSpinner from '../hooks/LoadingSpinner/LoadingSpinner';
+import useRole from '../hooks/useRole';
+
+const TeachersRoute = ({ children }) => {
+    const [role, isLoading] = useRole()
+
+    if (isLoading) return <LoadingSpinner></LoadingSpinner>
+    if (role === 'teacher') return children
+
 };
-
 export default TeachersRoute;
+TeachersRoute.propTypes = {
+    children: PropTypes.element,
+}

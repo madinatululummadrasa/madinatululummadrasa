@@ -49,7 +49,7 @@ const Login = () => {
         try {
             setLoading(true);
             await signIn(email, password);
-            // await getJwt(email); // ✅ Get JWT
+            await getJwt(email); // ✅ Get JWT
             toast.success('User logged in successfully');
             navigate('/');
             setLoading(false);
@@ -59,39 +59,83 @@ const Login = () => {
             toast.error(error.message);
         }
     };
-    const handleSignUpSubmit = async (e) => {
-        e.preventDefault();
-        const form = e.target;
-        const name = form.name.value;
-        const email = form.email.value;
-        const password = form.password.value;
-        const image = form.image.files[0];
+    // const handleSignUpSubmit = async (e) => {
+    //     e.preventDefault();
+    //     const form = e.target;
+    //     const name = form.name.value;
+    //     const email = form.email.value;
+    //     const password = form.password.value;
+    //     const image = form.image.files[0];
 
-        try {
-            setLoading(true);
-            const data = await imageUpload(image);
-            const result = await createUser(email, password);
-            await updateUserProfile(name, data);
+    //     try {
+    //         setLoading(true);
+    //         const data = await imageUpload(image);
+    //         const result = await createUser(email, password);
+    //         await updateUserProfile(name, data);
 
-            const response = await axios.post(`${API_URL}/users`, {
-                name,
-                email,
-                image: data,
-                role: 'guest'
-            }, { withCredentials: true });
-            console.log(response.data);
-            await axios.post('/jwt', { email }, { withCredentials: true }); // ⬅️ this triggers the route
+    //         const response = await axios.post(`${API_URL}/users`, {
+    //             name,
+    //             email,
+    //             image: data,
+    //             role: 'guest'
+    //         }, { withCredentials: true });
+    //         console.log(response.data);
+    //        await axios.post(`${API_URL}/jwt`, { email }, { withCredentials: true });
+    //         // ✅ Get JWT after signup
+    //         localStorage.setItem("newUserToken", response.data.token); // Store it manually
+    //         axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`; // Set it in Axios header
+    //         console.log('JWT set in localStorage and Axios header:', response.data.token);
+          
+    //         // await getJwt(email); // ✅ Get JWT after signup
+    //         toast.success('User created successfully');
+    //         navigate('/');
+    //         setLoading(false);
+    //     } catch (error) {
+    //         console.log(error);
+    //         setLoading(false);
+    //         toast.error(error.message);
+    //     }
+    // }
+const handleSignUpSubmit = async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    const image = form.image.files[0];
 
-            // await getJwt(email); // ✅ Get JWT after signup
-            toast.success('User created successfully');
-            navigate('/');
-            setLoading(false);
-        } catch (error) {
-            console.log(error);
-            setLoading(false);
-            toast.error(error.message);
-        }
+    try {
+        setLoading(true);
+        const data = await imageUpload(image);
+        const result = await createUser(email, password);
+        await updateUserProfile(name, data);
+
+        // 1. Save user to MongoDB
+        await axios.post(`${API_URL}/users`, {
+            name,
+            email,
+            image: data,
+            role: 'guest'
+        }, { withCredentials: true });
+
+        // 2. Get JWT after signup
+        const jwtRes = await axios.post(`${API_URL}/jwt`, { email }, { withCredentials: true });
+        const { token } = jwtRes.data;
+
+        // 3. Save and set token
+        localStorage.setItem("newUserToken", token);
+        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+        console.log('JWT set in localStorage and Axios header:', token);
+
+        toast.success('User created successfully');
+        navigate('/');
+        setLoading(false);
+    } catch (error) {
+        console.log(error);
+        setLoading(false);
+        toast.error(error.message);
     }
+}
 
 
 

@@ -1,7 +1,5 @@
 import PropTypes from 'prop-types'
 
-
-
 import LoadingSpinner from '../hooks/LoadingSpinner/LoadingSpinner';
 import useRole from '../hooks/useRole';
 
