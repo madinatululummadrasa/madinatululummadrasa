@@ -13,6 +13,7 @@ const menuItems = [
       { label: 'নোটিশ আপলোড ', link: '/notice-upload' },
       { label: 'নোটিশ দেখুন', link: '/notice' },
       { label: 'Dashboard ', link: '/dashboard' },
+      { label: 'Accounts Dashboard ', link: '/accounts-dashboard' },
       { label: 'স্কুল পরিচালকদের বানী ', link: '/speech' },
 
     ],

@@ -29,6 +29,10 @@ import DashboardLayout from '../pages/Dashboard/DashboardLayout'
 import ManageUsers from '../pages/Dashboard/Admin/user/ManageUsers'
 import AddNewUser from '../pages/Dashboard/Admin/user/AddNewUser'
 import NoticeTable from '../pages/Notice/Component/NoticeTable'
+import AccountDashboardLayout from '../pages/Accounts-Dashboard/AccountDashboardLayout'
+import MainElement from '../pages/Accounts-Dashboard/MainElement'
+import CreateClass from '../pages/Accounts-Dashboard/Components/class/CreateClass'
+
 
 
 
@@ -119,6 +123,14 @@ export const router = createBrowserRouter([
           { path: "add-results", element: <AddResultPage /> },
           { path: 'settings', element: <Speech /> },
 
+        ],
+      },
+      {
+        path: '/accounts-dashboard',
+        element: <PrivateRoute><AccountDashboardLayout /></PrivateRoute>,
+        children: [
+          { index: true, element: <MainElement></MainElement> }, // 
+          { path: 'create-class', element: <CreateClass></CreateClass> },
         ],
       },
       {
