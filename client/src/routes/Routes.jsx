@@ -34,6 +34,7 @@ import NoticeTable from '../pages/Notice/Component/NoticeTable'
 import CreateClass from '../pages/Accounts-Dashboard/Components/class/CreateClass'
 import AccountDashboardLayout from '../pages/Accounts-Dashboard/Layouts/AccountDashboardLayout'
 import MainElement from '../pages/Accounts-Dashboard/Layouts/MainElement'
+import ShowAllClass from '../pages/Accounts-Dashboard/Components/class/ShowAllClass'
 
 
 
@@ -133,6 +134,7 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <MainElement></MainElement> }, // 
           { path: 'create-class', element: <CreateClass></CreateClass> },
+          { path: 'all-class', element: <ShowAllClass/> },
         ],
       },
       {

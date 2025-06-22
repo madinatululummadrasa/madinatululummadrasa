@@ -18,6 +18,16 @@ module.exports = (db) => {
   });
 
 
+  router.get('/', async (req, res) => {
+    try {
+      const classes = await academicCollection.find({}).toArray();
+      res.send(classes);
+    } catch (error) {
+      console.error('Error fetching academic records:', error);
+      res.status(500).send({ message: 'Failed to fetch academic records' });
+    }
+  }
+  );
 
 
 
@@ -26,6 +36,7 @@ module.exports = (db) => {
 
 
 
-  
-   return router;
+
+
+  return router;
 }

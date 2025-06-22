@@ -18,7 +18,7 @@ const ManageUsers = () => {
             const res = await axiosSecure.get('/users');
             return res.data;
         }
-    });
+    }); 
 
     const { mutate: updateUser } = useMutation({
         mutationFn: async ({ userId, updatedData }) => {

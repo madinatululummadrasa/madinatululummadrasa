@@ -25,7 +25,7 @@ const CreateClass = () => {
     {
       type: "navigate",
       label: "সকল ক্লাস দেখুন",
-      to: "/account/classes",
+      to: "/accounts-dashboard/all-class",
     },
   ]
 
