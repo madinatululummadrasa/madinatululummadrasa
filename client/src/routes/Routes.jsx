@@ -135,6 +135,7 @@ export const router = createBrowserRouter([
           { index: true, element: <MainElement></MainElement> }, // 
           { path: 'create-class', element: <CreateClass></CreateClass> },
           { path: 'all-class', element: <ShowAllClass/> },
+          { path: 'students', element: <ShowAllClass/> },
         ],
       },
       {

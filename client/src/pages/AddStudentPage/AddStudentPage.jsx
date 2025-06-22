@@ -19,6 +19,7 @@ const AddStudentPage = () => {
     class: "",
     session: "2025",
     group: "",
+    feeStatus: "বেতন", // Default value
     admissionDate: "",
     profileImage: null, // File object for image
     AdmissionImage: null, // File object for image
@@ -121,6 +122,7 @@ const AddStudentPage = () => {
         roll: formData.roll,
         session: formData.session,
         group: formData.group,
+        feeStatus: formData.feeStatus,
         admissionDate: formData.admissionDate,
         phone: formData.phone,
         gender: formData.gender,
@@ -145,6 +147,7 @@ const AddStudentPage = () => {
           class: "",
           session: "",
           group: "",
+          feeStatus: "", // Default value
           admissionDate: "",
           profileImage: null,
           AdmissionImage: null,
@@ -304,6 +307,24 @@ const AddStudentPage = () => {
               <option value="হেফজ">হেফজ</option>
             </select>
           </div>
+
+          {/* fees status */}
+          <div>
+            <label htmlFor="feeStatus" className="block text-sm font-medium text-gray-700 mb-1">শাখা</label>
+            <select
+              id="feeStatus"
+              name="feeStatus"
+              value={formData.feeStatus}
+              onChange={handleChange}
+              className="mt-1 block w-full pl-3 pr-10 py-3 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md shadow-sm transition-all duration-200 ease-in-out"
+            >
+              <option value="">বেতনের অবস্থা নির্বাচন করুন</option>
+              <option value="বেতন">বেতন</option>
+              <option value="হাফ বেতন">হাফ বেতন</option>
+              <option value="ফ্রী বেতন">ফ্রী বেতন</option>
+            </select>
+          </div>
+
 
           {/* ---------------------------------------------------------Admission Date-------------------------------------------- */}
           <div>
