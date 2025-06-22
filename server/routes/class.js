@@ -5,7 +5,7 @@ module.exports = (db) => {
   const router = express.Router();
   const academicCollection = db.collection('academic');
 
-
+  // Create Academic Record
   router.post('/', async (req, res) => {
     try {
       const classes = req.body;
@@ -17,6 +17,15 @@ module.exports = (db) => {
     }
   });
 
-  // Create Academic Record
+
+
+
+
+
+
+
+
+
+  
    return router;
 }

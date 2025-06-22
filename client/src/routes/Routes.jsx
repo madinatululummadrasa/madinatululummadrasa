@@ -29,9 +29,11 @@ import DashboardLayout from '../pages/Dashboard/DashboardLayout'
 import ManageUsers from '../pages/Dashboard/Admin/user/ManageUsers'
 import AddNewUser from '../pages/Dashboard/Admin/user/AddNewUser'
 import NoticeTable from '../pages/Notice/Component/NoticeTable'
-import AccountDashboardLayout from '../pages/Accounts-Dashboard/AccountDashboardLayout'
-import MainElement from '../pages/Accounts-Dashboard/MainElement'
+
+
 import CreateClass from '../pages/Accounts-Dashboard/Components/class/CreateClass'
+import AccountDashboardLayout from '../pages/Accounts-Dashboard/Layouts/AccountDashboardLayout'
+import MainElement from '../pages/Accounts-Dashboard/Layouts/MainElement'
 
 
 

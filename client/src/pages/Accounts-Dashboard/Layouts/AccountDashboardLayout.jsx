@@ -1,7 +1,7 @@
 import { Outlet } from 'react-router-dom';
 import AccountDashboardHeader from './AccountDashboardHeader';
 import AccountSidebar from './AccountSidebar';
-import Breadcrumbs from './Components/Breadcrumb/Breadcrumb';
+import Breadcrumbs from '../Components/Breadcrumb/Breadcrumb';
 
 
 const AccountDashboardLayout = () => {
