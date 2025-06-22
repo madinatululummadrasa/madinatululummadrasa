@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useState, useEffect, useRef } from "react";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
+import { useNavigate } from "react-router-dom";
 
 const ReusableForm = ({
   endpoint,
@@ -11,13 +12,14 @@ const ReusableForm = ({
   onError,
   validationFn,
   grid = false, // optional: display in grid format
+  buttons = [] // ← New prop
 }) => {
   const [formData, setFormData] = useState(initialValues);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const secureAxios = useAxiosSecure();
   const firstFieldRef = useRef(null);
-
+const navigate = useNavigate();
   useEffect(() => {
     setFormData(initialValues);
   }, [initialValues]);
@@ -79,6 +81,11 @@ const ReusableForm = ({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleReset = () => {
+    setFormData(initialValues);
+    setErrors({});
   };
 
   const renderField = (field, index) => {
@@ -144,16 +151,51 @@ const ReusableForm = ({
           {loading ? "লোড হচ্ছে..." : buttonText}
         </button>
 
-        <button
-          type="button"
-          onClick={() => {
-            setFormData(initialValues);
-            setErrors({});
-          }}
-          className="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600"
-        >
-          রিসেট করুন
-        </button>
+    {buttons.map((btn, idx) => {
+  if (btn.type === "navigate") {
+    return (
+      <button
+        key={idx}
+        type="button"
+        onClick={() => navigate(btn.to)}
+        className="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700"
+      >
+        {btn.label}
+      </button>
+    );
+  }
+
+  if (btn.type === "reset") {
+    return (
+      <button
+        key={idx}
+        type="button"
+        onClick={handleReset}
+        className="w-full bg-yellow-600 text-white p-2 rounded hover:bg-yellow-700"
+      >
+        {btn.label}
+      </button>
+    );
+  }
+
+  if (btn.type === "custom" && typeof btn.onClick === "function") {
+    return (
+      <button
+        key={idx}
+        type="button"
+        onClick={btn.onClick}
+        className="w-full bg-gray-600 text-white p-2 rounded hover:bg-gray-700"
+      >
+        {btn.label}
+      </button>
+    );
+  }
+
+  return null;
+})}
+
+
+      
       </div>
     </form>
   );

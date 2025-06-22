@@ -21,7 +21,13 @@ const CreateClass = () => {
     alert("✅ সফলভাবে সংরক্ষিত হয়েছে!");
   };
 
-
+  const extraButtons = [
+    {
+      type: "navigate",
+      label: "সকল ক্লাস দেখুন",
+      to: "/account/classes",
+    },
+  ]
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4 font-inter">
@@ -34,9 +40,11 @@ const CreateClass = () => {
           endpoint="/classes"
           fields={fields}
           initialValues={initialValues}
+          buttonText="তৈরি করুন"
           onSuccess={handleSuccess}
-          buttonText="সংরক্ষণ করুন"
+          buttons={[...extraButtons]}
         />
+
 
       </div>
     </div>
