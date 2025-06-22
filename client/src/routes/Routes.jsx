@@ -35,6 +35,7 @@ import CreateClass from '../pages/Accounts-Dashboard/Components/class/CreateClas
 import AccountDashboardLayout from '../pages/Accounts-Dashboard/Layouts/AccountDashboardLayout'
 import MainElement from '../pages/Accounts-Dashboard/Layouts/MainElement'
 import ShowAllClass from '../pages/Accounts-Dashboard/Components/class/ShowAllClass'
+import Students from '../pages/Accounts-Dashboard/students/Students'
 
 
 
@@ -135,7 +136,7 @@ export const router = createBrowserRouter([
           { index: true, element: <MainElement></MainElement> }, // 
           { path: 'create-class', element: <CreateClass></CreateClass> },
           { path: 'all-class', element: <ShowAllClass/> },
-          { path: 'students', element: <ShowAllClass/> },
+          { path: 'students', element: <Students/> },
         ],
       },
       {
