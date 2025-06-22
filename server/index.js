@@ -10,6 +10,7 @@ const bcrypt = require('bcrypt');
 const uploadGoogleDriveRoute = require('./routes/UploadGoogleDrive');
 const uploadPdfToDrive = require('./utils/GooglePdfUploader');
 const studentRoutes = require('./routes/students');
+const classRoutes = require('./routes/class');
 const teachersRoutes = require('./routes/teachers');
 dotenv.config();
 const app = express();
@@ -466,7 +467,7 @@ app.get('/users/:email', async (req, res) => {
       }
     });
 
-    console.log("📥 GET /students/next-id hit"); // Add this line for confirmation
+   
 
 
     // Upload results
@@ -665,6 +666,19 @@ app.get('/users/:email', async (req, res) => {
         res.status(500).send({ message: "Failed to update attendance" });
       }
     });
+
+
+
+
+
+// From here the accounts server starts
+
+// create class
+
+const classRouter = classRoutes(db); // passing db directly
+app.use('/classes', classRouter);
+
+
 
 
     console.log('✅ Successfully connected to MongoDB.');
