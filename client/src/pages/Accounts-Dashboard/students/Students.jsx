@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import useFetchQuery from "../../../hooks/useFetchQuery";
 
 const Students = () => {
