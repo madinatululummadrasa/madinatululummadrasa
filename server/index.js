@@ -11,6 +11,7 @@ const uploadGoogleDriveRoute = require('./routes/UploadGoogleDrive');
 const uploadPdfToDrive = require('./utils/GooglePdfUploader');
 const studentRoutes = require('./routes/students');
 const classRoutes = require('./routes/class');
+const collectionRoutes = require('./routes/collection');
 const teachersRoutes = require('./routes/teachers');
 dotenv.config();
 const app = express();
@@ -93,6 +94,10 @@ async function run() {
     await client.connect();
 
     const db = client.db('allNotice');
+    const accountDB = client.db('accountDB');
+
+
+
     const noticesCollection = db.collection('notices');
     const studentsCollection = db.collection('students');
     const teachersCollection = db.collection('teachers');
@@ -100,6 +105,42 @@ async function run() {
     const resultCollection = db.collection('results');
     const usersCollection = db.collection('users');
 
+
+
+  // ---------------------------------------------------------From here the accounts server starts-------------------------------------------------------------
+
+    // create class
+
+    const classRouter = classRoutes(db); // passing db directly
+    app.use('/classes', classRouter);
+
+    const collectionRouter = collectionRoutes(accountDB); // passing db directly
+    app.use('/collections', collectionRouter);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    const accountCollection = accountDB.collection('collectionSource'); // example collection
 
     // app.get('/api/profile', verifyFirebaseToken, async (req, res) => {
     //   console.log('Accessing protected profile route for Firebase user:', req.user.email, 'UID:', req.user.uid);
@@ -167,23 +208,23 @@ async function run() {
       res.send(result);
     });
 
-// Get a single user by email
-app.get('/users/:email', async (req, res) => {
-  const email = req.params.email;
+    // Get a single user by email
+    app.get('/users/:email', async (req, res) => {
+      const email = req.params.email;
 
-  try {
-    const user = await usersCollection.findOne({ email }); // ✅ findOne returns a single document, not a cursor
+      try {
+        const user = await usersCollection.findOne({ email }); // ✅ findOne returns a single document, not a cursor
 
-    if (!user) {
-      return res.status(404).send({ message: 'User not found' });
-    }
+        if (!user) {
+          return res.status(404).send({ message: 'User not found' });
+        }
 
-    res.send(user);
-  } catch (error) {
-    console.error('Error fetching user:', error);
-    res.status(500).send({ message: 'Server error' });
-  }
-});
+        res.send(user);
+      } catch (error) {
+        console.error('Error fetching user:', error);
+        res.status(500).send({ message: 'Server error' });
+      }
+    });
 
 
 
@@ -200,25 +241,25 @@ app.get('/users/:email', async (req, res) => {
 
 
     app.patch('/users/:id', async (req, res) => {
-  const { id } = req.params;
-  const { name, email, role } = req.body;
+      const { id } = req.params;
+      const { name, email, role } = req.body;
 
-  const updateFields = {};
-  if (name) updateFields.name = name;
-  if (email) updateFields.email = email;
-  if (role) updateFields.role = role;
+      const updateFields = {};
+      if (name) updateFields.name = name;
+      if (email) updateFields.email = email;
+      if (role) updateFields.role = role;
 
-  const result = await usersCollection.updateOne(
-    { _id: new ObjectId(id) },
-    { $set: updateFields }
-  );
+      const result = await usersCollection.updateOne(
+        { _id: new ObjectId(id) },
+        { $set: updateFields }
+      );
 
-  if (result.modifiedCount > 0) {
-    res.send({ success: true });
-  } else {
-    res.status(400).send({ message: "No change made" });
-  }
-});
+      if (result.modifiedCount > 0) {
+        res.send({ success: true });
+      } else {
+        res.status(400).send({ message: "No change made" });
+      }
+    });
 
 
     // // JWT Route for Firebase Authenticated Users
@@ -325,7 +366,7 @@ app.get('/users/:email', async (req, res) => {
     });
 
     // Notices API
-    app.post('/notices',  async (req, res) => {
+    app.post('/notices', async (req, res) => {
       try {
         const result = await noticesCollection.insertOne(req.body);
         res.send(result);
@@ -371,7 +412,7 @@ app.get('/users/:email', async (req, res) => {
 
     // Students API
     const studentRouter = studentRoutes(db); // passing db directly
-    app.use('/students',  studentRouter);
+    app.use('/students', studentRouter);
 
     // Techers API
     const teachersRouter = teachersRoutes(db); // passing db directly
@@ -425,7 +466,7 @@ app.get('/users/:email', async (req, res) => {
       }
     });
     // get students
-    app.get("/students/:studentId",  async (req, res) => {
+    app.get("/students/:studentId", async (req, res) => {
       try {
         const { studentId } = req.params;
         const student = await studentsCollection.findOne({ studentId }); // ✅ use custom field
@@ -467,7 +508,7 @@ app.get('/users/:email', async (req, res) => {
       }
     });
 
-   
+
 
 
     // Upload results
@@ -671,15 +712,7 @@ app.get('/users/:email', async (req, res) => {
 
 
 
-// From here the accounts server starts
-
-// create class
-
-const classRouter = classRoutes(db); // passing db directly
-app.use('/classes', classRouter);
-
-
-
+  
 
     console.log('✅ Successfully connected to MongoDB.');
     app.listen(port, () => {

@@ -36,6 +36,7 @@ import AccountDashboardLayout from '../pages/Accounts-Dashboard/Layouts/AccountD
 import MainElement from '../pages/Accounts-Dashboard/Layouts/MainElement'
 import ShowAllClass from '../pages/Accounts-Dashboard/Components/class/ShowAllClass'
 import Students from '../pages/Accounts-Dashboard/students/Students'
+import AddCollection from '../pages/Accounts-Dashboard/Add-Collection/AddCollection'
 
 
 
@@ -137,6 +138,7 @@ export const router = createBrowserRouter([
           { path: 'create-class', element: <CreateClass></CreateClass> },
           { path: 'all-class', element: <ShowAllClass/> },
           { path: 'students', element: <Students/> },
+          { path: 'add-new-collection-entry', element: <AddCollection></AddCollection> },
         ],
       },
       {
