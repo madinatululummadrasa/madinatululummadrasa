@@ -10,7 +10,7 @@ const iconData = [
   { id: 7, icon: 'https://i.ibb.co/TDm5zFNy/memberfeecollection.png', text: 'সদস্যের কালেকশন', link: '#member-collection' },
   { id: 8, icon: 'https://i.ibb.co/8DM70m4R/salarydue.png', text: 'বেতনের বাকি রিপোর্ট', link: '#salary-due-report' },
   { id: 9, icon: 'https://i.ibb.co/60hZjGww/cost.png', text: 'খরচের খাত', link: '#expense-category' },
-  { id: 10, icon: 'https://i.ibb.co/d0HBsHZK/incometype.png', text: 'কালেকশনের খাত', link: '#collection-category' },
+  { id: 10, icon: 'https://i.ibb.co/d0HBsHZK/incometype.png', text: 'কালেকশনের খাত', link: 'accounts-dashboard/collection-category' },
   { id: 11, icon: 'https://i.ibb.co/4nWXDjLG/cashreport.png', text: 'ক্যাশ রিপোর্ট', link: '#cash-report' },
   { id: 12, icon: 'https://i.ibb.co/hRwB7RKW/incomeexpense.png', text: 'আয়-ব্যয়', link: '#income-expense' },
   { id: 13, icon: 'https://i.ibb.co/qLrwY0Sq/otherscashmoney.png', text: 'অন্যান্য নগদ জমা', link: '#other-cash-deposit' },
