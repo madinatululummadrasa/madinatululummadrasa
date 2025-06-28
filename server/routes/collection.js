@@ -4,6 +4,7 @@ const { ObjectId } = require('mongodb');
 module.exports = (accountDB) => {
     const router = express.Router();
     const accountCollection = accountDB.collection('collectionSource');
+    const sourceCollection = accountDB.collection('collectionSource');
 
 
 
@@ -42,7 +43,7 @@ module.exports = (accountDB) => {
     router.post('/collection-category', async (req, res) => {
         try {
             const newCategory = req.body;
-            const result = await accountCollection.insertOne(newCategory);
+            const result = await sourceCollection.insertOne(newCategory);
             console.log('New collection category added:', result);
             res.status(201).json({ message: 'Collection category added successfully', id: result.insertedId });
         } catch (error) {
@@ -51,6 +52,16 @@ module.exports = (accountDB) => {
         }
     }   
     );
+    // 📌 Get All Collection Categories
+    router.get('/collection-category', async (req, res) => {
+        try {
+            const categories = await sourceCollection.find({}).toArray();
+            res.status(200).json(categories);
+        } catch (error) {
+            console.error('Error fetching collection categories:', error);
+            res.status(500).json({ error: 'Failed to fetch collection categories' });
+        }
+    });
 
     return router;
 };

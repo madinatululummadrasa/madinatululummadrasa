@@ -16,3 +16,13 @@ enabled,
 };
 
 export default useFetchQuery;
+
+
+
+/* 
+ const { data: classes = [], isLoading, error, refetch } = useFetchQuery({
+    key: ["classes"],
+    url: "/classes",
+  });
+
+*/

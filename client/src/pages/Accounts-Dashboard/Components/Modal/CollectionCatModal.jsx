@@ -9,6 +9,7 @@ import { useState } from "react";
 const CollectionCatModal = ({
     isOpen,
     onClose,
+    refetch
 
 }) => {
 
@@ -16,17 +17,21 @@ const CollectionCatModal = ({
 
 
     const fields = [
-        { name: "collection", label: "khater নাম", required: true },
+        { name: "Name", label: "খাতের নাম", required: true },
+        { name: "link", label: "টার্গেট লিংক", required: true },
         { name: "status", label: "অবস্থা", type: "select", options: ["সক্রিয়", "নিষ্ক্রিয়"] },
     ];
 
     const initialValues = {
 
-        collection: "",
+        Name: "",
+        link: "",
         status: "সক্রিয়",
     };
     const handleSuccess = () => {
         alert("✅ সফলভাবে সংরক্ষিত হয়েছে!");
+        refetch(); 
+        onClose();
     };
 
 
@@ -41,7 +46,6 @@ const CollectionCatModal = ({
                         initialValues={initialValues}
                         onSuccess={handleSuccess}
                         buttonText="Collection করুন"
-                       
                         endpoint="/collections/collection-category"
                       
                     />

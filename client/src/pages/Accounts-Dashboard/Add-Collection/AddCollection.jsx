@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 import { useState } from "react";
 import ReusableForm from "../Components/ReusableForm/ReusableForm";
+import useFetchQuery from "../../../hooks/useFetchQuery";
 
 
 const AddCollection = () => {
@@ -13,12 +14,15 @@ const AddCollection = () => {
         amount: "",
         details: ""
     };
-
+    const { data: collectionCategories = [], isLoading, error, refetch } = useFetchQuery({
+        key: ["collectionCategories"],
+        url: "/collections/collection-category",
+    });
 
     const CollectionFields = [
 
         { name: "admissionDate", label: "collectioner  তারিখ", type: "date", required: true },
-        { name: "incomeSource", label: "আয়ের খাত", required: true, type: "select", options: ["1", "2", "3", "4", "5", "6"] },
+        { name: "incomeSource", label: "আয়ের খাত", required: true, type: "select", options: collectionCategories.map(c => c.Name) },
         { name: "month", label: "মাস", required: true, type: "select", options: ["1", "2", "3", "4", "5", "6"] },
         { name: "amount", label: "পরিমাণ", type: "number", required: true, min: 0 },
         { name: "details", label: "বিস্তারিত", type: "textarea", required: false }
