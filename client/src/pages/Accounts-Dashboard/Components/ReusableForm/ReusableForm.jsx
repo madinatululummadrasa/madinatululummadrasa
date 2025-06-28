@@ -10,11 +10,13 @@ const ReusableForm = ({
   buttonText = "Submit",
   onSuccess,
   onError,
+  onChange,
   validationFn,
   grid = false, // optional: display in grid format
   buttons = [] // ← New prop
 }) => {
   const [formData, setFormData] = useState(initialValues);
+  console.log(formData);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const secureAxios = useAxiosSecure();
@@ -30,12 +32,26 @@ const ReusableForm = ({
     }
   }, []);
 
+  // const handleChange = (e) => {
+  //   const { name, value, type, files } = e.target;
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [name]: type === "file" ? files[0] : value,
+  //   }));
+  // };
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
-    setFormData((prev) => ({
-      ...prev,
+    const updated = {
+      ...formData,
       [name]: type === "file" ? files[0] : value,
-    }));
+    };
+
+    setFormData(updated);
+
+    // 🔄 notify parent
+    if (onChange) {
+      onChange(updated);
+    }
   };
 
   const validate = async () => {

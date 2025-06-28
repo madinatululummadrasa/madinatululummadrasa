@@ -37,5 +37,20 @@ module.exports = (accountDB) => {
     );
     // 📌 Get Collection by ID
 
+
+    // post new collection category
+    router.post('/collection-category', async (req, res) => {
+        try {
+            const newCategory = req.body;
+            const result = await accountCollection.insertOne(newCategory);
+            console.log('New collection category added:', result);
+            res.status(201).json({ message: 'Collection category added successfully', id: result.insertedId });
+        } catch (error) {
+            console.error('Error adding collection category:', error);
+            res.status(500).json({ error: 'Failed to add collection category' });
+        }
+    }   
+    );
+
     return router;
 };
