@@ -107,7 +107,7 @@ async function run() {
 
 
 
-  // ---------------------------------------------------------From here the accounts server starts-------------------------------------------------------------
+    // ---------------------------------------------------------From here the accounts server starts-------------------------------------------------------------
 
     // create class
 
@@ -275,34 +275,34 @@ async function run() {
     //   console.log('JWT generated for user:', email, ":", token);
     //   res.send({ token }); // 🎯 Send token back to frontend
     // });
-app.post('/jwt', async (req, res) => {
-  try {
-    const { email } = req.body;
+    app.post('/jwt', async (req, res) => {
+      try {
+        const { email } = req.body;
 
-    if (!email) {
-      return res.status(400).json({ error: "Email is required" });
-    }
+        if (!email) {
+          return res.status(400).json({ error: "Email is required" });
+        }
 
-    const user = await usersCollection.findOne({ email });
+        const user = await usersCollection.findOne({ email });
 
-    if (!user) {
-      return res.status(404).json({ error: "User not found in database" });
-    }
+        if (!user) {
+          return res.status(404).json({ error: "User not found in database" });
+        }
 
-    const token = jwt.sign(
-      { email: user.email, role: user.role },
-      process.env.JWT_SECRET || 'your_secret_key',
-      { expiresIn: '1h' }
-    );
+        const token = jwt.sign(
+          { email: user.email, role: user.role },
+          process.env.JWT_SECRET || 'your_secret_key',
+          { expiresIn: '1h' }
+        );
 
-    console.log('✅ JWT generated for user:', email);
-    res.send({ token });
+        console.log('✅ JWT generated for user:', email);
+        res.send({ token });
 
-  } catch (err) {
-    console.error("❌ JWT generation failed:", err.message);
-    res.status(500).json({ error: "Internal server error" });
-  }
-});
+      } catch (err) {
+        console.error("❌ JWT generation failed:", err.message);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    });
 
 
     // Signup Route
@@ -741,7 +741,7 @@ app.post('/jwt', async (req, res) => {
 
 
 
-  
+
 
     console.log('✅ Successfully connected to MongoDB.');
     app.listen(port, () => {

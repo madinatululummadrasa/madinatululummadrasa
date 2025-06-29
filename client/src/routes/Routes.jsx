@@ -38,6 +38,8 @@ import ShowAllClass from '../pages/Accounts-Dashboard/Components/class/ShowAllCl
 import Students from '../pages/Accounts-Dashboard/students/Students'
 import AddCollection from '../pages/Accounts-Dashboard/Add-Collection/AddCollection'
 import CollectionCategory from '../pages/Accounts-Dashboard/collection-category/CollectionCategory'
+import Collection from '../pages/Accounts-Dashboard/Add-Collection/Collection'
+
 
 
 
@@ -141,7 +143,7 @@ export const router = createBrowserRouter([
           { path: 'students', element: <Students /> },
           { path: 'add-new-collection-entry', element: <AddCollection/> },
           { path: 'collection-category', element: <CollectionCategory /> },
-          { path: 'collections', element: <CollectionCategory /> },
+          { path: 'collections', element: <Collection /> },
         ],
       },
       {

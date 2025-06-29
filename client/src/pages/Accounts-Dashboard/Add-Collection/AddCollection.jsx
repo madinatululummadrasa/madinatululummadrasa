@@ -6,13 +6,14 @@ import useAuth from "../../../hooks/useAuth";
 
 
 const AddCollection = () => {
+    const [selectedIncomeSource, setSelectedIncomeSource] = useState("");
 
     const { user } = useAuth();
     console.log(user);
 
     const formattedDate = new Date().toISOString().split("T")[0]; // "2025-06-29"
 
-
+    const [formData, setFormData] = useState({}); // local copy to track changes
     const monthNames = [
         "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
         "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"
@@ -29,25 +30,58 @@ const AddCollection = () => {
         amount: "",
         details: "",
         colletioner: user?.displayName || "", // Use user's display name if available
-        
-        
+        donorName: "", // for donation case
+        donorPhone: "", // for donation case
+
+
     };
+
+const handleFormChange = (updatedForm) => {
+    setFormData(updatedForm);
+    setSelectedIncomeSource(updatedForm.incomeSource); // <-- now it tracks the selected income source
+};
+
+    const extraFields = [];
+
+    if (selectedIncomeSource === "মাসিক ফি") {
+        extraFields.push(
+            { name: "donorName", label: "দাতার নাম", type: "text", required: true },
+            { name: "donorPhone", label: "দাতার ফোন নম্বর", type: "text", required: false }
+        );
+    }
+
     const { data: collectionCategories = [], isLoading, error, refetch } = useFetchQuery({
         key: ["collectionCategories"],
         url: "/collections/collection-category",
     });
+    const commonFields = [
+        { name: "admissionDate", label: "collectioner  তারিখ", type: "date", required: true },
+        {
+            name: "incomeSource",
+            label: "আয়ের খাত",
+            required: true,
+            type: "select",
+            options: collectionCategories.map(c => c.Name)
+        },
+        { name: "month", label: "মাস", required: true, type: "select", options: monthNames },
+        { name: "amount", label: "পরিমাণ", type: "number", required: true, min: 0 },
+        { name: "colletioner", label: "কালেকশনকারী", type: "text", required: true },
+        { name: "details", label: "বিস্তারিত", type: "textarea", required: false },
+    ];
 
+    
     const CollectionFields = [
 
         { name: "admissionDate", label: "collectioner  তারিখ", type: "date", required: true },
         { name: "incomeSource", label: "আয়ের খাত", required: true, type: "select", options: collectionCategories.map(c => c.Name) },
         { name: "month", label: "মাস", required: true, type: "select", options: monthNames },
         { name: "amount", label: "পরিমাণ", type: "number", required: true, min: 0 },
-        { name: "colletioner", label: "কালেকশনকারী ", type: "text", required: true ,},
-        { name: "details", label: "বিস্তারিত", type: "textarea", required: false }
+        { name: "colletioner", label: "কালেকশনকারী ", type: "text", required: true, },
+        { name: "details", label: "বিস্তারিত", type: "textarea", required: false },
+        ...extraFields
     ];
 
- 
+
     const handleSuccess = () => {
         setSuccessMessage("collection সফলভাবে যোগ করা হয়েছে!");
     };
@@ -56,15 +90,16 @@ const AddCollection = () => {
         <div>
             <ReusableForm
                 endpoint="/collections"
-                fields={CollectionFields}
+               fields={CollectionFields}
                 onSuccess={handleSuccess}
                 initialValues={initialValues}
-                buttonText="Collection যুক্ত করুন"
+                buttonText="কালেকশন যুক্ত করুন"
                 grid={true}
+                 onChange={handleFormChange}
                 successMessage={successMessage}
                 setSuccessMessage={setSuccessMessage}
                 buttons={[
-                    { type: "reset", label: "রিসেট" },
+                    { type: "navigate", label: "সকল কালেকশন", to: "/accounts-dashboard/collections" },
 
                 ]}
             />

@@ -6,29 +6,28 @@ module.exports = (accountDB) => {
     const accountCollection = accountDB.collection('collections');
     const sourceCollection = accountDB.collection('collectionSource');
 
+/* this route will be started with '/collections' */
+
+
 
 
     // 📌 Create Academic Record
     router.post('/', async (req, res) => {
         try {
             const newCollection = req.body;
-
             const result = await accountCollection.insertOne(newCollection);
             console.log('New collection added:', result);
-
-
-
             res.status(201).json({ message: 'Collection added successfully', id: result.insertedId });
         } catch (error) {
             console.error('Error adding collection:', error);
             res.status(500).json({ error: 'Failed to add collection' });
         }
     });
-
+    
     // 📌 Get All Collections
     router.get('/', async (req, res) => {
         try {
-            const collections = await moneyCollection.find({}).toArray();
+            const collections = await accountCollection.find({}).toArray();
             res.status(200).json(collections);
         } catch (error) {
             console.error('Error fetching collections:', error);
@@ -36,7 +35,7 @@ module.exports = (accountDB) => {
         }
     }
     );
-    // 📌 Get Collection by ID
+
 
 
     // post new collection category
@@ -50,8 +49,11 @@ module.exports = (accountDB) => {
             console.error('Error adding collection category:', error);
             res.status(500).json({ error: 'Failed to add collection category' });
         }
-    }   
+    }
     );
+
+
+
     // 📌 Get All Collection Categories
     router.get('/collection-category', async (req, res) => {
         try {

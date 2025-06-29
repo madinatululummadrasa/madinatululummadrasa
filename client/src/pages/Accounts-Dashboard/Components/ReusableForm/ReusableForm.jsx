@@ -24,7 +24,7 @@ const ReusableForm = ({
   const navigate = useNavigate();
   useEffect(() => {
     setFormData(initialValues);
-  }, [initialValues]);
+  }, []);
 
   useEffect(() => {
     if (firstFieldRef.current) {
