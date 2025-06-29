@@ -141,6 +141,7 @@ export const router = createBrowserRouter([
           { path: 'students', element: <Students /> },
           { path: 'add-new-collection-entry', element: <AddCollection/> },
           { path: 'collection-category', element: <CollectionCategory /> },
+          { path: 'collections', element: <CollectionCategory /> },
         ],
       },
       {
