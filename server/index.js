@@ -262,19 +262,48 @@ async function run() {
     });
 
 
-    // // JWT Route for Firebase Authenticated Users
-    app.post('/jwt', async (req, res) => {
-      const { email } = req.body;
-      const user = await usersCollection.findOne({ email }); // ✅ Find user in DB
+    // // // JWT Route for Firebase Authenticated Users
+    // app.post('/jwt', async (req, res) => {
+    //   const { email } = req.body;
+    //   const user = await usersCollection.findOne({ email }); // ✅ Find user in DB
 
-      const token = jwt.sign(
-        { email: user.email, role: user.role }, // ✅ Payload
-        'your_secret_key',                      // 🔒 Secret key
-        { expiresIn: '1h' }                     // ⏰ Token expires in 1 hour
-      );
-      console.log('JWT generated for user:', email, ":", token);
-      res.send({ token }); // 🎯 Send token back to frontend
-    });
+    //   const token = jwt.sign(
+    //     { email: user.email, role: user.role }, // ✅ Payload
+    //     'your_secret_key',                      // 🔒 Secret key
+    //     { expiresIn: '1h' }                     // ⏰ Token expires in 1 hour
+    //   );
+    //   console.log('JWT generated for user:', email, ":", token);
+    //   res.send({ token }); // 🎯 Send token back to frontend
+    // });
+app.post('/jwt', async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({ error: "Email is required" });
+    }
+
+    const user = await usersCollection.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found in database" });
+    }
+
+    const token = jwt.sign(
+      { email: user.email, role: user.role },
+      process.env.JWT_SECRET || 'your_secret_key',
+      { expiresIn: '1h' }
+    );
+
+    console.log('✅ JWT generated for user:', email);
+    res.send({ token });
+
+  } catch (err) {
+    console.error("❌ JWT generation failed:", err.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 
     // Signup Route
     app.post('/api/signup', async (req, res) => {

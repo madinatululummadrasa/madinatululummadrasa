@@ -3,7 +3,7 @@ const { ObjectId } = require('mongodb');
 
 module.exports = (accountDB) => {
     const router = express.Router();
-    const accountCollection = accountDB.collection('collectionSource');
+    const accountCollection = accountDB.collection('collections');
     const sourceCollection = accountDB.collection('collectionSource');
 
 
