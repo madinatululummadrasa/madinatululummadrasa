@@ -32,13 +32,6 @@ const ReusableForm = ({
     }
   }, []);
 
-  // const handleChange = (e) => {
-  //   const { name, value, type, files } = e.target;
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [name]: type === "file" ? files[0] : value,
-  //   }));
-  // };
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
     const updated = {
