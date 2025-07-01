@@ -3,7 +3,7 @@ import React from 'react'; // Import React for JSX
 import useFetchQuery from "../../../hooks/useFetchQuery"; // Assuming this hook works as intended
 
 const Collection = () => {
-
+/* siam from laptop */
   // Fetching data using the custom hook
   const { data: collection = [], isLoading, error, refetch } = useFetchQuery({
     key: ["collections"],
