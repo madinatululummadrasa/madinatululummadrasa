@@ -17,9 +17,11 @@ const AddStudentPage = () => {
     name: "",
     roll: "",
     class: "",
+    
     session: "2025",
     group: "",
     feeStatus: "বেতন", // Default value
+    preDue: 0, // New field for preDue
     admissionDate: "",
     profileImage: null, // File object for image
     AdmissionImage: null, // File object for image
@@ -123,6 +125,7 @@ const AddStudentPage = () => {
         session: formData.session,
         group: formData.group,
         feeStatus: formData.feeStatus,
+        preDue: formData.preDue, // Include preDue in the new student object
         admissionDate: formData.admissionDate,
         phone: formData.phone,
         gender: formData.gender,
@@ -147,7 +150,8 @@ const AddStudentPage = () => {
           class: "",
           session: "",
           group: "",
-          feeStatus: "", // Default value
+          feeStatus: "", 
+          preDue: 0, 
           admissionDate: "",
           profileImage: null,
           AdmissionImage: null,
@@ -310,7 +314,7 @@ const AddStudentPage = () => {
 
           {/* fees status */}
           <div>
-            <label htmlFor="feeStatus" className="block text-sm font-medium text-gray-700 mb-1">শাখা</label>
+            <label htmlFor="feeStatus" className="block text-sm font-medium text-gray-700 mb-1">বেতন</label>
             <select
               id="feeStatus"
               name="feeStatus"
@@ -324,7 +328,20 @@ const AddStudentPage = () => {
               <option value="ফ্রী বেতন">ফ্রী বেতন</option>
             </select>
           </div>
-
+      {/* preDue Number */}
+          <div>
+            <label htmlFor="preDue" className="block text-sm font-medium text-gray-700 mb-1">পূর্বের বকেয়া</label>
+            <input
+              type="number"
+              id="preDue"
+              name="preDue"
+              placeholder="পূর্বের বকেয়া"
+              value={formData.preDue}
+              onChange={handleChange}
+              className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3 focus:ring-indigo-500 focus:border-indigo-500 transition duration-150 ease-in-out"
+              required
+            />
+          </div>
 
           {/* ---------------------------------------------------------Admission Date-------------------------------------------- */}
           <div>

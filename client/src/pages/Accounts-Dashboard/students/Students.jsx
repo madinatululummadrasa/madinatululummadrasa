@@ -36,6 +36,7 @@ const Students = () => {
                   <p><strong>অবস্থাঃ</strong> {student.status || "N/A"}</p>
                   <p><strong>শ্রেণীঃ</strong> {student.class}</p>
                   <p><strong>বেতনের ধরনঃ</strong> {student.feeType || "N/A"}</p>
+                  <p><strong>Due</strong> {student.preDue || "N/A"}</p>
                 </div>
 
                 {/* Student Image */}

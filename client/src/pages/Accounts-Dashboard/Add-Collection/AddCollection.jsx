@@ -21,28 +21,29 @@ const AddCollection = () => {
         key: ["students"],
         url: "/students",
     });
-
+    console.log("students----------------------------------", students);
     const [selectedIncomeSource, setSelectedIncomeSource] = useState("");
     const [formData, setFormData] = useState({}); // local copy to track changes
     const [successMessage, setSuccessMessage] = useState("");
     const [selectedClass, setSelectedClass] = useState("");
+    const [selectedName, setSelectedName] = useState("");
+    console.log("selectedName", selectedName);
+    console.log("selectedClass", selectedClass);
     const [selectedStudent, setSelectedStudent] = useState([]);
-    console.log("selectedClass", selectedStudent);
+    console.log("selectedStudent", selectedStudent);
 
-
-
-    //    const studentNames = students
-    //   .filter(student => student.class === selectedClass)
-    // //   .map(student => student.name);
-
-    //   console.log("studentNames", studentNames);
-    // console.log(studentNames);
-
-
+    const [AselectedStudent, setASelectedStudent] = useState([]);
+    console.log("AselectedStudent", AselectedStudent?.[0]?.preDue);
 
     const { user } = useAuth();
     const formattedDate = new Date().toISOString().split("T")[0]; // "2025-06-29"
 
+
+
+
+
+
+    // Update selectedIncomeSource when formData changes
     useEffect(() => {
         if (selectedClass) {
             const filteredStudents = students
@@ -51,8 +52,17 @@ const AddCollection = () => {
             setSelectedStudent(filteredStudents);
         }
     }, [selectedClass, students]);
+    // Update selectedClass when formData changes
+    useEffect(() => {
+        if (selectedClass) {
+            const filteredStudents = students
+                .filter(student => student.class === selectedClass).filter(student => student.name === selectedName);
 
+            setASelectedStudent(filteredStudents);
+        }
+    }, [selectedClass, students, selectedName]);
 
+    // name === student
     const monthNames = [
         "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
         "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"
@@ -69,6 +79,7 @@ const AddCollection = () => {
         amount: "",
         details: "",
         colletioner: user?.displayName || "",
+        preDue: '',
         donorName: "",
         donorPhone: "",
         class: "", // Initialize class field
@@ -81,6 +92,8 @@ const AddCollection = () => {
         setFormData(updatedForm);
         setSelectedIncomeSource(updatedForm.incomeSource); // <-- now it tracks the selected income source
         setSelectedClass(updatedForm.class); // <-- now it tracks the selected class
+        setSelectedName(updatedForm.student); // <-- now it tracks the selected student name
+        console.log("Updated Form Data:", updatedForm);
     };
 
     const extraFields = [];
@@ -93,7 +106,9 @@ const AddCollection = () => {
     } else if (selectedIncomeSource === "বেতন") {
         extraFields.push(
             { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
-            { name: "student", label: "শিক্ষার্থীর  নাম", type: "select", options: selectedClass ? selectedStudent : [], }
+            { name: "student", label: "শিক্ষার্থীর  নাম", type: "select", options: selectedClass ? selectedStudent : [], },
+            { name: "preDue", label: "পূর্বের বকেয়া", type: "number", required: true }, // Use AselectedStudent to get preDue
+
         );
     }
     // students.map(s => s.name)
@@ -119,6 +134,12 @@ const AddCollection = () => {
 
     return (
         <div>
+
+              {selectedIncomeSource === "বেতন" && AselectedStudent?.[0] && (
+                <div className="col-span-2 bg-yellow-50 p-3 rounded border text-gray-700">
+                    <p><strong>পূর্বের বকেয়া:</strong> {AselectedStudent[0].preDue || 0} টাকা</p>
+                </div>
+            )}
             <ReusableForm
                 endpoint="/collections"
                 fields={CollectionFields}
@@ -134,6 +155,7 @@ const AddCollection = () => {
 
                 ]}
             />
+          
         </div>
     );
 };
