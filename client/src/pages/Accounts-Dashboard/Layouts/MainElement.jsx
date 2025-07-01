@@ -25,6 +25,7 @@ const iconData = [
   { id: 22, icon: 'https://i.ibb.co/TBCqYv11/staffpresent.png', text: 'স্টাফদের উপস্থিতি', link: '#staff-attendance' },
   { id: 23, icon: 'https://i.ibb.co/FLPvy5tH/worker.png', text: 'স্টাফ', link: '#staff' },
   { id: 24, icon: 'https://i.ibb.co/4whN0NHD/money.png', text: 'শুরুর টাকা', link: '#opening-balance' },
+  { id: 25, icon: 'https://i.ibb.co/4whN0NHD/money.png', text: 'class fee set', link: 'accounts-dashboard/setclassfee' },
 ];
 
 const MainElement = () => {
