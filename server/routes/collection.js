@@ -1,10 +1,11 @@
 const express = require('express');
 const { ObjectId } = require('mongodb');
 
-module.exports = (accountDB) => {
+module.exports = (accountDB,db) => {
     const router = express.Router();
     const accountCollection = accountDB.collection('collections');
     const sourceCollection = accountDB.collection('collectionSource');
+  
 
 /* this route will be started with '/collections' */
 
@@ -64,6 +65,10 @@ module.exports = (accountDB) => {
             res.status(500).json({ error: 'Failed to fetch collection categories' });
         }
     });
+
+
+    // post new collection of student by id by patch method
+
 
     return router;
 };

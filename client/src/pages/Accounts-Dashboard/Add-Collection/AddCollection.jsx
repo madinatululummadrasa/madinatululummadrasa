@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import ReusableForm from "../Components/ReusableForm/ReusableForm";
 import useFetchQuery from "../../../hooks/useFetchQuery";
 import useAuth from "../../../hooks/useAuth";
+import useMutateData from "../../../hooks/useMutateData";
 
 
 const AddCollection = () => {
@@ -11,6 +12,8 @@ const AddCollection = () => {
         key: ["collectionCategories"],
         url: "/collections/collection-category",
     });
+
+
     // Fetch class names
     const { data: className = [], isLoading: isclassLoading, error: isclassError, refetch: classrefeytch } = useFetchQuery({
         key: ["className"],
@@ -27,14 +30,16 @@ const AddCollection = () => {
     const [successMessage, setSuccessMessage] = useState("");
     const [selectedClass, setSelectedClass] = useState("");
     const [selectedName, setSelectedName] = useState("");
+
+    
     console.log("selectedName", selectedName);
     console.log("selectedClass", selectedClass);
     const [selectedStudent, setSelectedStudent] = useState([]);
     console.log("selectedStudent", selectedStudent);
 
     const [AselectedStudent, setASelectedStudent] = useState([]);
-    console.log("AselectedStudent", AselectedStudent?.[0]?.preDue);
-
+    console.log("AselectedStudent", AselectedStudent);
+console.log("selectedIncomeSource", selectedIncomeSource);
     const { user } = useAuth();
     const formattedDate = new Date().toISOString().split("T")[0]; // "2025-06-29"
 
@@ -87,14 +92,42 @@ const AddCollection = () => {
 
 
     };
-
+    const [Form, setForm] = useState('');
     const handleFormChange = (updatedForm) => {
         setFormData(updatedForm);
         setSelectedIncomeSource(updatedForm.incomeSource); // <-- now it tracks the selected income source
         setSelectedClass(updatedForm.class); // <-- now it tracks the selected class
         setSelectedName(updatedForm.student); // <-- now it tracks the selected student name
         console.log("Updated Form Data:", updatedForm);
+        setForm(updatedForm); // Update the form state with the new data
+        setSelectedIncomeSource(updatedForm.incomeSource); // Update the selected source
+        // Return the updated form data
     };
+
+
+    // const sendTransaction = useMutateData({
+    //     method: "patch", // or "put"
+    //     invalidateKey: ["users"], // which query to refresh after mutation
+    //     successMsg: "User updated!",
+    //     errorMsg: "Failed to update user",
+    //     onSuccessCallback: () => {
+    //         console.log("User updated!");
+    //     },
+    // });
+
+    // try {
+    //     sendTransaction.mutate({
+    //         url: `/student/${AselectedStudent?.[0]?.studentId}`, // API endpoint
+    //         data: {
+    //             name: "Updated Name",
+    //             amount: Form.amount,
+    //         },
+    //     });
+
+    // } catch (error) {
+    //     console.error("Error fetching collection categories:", error);
+
+    // }
 
     const extraFields = [];
 
@@ -107,17 +140,20 @@ const AddCollection = () => {
         extraFields.push(
             { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
             { name: "student", label: "শিক্ষার্থীর  নাম", type: "select", options: selectedClass ? selectedStudent : [], },
-            { name: "preDue", label: "পূর্বের বকেয়া", type: "number", required: true }, // Use AselectedStudent to get preDue
+
 
         );
     }
     // students.map(s => s.name)
+    const initialPreDue = AselectedStudent?.[0]?.preDue || 0;
+    const currentPay = Form?.amount || 0;
+    const restDue = initialPreDue - currentPay;
+    console.log("restDue", restDue);
 
-
+    
     const CollectionFields = [
 
         { name: "admissionDate", label: "collectioner  তারিখ", type: "date", required: true },
-
         { name: "incomeSource", label: "আয়ের খাত", required: true, type: "select", options: collectionCategories.map(c => c.Name) },
         ...extraFields,
         { name: "month", label: "মাস", required: true, type: "select", options: monthNames },
@@ -127,15 +163,45 @@ const AddCollection = () => {
 
     ];
 
+    const sendTransaction = useMutateData({
+        method: "patch", // or "put"
+        invalidateKey: ["users"],
+        successMsg: "User updated!",
+        errorMsg: "Failed to update user",
+        onSuccessCallback: () => {
+            console.log("User updated!");
+        },
+    });
 
     const handleSuccess = () => {
         setSuccessMessage("collection সফলভাবে যোগ করা হয়েছে!");
+
+
+
+        try {
+            sendTransaction.mutate({
+                url: `/students/student/${AselectedStudent?.[0]?.studentId}`,
+                data: {
+                    name: selectedIncomeSource,
+                    amount: Form.amount,
+                    preDue: restDue,
+                    month: Form.month,
+                    colletioner: Form.colletioner,
+                },
+            });
+
+        } catch (error) {
+            console.error("Error fetching collection categories:", error);
+
+        }
+
+
     };
 
     return (
         <div>
-
-              {selectedIncomeSource === "বেতন" && AselectedStudent?.[0] && (
+            <div><img src={AselectedStudent?.[0]?.profileImageUrl} alt="" className="w-40 h-40" /></div>
+            {selectedIncomeSource === "বেতন" && AselectedStudent?.[0] && (
                 <div className="col-span-2 bg-yellow-50 p-3 rounded border text-gray-700">
                     <p><strong>পূর্বের বকেয়া:</strong> {AselectedStudent[0].preDue || 0} টাকা</p>
                 </div>
@@ -155,7 +221,7 @@ const AddCollection = () => {
 
                 ]}
             />
-          
+
         </div>
     );
 };
