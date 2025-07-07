@@ -12,7 +12,7 @@ const AddCollection = () => {
         key: ["collectionCategories"],
         url: "/collections/collection-category",
     });
-
+/* ddddfg */
 
     // Fetch class names
     const { data: className = [], isLoading: isclassLoading, error: isclassError, refetch: classrefeytch } = useFetchQuery({
