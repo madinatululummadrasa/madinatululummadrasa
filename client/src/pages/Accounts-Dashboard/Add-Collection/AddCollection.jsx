@@ -150,7 +150,7 @@ console.log("selectedIncomeSource", selectedIncomeSource);
     const restDue = initialPreDue - currentPay;
     console.log("restDue", restDue);
 
-    
+
     const CollectionFields = [
 
         { name: "admissionDate", label: "collectioner  তারিখ", type: "date", required: true },
