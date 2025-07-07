@@ -12,6 +12,7 @@ const AddCollection = () => {
         key: ["collectionCategories"],
         url: "/collections/collection-category",
     });
+    
 /* ddddfg */
 
     // Fetch class names
