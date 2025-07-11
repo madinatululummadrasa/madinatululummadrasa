@@ -12,8 +12,8 @@ const AddCollection = () => {
         key: ["collectionCategories"],
         url: "/collections/collection-category",
     });
-    
-/* ddddfg */
+
+    /* ddddfg */
 
     // Fetch class names
     const { data: className = [], isLoading: isclassLoading, error: isclassError, refetch: classrefeytch } = useFetchQuery({
@@ -32,7 +32,7 @@ const AddCollection = () => {
     const [selectedClass, setSelectedClass] = useState("");
     const [selectedName, setSelectedName] = useState("");
 
-    
+
     console.log("selectedName", selectedName);
     console.log("selectedClass", selectedClass);
     const [selectedStudent, setSelectedStudent] = useState([]);
@@ -40,7 +40,7 @@ const AddCollection = () => {
 
     const [AselectedStudent, setASelectedStudent] = useState([]);
     console.log("AselectedStudent", AselectedStudent);
-console.log("selectedIncomeSource", selectedIncomeSource);
+    console.log("selectedIncomeSource", selectedIncomeSource);
     const { user } = useAuth();
     const formattedDate = new Date().toISOString().split("T")[0]; // "2025-06-29"
 
@@ -75,7 +75,22 @@ console.log("selectedIncomeSource", selectedIncomeSource);
     ];
 
     const currentMonthIndex = new Date().getMonth();
+    console.log("currentMonthIndex", currentMonthIndex);
     const currentMonthName = monthNames[currentMonthIndex];
+ 
+  // 2. Get expected months up to current month
+const expectedMonths = monthNames.slice(0, currentMonthIndex + 1);
+console.log("Expected Months:", expectedMonths);
+    // 3. Extract months from student's paid collections
+const paidMonths = AselectedStudent
+  .filter(item => item.month && monthNames.includes(item.month))
+  .map(item => item.month);
+  console.log(paidMonths)
+    // Step 5: Calculate unpaid months
+    const unpaidMonths = expectedMonths.filter(month => !paidMonths.includes(month));
+
+    console.log("Unpaid Months:", unpaidMonths);
+    console.log("Total Unpaid:", unpaidMonths.length);
 
 
     const initialValues = {
