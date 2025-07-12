@@ -9,6 +9,8 @@ const ClassUpdateModal = ({
   onChange,
   onSubmit,
 }) => {
+
+  console.log("formData in modal", formData);
   return (
     <Dialog open={isOpen} onClose={onClose} className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4">
@@ -25,6 +27,18 @@ const ClassUpdateModal = ({
                 onChange={onChange}
               />
             </div>
+            <div>
+              <label className="block mb-1">বেতন</label>
+              <input
+                type="text"
+                name="fee"
+                className="w-full border rounded px-3 py-1"
+                value={formData.fee}
+                onChange={onChange}
+              />
+            </div>
+
+
             <div>
               <label className="block mb-1">অবস্থা</label>
               <select

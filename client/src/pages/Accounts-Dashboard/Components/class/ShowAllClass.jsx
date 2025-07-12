@@ -15,13 +15,13 @@ const ShowAllClass = () => {
 
   const [selectedClass, setSelectedClass] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({ className: "", status: "" });
+  const [formData, setFormData] = useState({ className: "", status: "" , fee: "" });
 
   const axiosSecure = useAxiosSecure();
 
   const openModal = (cls) => {
     setSelectedClass(cls);
-    setFormData({ className: cls.className, status: cls.status });
+    setFormData({ className: cls.className, status: cls.status , fee: cls.fee });
     setIsOpen(true);
   };
 
@@ -67,6 +67,7 @@ const ShowAllClass = () => {
               <td className="p-2 border">
                 <p>নামঃ {cls.className}</p>
                 <p>অবস্থা: {cls.status}</p>
+               <p>বেতন: {cls.fee}</p>
               </td>
               <td className="p-2 border text-center">
                 <button

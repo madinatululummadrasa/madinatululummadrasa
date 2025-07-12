@@ -31,7 +31,7 @@ module.exports = (db) => {
   // ✅ Update Academic Record (class) by ID
   router.patch('/:id', async (req, res) => {
     const { id } = req.params;
-    const { className, status } = req.body;
+    const { className, status,fee } = req.body;
 
     if (!ObjectId.isValid(id)) {
       return res.status(400).send({ message: 'Invalid ID format' });
@@ -43,6 +43,7 @@ module.exports = (db) => {
         {
           $set: {
             className,
+            fee,
             status,
             updatedAt: new Date(), // optional
           },

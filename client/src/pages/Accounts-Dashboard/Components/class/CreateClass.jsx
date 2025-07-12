@@ -8,12 +8,15 @@ const CreateClass = () => {
   const fields = [
     { name: "date", label: "তারিখ", type: "date", required: true },
     { name: "className", label: "শ্রেণীর নাম", required: true },
+    { name: "fee", label: "fee", type: "text", required: true },
     { name: "status", label: "অবস্থা", type: "select", options: ["সক্রিয়", "নিষ্ক্রিয়"] },
   ];
 
   const initialValues = {
     date: new Date().toISOString().split("T")[0],
     className: "",
+
+    fee: '',
     status: "সক্রিয়",
   };
 
