@@ -1,8 +1,13 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 import { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../providers/AuthProvider';
-
+import {
+  BeatLoading, BounceLoading, CircularLoading,
+  ClockLoading, RotateLoading, SpinLoading,
+  WaveLoading, DashLoading, CopperLoading
+} from 'respinner'
 const PrivateRoute = ({ children }) => {
   const { user, loading, isAuthChecked } = useContext(AuthContext);
   console.log('PrivateRoute: user, loading, isAuthChecked', user, loading, isAuthChecked);
@@ -16,7 +21,7 @@ const PrivateRoute = ({ children }) => {
     console.log('PrivateRoute: Still loading or initial auth check not complete. Showing loading indicator.');
     return (
       <div className="flex justify-center items-center h-screen">
-        <span className="loading loading-spinner loading-lg"></span>
+        <span className="loading loading-spinner loading-lg"><BounceLoading gap={5} /></span>
         <p className="text-xl ml-2">Loading authentication...</p>
       </div>
     );

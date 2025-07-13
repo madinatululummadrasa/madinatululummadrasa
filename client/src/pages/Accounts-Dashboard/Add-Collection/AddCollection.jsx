@@ -5,7 +5,7 @@ import useFetchQuery from "../../../hooks/useFetchQuery";
 import useAuth from "../../../hooks/useAuth";
 import useMutateData from "../../../hooks/useMutateData";
 import { toast } from "react-hot-toast";
-
+import {BeatLoading,BounceLoading} from 'respinner'
 const AddCollection = () => {
   const { user } = useAuth();
 
@@ -156,7 +156,11 @@ const AddCollection = () => {
   };
 
   // Loading & Error states
-  if (isLoading || isClassLoading || isStudentLoading) return <p>লোড হচ্ছে...</p>;
+  if (isLoading || isClassLoading || isStudentLoading) return  <div className="flex justify-center items-center h-screen">
+          <span className="loading loading-spinner loading-lg"><BounceLoading gap={5} /></span>
+      
+        </div>
+;
   if (error) return <p className="text-red-600">ডেটা লোড করতে সমস্যা হয়েছে।</p>;
 
   return (
