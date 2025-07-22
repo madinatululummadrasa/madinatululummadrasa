@@ -12,16 +12,17 @@ const ReusableForm = ({
   onError,
   onChange,
   validationFn,
-  grid = false, // optional: display in grid format
-  buttons = [] // ← New prop
+  grid = false,
+  buttons = [],
+  styleMode = "default" // NEW PROP
 }) => {
   const [formData, setFormData] = useState(initialValues);
-  console.log(formData);
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const secureAxios = useAxiosSecure();
   const firstFieldRef = useRef(null);
   const navigate = useNavigate();
+
   useEffect(() => {
     setFormData(initialValues);
   }, []);
@@ -38,13 +39,8 @@ const ReusableForm = ({
       ...formData,
       [name]: type === "file" ? files[0] : value,
     };
-
     setFormData(updated);
-
-    // 🔄 notify parent
-    if (onChange) {
-      onChange(updated);
-    }
+    if (onChange) onChange(updated);
   };
 
   const validate = async () => {
@@ -82,7 +78,7 @@ const ReusableForm = ({
       }
       const res = await secureAxios.post(endpoint, formToSend);
       if (onSuccess) onSuccess(res);
-      setFormData(initialValues); // reset form
+      setFormData(initialValues);
       setErrors({});
     } catch (err) {
       if (onError) onError(err);
@@ -97,13 +93,19 @@ const ReusableForm = ({
     setErrors({});
   };
 
+  const modernInputClass =
+    "w-full rounded-md border border-gray-300 bg-white px-4 py-2 text-sm shadow-sm placeholder-gray-400 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50";
+  const modernLabelClass = "block text-sm font-medium text-gray-700 mb-1";
+
   const renderField = (field, index) => {
+    const isModern = styleMode === "modern";
+
     const commonProps = {
       name: field.name,
       value: formData[field.name] || "",
       onChange: handleChange,
       placeholder: field.placeholder || "",
-      className: "w-full border rounded p-2",
+      className: isModern ? modernInputClass : "w-full border rounded p-2",
     };
 
     if (field.hidden && formData[field.hidden.dependsOn] !== field.hidden.value) {
@@ -112,7 +114,7 @@ const ReusableForm = ({
 
     return (
       <div key={field.name} className="space-y-1">
-        <label className="block text-sm font-medium text-gray-700">
+        <label className={isModern ? modernLabelClass : "block text-sm font-medium text-gray-700"}>
           {field.label}
         </label>
         {field.description && <p className="text-xs text-gray-500 mb-1">{field.description}</p>}
@@ -130,7 +132,7 @@ const ReusableForm = ({
             name={field.name}
             accept={field.accept || "*"}
             onChange={handleChange}
-            className={commonProps.className}
+            className={isModern ? modernInputClass : commonProps.className}
           />
         ) : field.type === "textarea" ? (
           <textarea
@@ -138,26 +140,19 @@ const ReusableForm = ({
             rows={4}
             ref={index === 0 ? firstFieldRef : null}
           />
+        ) : field.type === "date" ? (
+          <input
+            type="date"
+            {...commonProps}
+            ref={index === 0 ? firstFieldRef : null}
+          />
         ) : (
-          field.type === "date" ? (
-            <input
-              type="date"
-              {...commonProps}
-              ref={index === 0 ? firstFieldRef : null}
-            />
-          ) : (
-            <input
-              type={field.type || "text"}
-              {...commonProps}
-              ref={index === 0 ? firstFieldRef : null}
-            />
-          )
+          <input
+            type={field.type || "text"}
+            {...commonProps}
+            ref={index === 0 ? firstFieldRef : null}
+          />
         )}
-
-
-
-
-
 
         {errors[field.name] && (
           <p className="text-red-500 text-sm mt-1">{errors[field.name]}</p>
@@ -167,26 +162,37 @@ const ReusableForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit} className={`space-y-4 ${grid ? "grid grid-cols-1 sm:grid-cols-2 gap-4" : ""}`}>
+    <form
+      onSubmit={handleSubmit}
+      className={`space-y-4 ${grid ? "grid grid-cols-1 sm:grid-cols-2 gap-4" : ""} ${
+        styleMode === "modern" ? "bg-white p-6 rounded-xl shadow-xl" : ""
+      }`}
+    >
       {fields.map((field, i) => renderField(field, i))}
 
-      <div className="col-span-2 flex gap-4">
+      <div className="col-span-2 flex flex-wrap gap-4">
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+          className={`flex-1 ${
+            styleMode === "modern"
+              ? "bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-md shadow"
+              : "w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+          }`}
         >
           {loading ? "লোড হচ্ছে..." : buttonText}
         </button>
 
         {buttons.map((btn, idx) => {
+          const baseClass =
+            "flex-1 py-2 px-4 rounded-md text-white font-semibold shadow";
           if (btn.type === "navigate") {
             return (
               <button
                 key={idx}
                 type="button"
                 onClick={() => navigate(btn.to)}
-                className="w-full bg-green-600 text-white p-2 rounded hover:bg-green-700"
+                className={`${baseClass} bg-green-600 hover:bg-green-700`}
               >
                 {btn.label}
               </button>
@@ -199,7 +205,7 @@ const ReusableForm = ({
                 key={idx}
                 type="button"
                 onClick={handleReset}
-                className="w-full bg-yellow-600 text-white p-2 rounded hover:bg-yellow-700"
+                className={`${baseClass} bg-yellow-600 hover:bg-yellow-700`}
               >
                 {btn.label}
               </button>
@@ -212,7 +218,7 @@ const ReusableForm = ({
                 key={idx}
                 type="button"
                 onClick={btn.onClick}
-                className="w-full bg-gray-600 text-white p-2 rounded hover:bg-gray-700"
+                className={`${baseClass} bg-gray-600 hover:bg-gray-700`}
               >
                 {btn.label}
               </button>
@@ -221,16 +227,12 @@ const ReusableForm = ({
 
           return null;
         })}
-
-
-
       </div>
     </form>
   );
 };
 
 export default ReusableForm;
-
 
 
 

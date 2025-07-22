@@ -37,6 +37,26 @@ const ClassUpdateModal = ({
                 onChange={onChange}
               />
             </div>
+            <div>
+              <label className="block mb-1">Admission Fee</label>
+              <input
+                type="text"
+                name="AdmissionFee"
+                className="w-full border rounded px-3 py-1"
+                value={formData.AdmissionFee}
+                onChange={onChange}
+              />
+            </div>
+            <div>
+              <label className="block mb-1">Session Fee</label>
+              <input
+                type="text"
+                name="sesionFee"
+                className="w-full border rounded px-3 py-1"
+                value={formData.sesionFee}
+                onChange={onChange}
+              />
+            </div>
 
 
             <div>

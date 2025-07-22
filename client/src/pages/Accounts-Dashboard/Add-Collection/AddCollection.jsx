@@ -5,7 +5,7 @@ import useFetchQuery from "../../../hooks/useFetchQuery";
 import useAuth from "../../../hooks/useAuth";
 import useMutateData from "../../../hooks/useMutateData";
 import { toast } from "react-hot-toast";
-import {BeatLoading,BounceLoading} from 'respinner'
+import { BeatLoading, BounceLoading } from 'respinner'
 const AddCollection = () => {
   const { user } = useAuth();
 
@@ -31,6 +31,7 @@ const AddCollection = () => {
   const [selectedStudentName, setSelectedStudentName] = useState("");
   const [selectedStudentNames, setSelectedStudentNames] = useState([]); // for dropdown
   const [selectedStudentList, setSelectedStudentList] = useState([]); // actual object
+  // console.log("selectedStudentList:", selectedStudentList[0]?.preDue);
   const [form, setForm] = useState({});
 
   // Date setup
@@ -69,11 +70,14 @@ const AddCollection = () => {
 
   const unpaidMonths = expectedMonths.filter(month => !paidMonths.includes(month));
   const classFee = parseFloat(className.find(c => c.className === selectedClass)?.fee || 0);
+  const admissionFee = (className.find(c => c.className === selectedClass)?.AdmissionFee || 0);
+  console.log("admissionFee:", admissionFee);
   const totalMonthlyDue = classFee * unpaidMonths.length;
   const totalDue = totalMonthlyDue;
-  const preDue = parseFloat(currentStudent?.preDue || 0);
+  // const preDue = parseFloat(selectedStudentList[0]?.preDue || 0);
+
   const currentPay = parseFloat(form?.amount || 0);
-  const remainingDue = Math.max(totalDue + preDue - currentPay, 0);
+  // const remainingDue = Math.max(totalDue + preDue - currentPay, 0);
 
   // Fields
   const extraFields = [];
@@ -87,17 +91,25 @@ const AddCollection = () => {
       { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
       { name: "student", label: "শিক্ষার্থীর নাম", type: "select", options: selectedStudentNames }
     );
+  } else if (selectedIncomeSource === "ভর্তি ফি") {
+    extraFields.push(
+      { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
+      { name: "student", label: "শিক্ষার্থীর নাম", type: "select", options: selectedStudentNames }
+    );
   }
+
 
   const CollectionFields = [
     { name: "admissionDate", label: "কালেকশন তারিখ", type: "date", required: true },
     { name: "incomeSource", label: "আয়ের খাত", required: true, type: "select", options: collectionCategories.map(c => c.Name) },
     ...extraFields,
-    { name: "month", label: "মাস", type: "select", options: monthNames },
+    ...((selectedIncomeSource !== "ভর্তি ফি" && selectedIncomeSource !== "সেশন ফি")
+      ? [{ name: "month", label: "মাস", type: "select", options: monthNames }]
+      : []),
     { name: "amount", label: "পরিমাণ", type: "number", required: true, min: 0 },
     { name: "collector", label: "কালেকশনকারী", type: "text", required: true },
     { name: "details", label: "বিস্তারিত", type: "textarea", required: false },
-    { name: "preDue", label: "পূর্বের বকেয়া", type: "number", value: preDue, readOnly: true },
+
   ];
 
   const initialValues = {
@@ -107,7 +119,6 @@ const AddCollection = () => {
     amount: "",
     details: "",
     collector: user?.displayName || "",
-    preDue: preDue,
     donorName: "",
     donorPhone: "",
     class: "",
@@ -136,7 +147,7 @@ const AddCollection = () => {
         classFee,
         totalMonthlyDue,
         paidForMonths: paidMonths,
-        preDue: remainingDue,
+
       },
     });
 
@@ -156,73 +167,72 @@ const AddCollection = () => {
   };
 
   // Loading & Error states
-  if (isLoading || isClassLoading || isStudentLoading) return  <div className="flex justify-center items-center h-screen">
-          <span className="loading loading-spinner loading-lg"><BounceLoading gap={5} /></span>
-      
-        </div>
-;
+  if (isLoading || isClassLoading || isStudentLoading) return <div className="flex justify-center items-center h-screen">
+    <span className="loading loading-spinner loading-lg"><BounceLoading gap={5} /></span>
+
+  </div>
+    ;
   if (error) return <p className="text-red-600">ডেটা লোড করতে সমস্যা হয়েছে।</p>;
 
   return (
-    <div>
+    <div className="p-4 flex flex-col items-center justify-center sm:p-6 lg:p-8 min-h-screen max-w-96 mx-auto bg-gradient-to-br to-indigo-100 font-sans">
       {currentStudent?.profileImageUrl && (
         <div className="mb-4">
-          <img src={currentStudent.profileImageUrl} alt="" className="w-40 h-40 object-cover rounded" />
+          <img
+            src={currentStudent.profileImageUrl}
+            alt=""
+            className="w-40 h-40 object-cover rounded"
+          />
         </div>
       )}
 
       {selectedIncomeSource === "বেতন" && unpaidMonths.length === 0 && (
-        <div className="text-red-600 bg-red-50 border p-2 mt-2 rounded">
+        <div className="text-red-600 bg-red-50 border p-2 mt-2 rounded text-center">
           এই শিক্ষার্থীর জন্য কোনো বকেয়া মাস পাওয়া যায়নি।
         </div>
       )}
 
+      {selectedIncomeSource &&
+        selectedClass &&
+        (
+          <div className="text-red-600 bg-red-50 border p-2 mt-2 rounded text-center">
+            <p>
+              {selectedClass} শ্রেণীর {selectedIncomeSource} হচ্ছে{" "}
+              {admissionFee} টাকা
+            </p>
+          </div>
+        )}
       {selectedIncomeSource === "বেতন" && selectedClass && currentStudent && unpaidMonths.length > 0 && (
-        <div className="col-span-2 bg-yellow-50 p-3 rounded border text-gray-700">
+        <div className="col-span-2 bg-yellow-50 p-3 rounded border text-gray-700 text-center mb-4">
           <p><strong>বকেয়া মাস:</strong> <span className="text-red-700">{unpaidMonths.join(", ")}</span></p>
           <p><strong>বেতন বকেয়া:</strong> {totalDue} টাকা</p>
-          <p><strong>পূর্বের বকেয়া:</strong> {preDue} টাকা</p>
           <p>-----------------------------</p>
-          <p><strong>সর্বমোট বকেয়া:</strong> {totalDue + preDue} টাকা</p>
-          <p><strong>বর্তমান পরিশোধ:</strong> {currentPay} টাকা</p>
-          <p><strong>বাকি থাকলো:</strong> {remainingDue} টাকা</p>
+          <p><strong>সর্বমোট বকেয়া:</strong> {totalDue} টাকা</p>
         </div>
       )}
 
-      <ReusableForm
-        endpoint="/collections"
-        fields={CollectionFields}
-        onSuccess={handleSuccess}
-        initialValues={initialValues}
-        buttonText="কালেকশন যুক্ত করুন"
-        grid={true}
-        onChange={handleFormChange}
-        successMessage={successMessage}
-        setSuccessMessage={setSuccessMessage}
-        buttons={[
-          { type: "navigate", label: "সকল কালেকশন", to: "/accounts-dashboard/collections" },
-        ]}
-      />
+      <div className="w-full">
+        <ReusableForm
+          endpoint="/collections"
+          fields={CollectionFields}
+          onSuccess={handleSuccess}
+          initialValues={initialValues}
+          buttonText="কালেকশন যুক্ত করুন"
+          styleMode="modern"
+          onChange={handleFormChange}
+          successMessage={successMessage}
+          setSuccessMessage={setSuccessMessage}
+          buttons={[
+            { type: "navigate", label: "সকল কালেকশন", to: "/accounts-dashboard/collections" },
+          ]}
+        />
+      </div>
     </div>
+
   );
 };
 
 export default AddCollection;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

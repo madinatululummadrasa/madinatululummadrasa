@@ -15,13 +15,13 @@ const ShowAllClass = () => {
 
   const [selectedClass, setSelectedClass] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [formData, setFormData] = useState({ className: "", status: "" , fee: "" });
+  const [formData, setFormData] = useState({ className: "", status: "" , fee: "", AdmissionFee: "", sesionFee: "" });
 
   const axiosSecure = useAxiosSecure();
 
   const openModal = (cls) => {
     setSelectedClass(cls);
-    setFormData({ className: cls.className, status: cls.status , fee: cls.fee });
+    setFormData({ className: cls.className, status: cls.status , fee: cls.fee, AdmissionFee: cls.AdmissionFee , sesionFee: cls.sesionFee });
     setIsOpen(true);
   };
 
@@ -52,47 +52,56 @@ const ShowAllClass = () => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Something went wrong</p>;
 
-  return (
-    <div className="p-4">
-      <table className="w-full border border-collapse">
-        <thead>
-          <tr className="bg-blue-500 text-white">
-            <th className="p-2 border text-left">শ্রেণীর তথ্য</th>
-            <th className="p-2 border text-left">পরিবর্তন</th>
-          </tr>
-        </thead>
-        <tbody>
-          {classes.map((cls) => (
-            <tr key={cls._id} className="border">
-              <td className="p-2 border">
-                <p>নামঃ {cls.className}</p>
-                <p>অবস্থা: {cls.status}</p>
-               <p>বেতন: {cls.fee}</p>
-              </td>
-              <td className="p-2 border text-center">
-                <button
-                  className="text-blue-600 hover:text-blue-800"
-                  onClick={() => openModal(cls)}
-                >
-                  <Pencil className="inline mr-1" />
-                  পরিবর্তন করুন
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+return (
+  <div className="p-4 max-w-4xl mx-auto">
+    <h2 className="text-xl font-semibold mb-4 text-gray-800">সকল শ্রেণীর তালিকা</h2>
 
-      {/* Reusable Modal Component */}
-      <ClassUpdateModal
-        isOpen={isOpen}
-        onClose={closeModal}
-        formData={formData}
-        onChange={handleChange}
-        onSubmit={handleUpdate}
-      />
+    <div className="bg-white rounded-lg shadow overflow-hidden">
+      {/* Header Row */}
+      <div className="grid grid-cols-6 bg-emerald-600 text-white font-semibold text-sm">
+        <div className="col-span-1 px-4 py-3 border-r border-emerald-500">নাম</div>
+        <div className="col-span-1 px-4 py-3 border-r border-emerald-500">অবস্থা</div>
+        <div className="col-span-1 px-4 py-3 border-r border-emerald-500">বেতন</div>
+        <div className="col-span-1 px-4 py-3 border-r border-emerald-500">ভর্তি ফি</div>
+        <div className="col-span-1 px-4 py-3 border-r border-emerald-500">সেশন ফি</div>
+        <div className="col-span-1 px-4 py-3 text-center">পরিবর্তন</div>
+      </div>
+
+      {/* Data Rows */}
+      {classes.map((cls, index) => (
+        <div
+          key={cls._id}
+          className="grid grid-cols-6 text-sm items-center border-t hover:bg-gray-50 transition"
+        >
+          <div className="col-span-1 px-4 py-3">{cls.className}</div>
+          <div className="col-span-1 px-4 py-3">{cls.status}</div>
+          <div className="col-span-1 px-4 py-3">{cls.fee} ৳</div>
+          <div className="col-span-1 px-4 py-3">{cls.AdmissionFee} ৳</div>
+          <div className="col-span-1 px-4 py-3">{cls.sesionFee} ৳</div>
+          <div className="col-span-1 px-4 py-3 flex justify-center">
+            <button
+              onClick={() => openModal(cls)}
+              className="text-emerald-600 hover:underline flex items-center gap-1"
+            >
+             
+              পরিবর্তন <Pencil size={14} />
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
-  );
+
+    {/* Modal Component */}
+    <ClassUpdateModal
+      isOpen={isOpen}
+      onClose={closeModal}
+      formData={formData}
+      onChange={handleChange}
+      onSubmit={handleUpdate}
+    />
+  </div>
+);
+
 };
 
 export default ShowAllClass;
