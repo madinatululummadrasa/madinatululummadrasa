@@ -147,6 +147,7 @@ const AddCollection = () => {
         classFee,
         totalMonthlyDue,
         paidForMonths: paidMonths,
+        
 
       },
     });
