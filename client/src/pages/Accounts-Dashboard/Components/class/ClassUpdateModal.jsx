@@ -15,10 +15,10 @@ const ClassUpdateModal = ({
     <Dialog open={isOpen} onClose={onClose} className="fixed inset-0 z-50 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen px-4">
         <Dialog.Panel className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg">
-          <Dialog.Title className="text-xl font-semibold mb-4">শ্রেণী পরিবর্তন</Dialog.Title>
+          <Dialog.Title className="text-xl font-semibold mb-4">শ্রেণী তথ্য পরিবর্তন</Dialog.Title>
           <form onSubmit={onSubmit} className="space-y-4">
             <div>
-              <label className="block mb-1">নাম</label>
+              <label className="block mb-1">শ্রেনির নাম</label>
               <input
                 type="text"
                 name="className"
@@ -38,7 +38,7 @@ const ClassUpdateModal = ({
               />
             </div>
             <div>
-              <label className="block mb-1">Admission Fee</label>
+              <label className="block mb-1">ভর্তি ফি</label>
               <input
                 type="text"
                 name="AdmissionFee"
@@ -48,12 +48,39 @@ const ClassUpdateModal = ({
               />
             </div>
             <div>
-              <label className="block mb-1">Session Fee</label>
+              <label className="block mb-1">সেশন ফি</label>
               <input
                 type="text"
                 name="sesionFee"
                 className="w-full border rounded px-3 py-1"
                 value={formData.sesionFee}
+                onChange={onChange}
+              />
+            </div>
+            <div>
+              <label className="block mb-1">পরিক্ষার ফি</label>
+              <input
+                type="text"
+                name="firstExamFee"
+                placeholder="প্রথম সাময়িক"
+                className="w-1/3 border rounded px-3 py-1"
+                value={formData.firstExamFee}
+                onChange={onChange}
+              />
+              <input
+                type="text"
+                name="secondExamFee"
+                placeholder="দ্বিতীয় সাময়িক"
+                className="w-1/3 border rounded px-3 py-1"
+                value={formData.secondExamFee}
+                onChange={onChange}
+              />
+              <input
+                type="text"
+                name="finalExamFee"
+                placeholder="বার্ষিক"
+                className="w-1/3 border rounded px-3 py-1"
+                value={formData.finalExamFee}
                 onChange={onChange}
               />
             </div>

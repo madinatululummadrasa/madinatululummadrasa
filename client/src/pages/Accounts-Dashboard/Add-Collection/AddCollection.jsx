@@ -71,7 +71,7 @@ const AddCollection = () => {
   const unpaidMonths = expectedMonths.filter(month => !paidMonths.includes(month));
   const classFee = parseFloat(className.find(c => c.className === selectedClass)?.fee || 0);
   const admissionFee = (className.find(c => c.className === selectedClass)?.AdmissionFee || 0);
-  console.log("admissionFee:", admissionFee);
+
   const totalMonthlyDue = classFee * unpaidMonths.length;
   const totalDue = totalMonthlyDue;
   // const preDue = parseFloat(selectedStudentList[0]?.preDue || 0);
@@ -105,7 +105,7 @@ const AddCollection = () => {
     extraFields.push(
       { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
       { name: "student", label: "শিক্ষার্থীর নাম", type: "select", options: selectedStudentNames },
-      { name: "student", label: "পরীক্ষার নাম", type: "select", options: ['প্রথম সাময়িক ', 'দ্বিতীয় সাময়িক','বার্ষিক'] },
+      { name: "student", label: "পরীক্ষার নাম", type: "select", options: ['প্রথম সাময়িক ', 'দ্বিতীয় সাময়িক', 'বার্ষিক'] },
 
     );
   }
@@ -187,6 +187,23 @@ const AddCollection = () => {
     ;
   if (error) return <p className="text-red-600">ডেটা লোড করতে সমস্যা হয়েছে।</p>;
 
+
+
+  // let log = 0;
+
+
+  // if (selectedIncomeSource === "ভর্তি ফি") {
+  //   log = admissionFee;
+
+  // } else if (selectedIncomeSource === "বেতন") {
+  //   if (selectedClass === "শিশু") admissionFee = 50;
+  //   else admissionFee = 100;
+  // } else {
+  //   admissionFee = "N/A";
+  // }
+
+
+
   return (
     <div className="p-4 flex flex-col items-center justify-center sm:p-6 lg:p-8 min-h-screen max-w-96 mx-auto bg-gradient-to-br to-indigo-100 font-sans">
       {currentStudent?.profileImageUrl && (
@@ -205,6 +222,10 @@ const AddCollection = () => {
         </div>
       )}
 
+
+
+
+
       {selectedIncomeSource &&
         selectedClass &&
         (
@@ -215,6 +236,14 @@ const AddCollection = () => {
             </p>
           </div>
         )}
+
+
+
+
+
+
+
+
       {selectedIncomeSource === "বেতন" && selectedClass && currentStudent && unpaidMonths.length > 0 && (
         <div className="col-span-2 bg-yellow-50 p-3 rounded border text-gray-700 text-center mb-4">
           <p><strong>বকেয়া মাস:</strong> <span className="text-red-700">{unpaidMonths.join(", ")}</span></p>
