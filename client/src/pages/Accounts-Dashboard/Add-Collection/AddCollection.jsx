@@ -96,6 +96,18 @@ const AddCollection = () => {
       { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
       { name: "student", label: "শিক্ষার্থীর নাম", type: "select", options: selectedStudentNames }
     );
+  } else if (selectedIncomeSource === "সেশন ফি") {
+    extraFields.push(
+      { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
+      { name: "student", label: "শিক্ষার্থীর নাম", type: "select", options: selectedStudentNames }
+    );
+  } else if (selectedIncomeSource === "পরীক্ষার ফি") {
+    extraFields.push(
+      { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
+      { name: "student", label: "শিক্ষার্থীর নাম", type: "select", options: selectedStudentNames },
+      { name: "student", label: "পরীক্ষার নাম", type: "select", options: ['প্রথম সাময়িক ', 'দ্বিতীয় সাময়িক','বার্ষিক'] },
+
+    );
   }
 
 
@@ -147,7 +159,7 @@ const AddCollection = () => {
         classFee,
         totalMonthlyDue,
         paidForMonths: paidMonths,
-        
+
 
       },
     });
