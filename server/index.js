@@ -13,6 +13,7 @@ const studentRoutes = require('./routes/students');
 const classRoutes = require('./routes/class');
 const collectionRoutes = require('./routes/collection');
 const teachersRoutes = require('./routes/teachers');
+const memberRoutes = require('./routes/members'); // Assuming you have a members route file
 dotenv.config();
 const app = express();
 const port = process.env.PORT || 8000;
@@ -114,10 +115,11 @@ async function run() {
     const classRouter = classRoutes(db); // passing db directly
     app.use('/classes', classRouter);
 
-    const collectionRouter = collectionRoutes(accountDB); // passing db directly
+    const collectionRouter = collectionRoutes(accountDB);   
     app.use('/collections', collectionRouter);
-
-
+    
+    const memberRouter = memberRoutes(accountDB);
+    app.use('/members', memberRouter);
 
 
 

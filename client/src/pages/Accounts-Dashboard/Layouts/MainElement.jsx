@@ -3,7 +3,7 @@
 const iconData = [
   { id: 1, icon: 'https://i.ibb.co/Q7KXQYdF/class.png', text: 'ক্লাস তৈরি', link: 'accounts-dashboard/create-class' },
   { id: 2, icon: 'https://i.ibb.co/KpdNGjdP/students.png', text: 'ছাত্র-ছাত্রী', link: 'accounts-dashboard/students' },
-  { id: 3, icon: 'https://i.ibb.co/CpTjtbF5/member.png', text: 'সদস্য', link: '#members' },
+  { id: 3, icon: 'https://i.ibb.co/CpTjtbF5/member.png', text: 'সদস্য', link: 'accounts-dashboard/members' },
   { id: 4, icon: 'https://i.ibb.co/8LkJQfxK/collection.png', text: 'কালেকশন', link: 'accounts-dashboard/add-new-collection-entry' },
   { id: 5, icon: 'https://i.ibb.co/fGvLNXKK/collectionreport.png', text: 'কালেকশন রিপোর্ট', link: '#collection-report' },
   { id: 6, icon: 'https://i.ibb.co/Z6cptFwH/studentsfeecollection.png', text: 'ছাত্র-ছাত্রীর কালেকশন', link: '#student-collection' },

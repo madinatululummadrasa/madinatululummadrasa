@@ -41,6 +41,8 @@ import CollectionCategory from '../pages/Accounts-Dashboard/collection-category/
 import Collection from '../pages/Accounts-Dashboard/Add-Collection/Collection'
 import StudentFee from '../pages/Accounts-Dashboard/studentFeeCard/StudentFee'
 import SetClassFee from '../pages/Accounts-Dashboard/Class/SetClassFee'
+import CreateMemeber from '../pages/Accounts-Dashboard/Members/CreateMemeber'
+import AllMembers from '../pages/Accounts-Dashboard/Members/AllMembers'
 
 
 
@@ -148,6 +150,11 @@ export const router = createBrowserRouter([
           { path: 'collections', element: <Collection /> },
           { path: 'studentsfee', element: <StudentFee /> },
           { path: 'setclassfee', element: <SetClassFee /> },
+          { path: 'members', element: <AllMembers />},
+          { path: 'members/create-member', element: <CreateMemeber />},
+
+          
+        
         ],
       },
       {
