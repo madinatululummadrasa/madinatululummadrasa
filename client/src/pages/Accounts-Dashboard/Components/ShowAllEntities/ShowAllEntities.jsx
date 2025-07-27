@@ -13,7 +13,8 @@ import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 const ShowAllEntities = ({
   entityKey, // eg. "classes"
   fetchUrl,  // eg. "/classes"
-  title = "Entity List",
+  
+  title = "",
   columns = [], // [{ label: 'নাম', key: 'className' }, ...]
   getSubTable = null, // optional: (entity) => JSX
   ModalComponent, // Modal component

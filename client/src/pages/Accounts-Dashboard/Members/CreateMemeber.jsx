@@ -1,12 +1,14 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
 
+import { useState } from "react";
+import Modal from "../../../components/ui/Modal";
 import ReusableForm from "../Components/ReusableForm/ReusableForm";
 
 
 
-const CreateMemeber = () => {
-
+const CreateMemeber = ({onSuccess} ) => {
+ 
   const fields = [
     { name: "date", label: "তারিখ", type: "date", required: true },
     { name: "name", label: "সদস্যের  নাম", required: true },
@@ -29,6 +31,8 @@ const CreateMemeber = () => {
 
   const handleSuccess = (res) => {
     alert("✅ সফলভাবে সংরক্ষিত হয়েছে!");
+      if (onSuccess) onSuccess(res); // ✅ Triggers refetch in parent
+     
   };
 
   const extraButtons = [
@@ -40,7 +44,9 @@ const CreateMemeber = () => {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4 font-inter">
+
+
+       <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4 font-inter">
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm mx-auto">
         <h2 className="text-center text-xl font-semibold text-gray-800 mb-6">
           নতুন সদস্য যুক্ত করুন
@@ -53,11 +59,13 @@ const CreateMemeber = () => {
           buttonText="তৈরি করুন"
           onSuccess={handleSuccess}
           buttons={[...extraButtons]}
+
         />
 
 
       </div>
     </div>
+
   );
 };
 

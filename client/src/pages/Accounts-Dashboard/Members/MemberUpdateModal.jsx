@@ -69,5 +69,5 @@ const MemberUpdateModal = ({ isOpen, onClose, formData, onChange, onSubmit }) =>
     </Modal>
   );
 };
-
+        
 export default MemberUpdateModal;
