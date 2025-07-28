@@ -13,7 +13,7 @@ const CreateMemeber = ({onSuccess} ) => {
     { name: "date", label: "তারিখ", type: "date", required: true },
     { name: "name", label: "সদস্যের  নাম", required: true },
     { name: "contact", label: "মোবাইল নম্বর", required: true },
-    { name: "nidNumber", label: "জাতীয় পরিচয়পত্র নম্বর", type: "text", required: true },
+    { name: "nidNumber", label: "জাতীয় পরিচয়পত্র নম্বর", type: "text",  },
     { name: "address", label: "ঠিকানা", type: "text", required: true },
     { name: "fixedAmount", label: "ধার্যকৃত টাকা", type: "text", required: true },
     { name: "status", label: "অবস্থা", type: "select", options: ["সক্রিয়", "নিষ্ক্রিয়"] },

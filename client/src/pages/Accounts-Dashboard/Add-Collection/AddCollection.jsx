@@ -6,6 +6,8 @@ import useAuth from "../../../hooks/useAuth";
 import useMutateData from "../../../hooks/useMutateData";
 import { toast } from "react-hot-toast";
 import { BeatLoading, BounceLoading } from 'respinner'
+import { use } from "react";
+import { FieldValue } from "firebase/firestore";
 const AddCollection = () => {
   const { user } = useAuth();
 
@@ -23,16 +25,28 @@ const AddCollection = () => {
     key: ["students"],
     url: "/students",
   });
+  const { data: members = [], isLoading: isMembersLoading } = useFetchQuery({
+    key: ["members"],
+    url: "/members",
+  });
+
+
 
   const [selectedIncomeSource, setSelectedIncomeSource] = useState("");
   const [formData, setFormData] = useState({});
+
+
   const [successMessage, setSuccessMessage] = useState("");
   const [selectedClass, setSelectedClass] = useState("");
   const [selectedStudentName, setSelectedStudentName] = useState("");
   const [selectedStudentNames, setSelectedStudentNames] = useState([]); // for dropdown
   const [selectedStudentList, setSelectedStudentList] = useState([]); // actual object
-  // console.log("selectedStudentList:", selectedStudentList[0]?.preDue);
   const [form, setForm] = useState({});
+
+  const [selectedMember, setSelectedMember] = useState("");
+  const [selectedMemberList, setSelectedMemberList] = useState("");
+ 
+
 
   // Date setup
   const formattedDate = new Date().toISOString().split("T")[0];
@@ -45,6 +59,14 @@ const AddCollection = () => {
   const expectedMonths = monthNames.slice(0, currentMonthIndex + 1);
 
   // Effects
+
+useEffect(() => {
+  if (formData?.donorName && selectedMember !== formData.donorName) {
+    setSelectedMember(formData.donorName);
+  }
+}, [formData?.donorName, selectedMember]);
+
+
   useEffect(() => {
     if (selectedClass) {
       const dropdownNames = students
@@ -63,6 +85,14 @@ const AddCollection = () => {
     }
   }, [selectedClass, selectedStudentName, students]);
 
+  useEffect(() => {
+    if (selectedMember) {
+      const selected = members.filter(member => member.name === selectedMember);
+      setSelectedMemberList(selected);
+    }
+  }, [selectedMember, members]);
+
+
   const currentStudent = selectedStudentList?.[0];
   const paidMonths = currentStudent?.collections
     ?.filter(entry => entry.month && monthNames.includes(entry.month))
@@ -80,11 +110,16 @@ const AddCollection = () => {
   // const remainingDue = Math.max(totalDue + preDue - currentPay, 0);
 
   // Fields
+
+
+
+
+
   const extraFields = [];
-  if (selectedIncomeSource === "মাসিক ফি") {
+  if (selectedIncomeSource === "সদস্যের অনুদান") {
     extraFields.push(
-      { name: "donorName", label: "দাতার নাম", type: "text", required: true },
-      { name: "donorPhone", label: "দাতার ফোন নম্বর", type: "text", required: false }
+      { name: "donorName", label: "সদস্যের নাম", type: "select", required: true, options: members.map(member => member.name) },
+    
     );
   } else if (selectedIncomeSource === "বেতন") {
     extraFields.push(
@@ -108,8 +143,12 @@ const AddCollection = () => {
       { name: "student", label: "পরীক্ষার নাম", type: "select", options: ['প্রথম সাময়িক ', 'দ্বিতীয় সাময়িক', 'বার্ষিক'] },
 
     );
+  }else if (selectedIncomeSource === "অনুদান") {
+    extraFields.push( 
+      { name: "donorName", label: "দাতার নাম", type: "text",  },
+      { name: "contact", label: "mobile", type: "text",  },
+    );
   }
-
 
   const CollectionFields = [
     { name: "admissionDate", label: "কালেকশন তারিখ", type: "date", required: true },
@@ -132,7 +171,7 @@ const AddCollection = () => {
     details: "",
     collector: user?.displayName || "",
     donorName: "",
-    donorPhone: "",
+    donorPhone: '',
     class: "",
     student: "",
   };
@@ -145,7 +184,7 @@ const AddCollection = () => {
   });
 
   const handleSuccess = () => {
-    if (!currentStudent) return toast.error("শিক্ষার্থী নির্বাচন করুন");
+    if (!selectedIncomeSource) return toast.error("আয়ের খাত নির্বাচন করুন");
     if (!form.amount || isNaN(currentPay)) return toast.error("সঠিক পরিমাণ লিখুন");
 
     sendTransaction.mutate({
@@ -180,7 +219,7 @@ const AddCollection = () => {
   };
 
   // Loading & Error states
-  if (isLoading || isClassLoading || isStudentLoading) return <div className="flex justify-center items-center h-screen">
+  if (isLoading || isClassLoading || isStudentLoading || isMembersLoading) return <div className="flex justify-center items-center h-screen">
     <span className="loading loading-spinner loading-lg"><BounceLoading gap={5} /></span>
 
   </div>
