@@ -5,7 +5,7 @@ const iconData = [
   { id: 2, icon: 'https://i.ibb.co/KpdNGjdP/students.png', text: 'ছাত্র-ছাত্রী', link: 'accounts-dashboard/students' },
   { id: 3, icon: 'https://i.ibb.co/CpTjtbF5/member.png', text: 'সদস্য', link: 'accounts-dashboard/members' },
   { id: 4, icon: 'https://i.ibb.co/8LkJQfxK/collection.png', text: 'কালেকশন', link: 'accounts-dashboard/add-new-collection-entry' },
-  { id: 9, icon: 'https://i.ibb.co/60hZjGww/cost.png', text: 'খরচ', link: 'accounts-dashboard/expense-category' },
+  { id: 9, icon: 'https://i.ibb.co/60hZjGww/cost.png', text: 'খরচ', link: 'accounts-dashboard/add-new-expense-entry' },
   { id: 5, icon: 'https://i.ibb.co/fGvLNXKK/collectionreport.png', text: 'কালেকশন রিপোর্ট', link: '#collection-report' },
   { id: 6, icon: 'https://i.ibb.co/Z6cptFwH/studentsfeecollection.png', text: 'ছাত্র-ছাত্রীর কালেকশন', link: '#student-collection' },
   { id: 7, icon: 'https://i.ibb.co/TDm5zFNy/memberfeecollection.png', text: 'সদস্যের কালেকশন', link: '#member-collection' },
