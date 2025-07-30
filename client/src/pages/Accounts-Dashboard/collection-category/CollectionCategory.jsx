@@ -6,6 +6,7 @@ import { useState } from "react";
 import CollectionCatModal from "../Components/Modal/CollectionCatModal";
 import useFetchQuery from "../../../hooks/useFetchQuery";
 import ExpenseCatModal from "../Components/Modal/ExpenseCatModal";
+import { constructNow } from "date-fns";
 
 const CollectionCategory = () => {
   const {
@@ -27,6 +28,9 @@ const CollectionCategory = () => {
     key: ["expensesCategories"],
     url: "/expenses/expenses-category",
   });
+
+
+  console.log("Expenses Categories:", expensesCategories);
 
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
@@ -101,6 +105,7 @@ const CollectionCategory = () => {
 
         <section className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6 bg-white p-5 rounded-xl shadow-lg">
           {expensesCategories.map((item) => (
+            
             <Link
               to={item.link || "#"} // Use Link for internal navigation, fallback to '#'
               key={item._id}

@@ -5,11 +5,11 @@ const iconData = [
   { id: 2, icon: 'https://i.ibb.co/KpdNGjdP/students.png', text: 'ছাত্র-ছাত্রী', link: 'accounts-dashboard/students' },
   { id: 3, icon: 'https://i.ibb.co/CpTjtbF5/member.png', text: 'সদস্য', link: 'accounts-dashboard/members' },
   { id: 4, icon: 'https://i.ibb.co/8LkJQfxK/collection.png', text: 'কালেকশন', link: 'accounts-dashboard/add-new-collection-entry' },
+  { id: 9, icon: 'https://i.ibb.co/60hZjGww/cost.png', text: 'খরচ', link: 'accounts-dashboard/expense-category' },
   { id: 5, icon: 'https://i.ibb.co/fGvLNXKK/collectionreport.png', text: 'কালেকশন রিপোর্ট', link: '#collection-report' },
   { id: 6, icon: 'https://i.ibb.co/Z6cptFwH/studentsfeecollection.png', text: 'ছাত্র-ছাত্রীর কালেকশন', link: '#student-collection' },
   { id: 7, icon: 'https://i.ibb.co/TDm5zFNy/memberfeecollection.png', text: 'সদস্যের কালেকশন', link: '#member-collection' },
   { id: 8, icon: 'https://i.ibb.co/8DM70m4R/salarydue.png', text: 'বেতনের বাকি রিপোর্ট', link: '#salary-due-report' },
-  { id: 9, icon: 'https://i.ibb.co/60hZjGww/cost.png', text: 'খরচের খাত', link: 'accounts-dashboard/expense-category' },
   { id: 10, icon: 'https://i.ibb.co/d0HBsHZK/incometype.png', text: 'কালেকশনের খাত', link: 'accounts-dashboard/collection-category' },
   { id: 11, icon: 'https://i.ibb.co/4nWXDjLG/cashreport.png', text: 'ক্যাশ রিপোর্ট', link: '#cash-report' },
   { id: 12, icon: 'https://i.ibb.co/hRwB7RKW/incomeexpense.png', text: 'আয়-ব্যয়', link: '#income-expense' },
@@ -55,7 +55,7 @@ const MainElement = () => {
             className="flex flex-col items-center justify-center p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer no-underline text-inherit" // Added no-underline and text-inherit for styling
           >
             {/* You can replace this img with an SVG or a FontAwesome icon component later */}
-            <img src={item.icon}  className="w-14 h-14 mb-2 " />
+            <img src={item.icon} className="w-14 h-14 mb-2 " />
             <p className="text-center text-sm font-medium text-gray-700">{item.text}</p>
           </a>
         ))}
