@@ -152,6 +152,7 @@ export const router = createBrowserRouter([
           { path: 'setclassfee', element: <SetClassFee /> },
           { path: 'members', element: <AllMembers />},
           { path: 'members/create-member', element: <CreateMemeber />},
+          { path: 'expense-category', element: <CreateMemeber />},
 
           
         

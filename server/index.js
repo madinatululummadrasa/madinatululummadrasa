@@ -11,7 +11,9 @@ const uploadGoogleDriveRoute = require('./routes/UploadGoogleDrive');
 const uploadPdfToDrive = require('./utils/GooglePdfUploader');
 const studentRoutes = require('./routes/students');
 const classRoutes = require('./routes/class');
+
 const collectionRoutes = require('./routes/collection');
+const ExpensesRoutes = require('./routes/expenses');
 const teachersRoutes = require('./routes/teachers');
 const memberRoutes = require('./routes/members'); // Assuming you have a members route file
 dotenv.config();
@@ -117,29 +119,12 @@ async function run() {
 
     const collectionRouter = collectionRoutes(accountDB);   
     app.use('/collections', collectionRouter);
-    
+
+    const ExpensesRouter = ExpensesRoutes(accountDB);   
+    app.use('/expenses', ExpensesRouter);
+
     const memberRouter = memberRoutes(accountDB);
     app.use('/members', memberRouter);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     const accountCollection = accountDB.collection('collectionSource'); // example collection
