@@ -4,7 +4,7 @@ const { ObjectId } = require('mongodb');
 
 module.exports = (accountDB) => {
     const router = express.Router();
-    const accountExpenses = accountDB.collection('collections');
+    const accountExpenses = accountDB.collection('expenses');
     const sourceExpenses = accountDB.collection('expensesSource');
 
 
@@ -37,6 +37,34 @@ module.exports = (accountDB) => {
         }
     }
     );
+
+    // 📌 Get All expenses
+
+    router.get('/', async (req, res) => {
+        try {
+            const expenses = await accountExpenses.find({}).toArray();
+            res.status(200).json(expenses);
+        } catch (error) {
+            console.error('Error fetching expenses:', error);
+            res.status(500).json({ error: 'Failed to fetch expenses' });
+        }   
+    });
+
+    // 📌 Post new expense
+    // s
+    router.post('/', async (req, res) => {
+        try {
+            const newExpense = req.body;
+            const result = await accountExpenses.insertOne(newExpense);
+            console.log('New expense added:', result);
+            res.status(201).json({ message: 'Expense added successfully', id: result.insertedId });
+        } catch (error) {
+            console.error('Error adding expense:', error);
+            res.status(500).json({ error: 'Failed to add expense' });
+        }
+    }
+    );
+    // 📌 Get expense by ID
 
 
 

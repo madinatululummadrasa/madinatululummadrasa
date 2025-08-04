@@ -4,7 +4,7 @@ import useAuth from './useAuth';
 import { useNavigate } from 'react-router-dom';
 
 export const axiosSecure = axios.create({
-  baseURL: 'http://localhost:8000',
+  baseURL: 'http://madinalocal:8000',
   withCredentials: true,
 });
 

@@ -71,12 +71,29 @@ const verifyJwt = (req, res, next) => {
 };
 
 
-// Middleware
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://madinatalocal:5173',
+  'http://192.168.0.101:5173',  // your laptop's IP and port
+  // add more allowed origins if needed
+];
+
 const corsOptions = {
-  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  origin: function (origin, callback) {
+    console.log('CORS Origin:', origin); // log incoming origin to debug
+    // allow requests with no origin (like Postman or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   optionSuccessStatus: 200,
 };
+
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
@@ -731,7 +748,7 @@ async function run() {
 
 
     console.log('✅ Successfully connected to MongoDB.');
-    app.listen(port, () => {
+    app.listen(port, '0.0.0.0', () => {
       console.log(`✅ StayVista is running on port ${port}`);
     });
 

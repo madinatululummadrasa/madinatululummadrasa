@@ -1,11 +1,308 @@
-
-
+/* eslint-disable no-unused-vars */
+import { useEffect, useState } from "react";
+import ReusableForm from "../Components/ReusableForm/ReusableForm";
+import useFetchQuery from "../../../hooks/useFetchQuery";
+import useAuth from "../../../hooks/useAuth";
+import useMutateData from "../../../hooks/useMutateData";
+import { toast } from "react-hot-toast";
+import { BeatLoading, BounceLoading } from 'respinner'
+import { use } from "react";
+import { FieldValue } from "firebase/firestore";
 const AddExpenses = () => {
+    const { user } = useAuth();
+
+    const { data: expenseCategories = [], isLoading, error } = useFetchQuery({
+        key: ["expenseCategories"],
+        url: "/expenses/expenses-category",
+    });
+
+    const { data: className = [], isLoading: isClassLoading } = useFetchQuery({
+        key: ["className"],
+        url: "/classes",
+    });
+
+    const { data: students = [], isLoading: isStudentLoading } = useFetchQuery({
+        key: ["students"],
+        url: "/students",
+    });
+    const { data: members = [], isLoading: isMembersLoading } = useFetchQuery({
+        key: ["members"],
+        url: "/members",
+    });
+
+
+
+    const [SelectedExpenseSource, setSelectedExpenseSource] = useState("");
+
+    const [formData, setFormData] = useState({});
+
+
+    const [successMessage, setSuccessMessage] = useState("");
+    const [selectedClass, setSelectedClass] = useState("");
+    const [selectedStudentName, setSelectedStudentName] = useState("");
+    const [selectedStudentNames, setSelectedStudentNames] = useState([]); // for dropdown
+    const [selectedStudentList, setSelectedStudentList] = useState([]); // actual object
+    const [form, setForm] = useState({});
+
+    const [selectedMember, setSelectedMember] = useState("");
+    const [selectedMemberList, setSelectedMemberList] = useState("");
+
+
+
+    // Date setup
+    const formattedDate = new Date().toISOString().split("T")[0];
+    const monthNames = [
+        "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
+        "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"
+    ];
+    const currentMonthIndex = new Date().getMonth();
+    const currentMonthName = monthNames[currentMonthIndex];
+    const expectedMonths = monthNames.slice(0, currentMonthIndex + 1);
+
+    // Effects
+
+    useEffect(() => {
+        if (formData?.donorName && selectedMember !== formData.donorName) {
+            setSelectedMember(formData.donorName);
+        }
+    }, [formData?.donorName, selectedMember]);
+
+
+    useEffect(() => {
+        if (selectedClass) {
+            const dropdownNames = students
+                .filter(student => student.class === selectedClass)
+                .map(student => student.name);
+            setSelectedStudentNames(dropdownNames);
+        }
+    }, [selectedClass, students]);
+
+    useEffect(() => {
+        if (selectedClass && selectedStudentName) {
+            const selected = students.filter(
+                student => student.class === selectedClass && student.name === selectedStudentName
+            );
+            setSelectedStudentList(selected);
+        }
+    }, [selectedClass, selectedStudentName, students]);
+
+    useEffect(() => {
+        if (selectedMember) {
+            const selected = members.filter(member => member.name === selectedMember);
+            setSelectedMemberList(selected);
+        }
+    }, [selectedMember, members]);
+
+
+    const currentStudent = selectedStudentList?.[0];
+    const paidMonths = currentStudent?.collections
+        ?.filter(entry => entry.month && monthNames.includes(entry.month))
+        ?.map(entry => entry.month) || [];
+
+    const unpaidMonths = expectedMonths.filter(month => !paidMonths.includes(month));
+    const classFee = parseFloat(className.find(c => c.className === selectedClass)?.fee || 0);
+    const admissionFee = (className.find(c => c.className === selectedClass)?.AdmissionFee || 0);
+
+    const totalMonthlyDue = classFee * unpaidMonths.length;
+    const totalDue = totalMonthlyDue;
+    // const preDue = parseFloat(selectedStudentList[0]?.preDue || 0);
+
+    const currentPay = parseFloat(form?.amount || 0);
+    // const remainingDue = Math.max(totalDue + preDue - currentPay, 0);
+
+    // Fields
+
+
+
+
+
+    // const extraFields = [];
+    // if (selectedIncomeSource === "সদস্যের অনুদান") {
+    //     extraFields.push(
+    //         { name: "donorName", label: "সদস্যের নাম", type: "select", required: true, options: members.map(member => member.name) },
+
+    //     );
+    // } else if (selectedIncomeSource === "বেতন") {
+    //     extraFields.push(
+    //         { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
+    //         { name: "student", label: "শিক্ষার্থীর নাম", type: "select", options: selectedStudentNames }
+    //     );
+    // } else if (selectedIncomeSource === "ভর্তি ফি") {
+    //     extraFields.push(
+    //         { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
+    //         { name: "student", label: "শিক্ষার্থীর নাম", type: "select", options: selectedStudentNames }
+    //     );
+    // } else if (selectedIncomeSource === "সেশন ফি") {
+    //     extraFields.push(
+    //         { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
+    //         { name: "student", label: "শিক্ষার্থীর নাম", type: "select", options: selectedStudentNames }
+    //     );
+    // } else if (selectedIncomeSource === "পরীক্ষার ফি") {
+    //     extraFields.push(
+    //         { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
+    //         { name: "student", label: "শিক্ষার্থীর নাম", type: "select", options: selectedStudentNames },
+    //         { name: "student", label: "পরীক্ষার নাম", type: "select", options: ['প্রথম সাময়িক ', 'দ্বিতীয় সাময়িক', 'বার্ষিক'] },
+
+    //     );
+    // } else if (selectedIncomeSource === "অনুদান") {
+    //     extraFields.push(
+    //         { name: "donorName", label: "দাতার নাম", type: "text", },
+    //         { name: "contact", label: "mobile", type: "text", },
+    //     );
+    // }
+
+    const CollectionFields = [
+        { name: "expenseDate", label: " খরচের তারিখ", type: "date", required: true },
+        { name: "expenseSource", label: "খরচের খাত", required: true, type: "select", options: expenseCategories.map(c => c.Name) },
+        // ...extraFields,
+        // ...((selectedIncomeSource !== "ভর্তি ফি" && selectedIncomeSource !== "সেশন ফি")
+        //     ? [{ name: "month", label: "মাস", type: "select", options: monthNames }]
+        //     : []),
+        { name: "amount", label: "পরিমাণ", type: "number", required: true, min: 0 },
+        { name: "collector", label: "কালেকশনকারী", type: "text", required: true },
+        { name: "details", label: "বিস্তারিত", type: "textarea", required: false },
+
+    ];
+
+    const initialValues = {
+        expenseDate: formattedDate,
+        expenseSource: "",
+        month: currentMonthName,
+        amount: "",
+        details: "",
+        collector: user?.displayName || "",
+        class: "",
+        student: "",
+    };
+
+    const sendTransaction = useMutateData({
+        method: "patch",
+        invalidateKey: ["students", "collections"],
+        successMsg: "কালেকশন সফলভাবে যোগ হয়েছে!",
+        errorMsg: "কালেকশন যোগ করতে ব্যর্থ!",
+    });
+
+    const handleSuccess = () => {
+        alert("Expense added successfully!");
+        
+
+
+        if (!SelectedExpenseSource) return toast.error("আয়ের খাত নির্বাচন করুন");
+        if (!form.amount || isNaN(currentPay)) return toast.error("সঠিক পরিমাণ লিখুন");
+
+        // sendTransaction.mutate({
+        //     url: `/students/student/${currentStudent?.studentId}`,
+        //     data: {
+        //         name: selectedIncomeSource,
+        //         amount: currentPay,
+        //         month: form.month,
+        //         collector: form.collector,
+        //         monthsCovered: selectedIncomeSource === "বেতন" ? unpaidMonths : [],
+        //         classFee,
+        //         totalMonthlyDue,
+        //         paidForMonths: paidMonths,
+
+
+        //     },
+        // });
+
+        setSuccessMessage("কালেকশন সফলভাবে যোগ হয়েছে!");
+        setFormData({});
+        setForm("");
+        setSelectedClass("");
+        setSelectedStudentName("");
+    };
+
+    const handleFormChange = (updatedForm) => {
+        setFormData(updatedForm);
+        setForm(updatedForm);
+        setSelectedExpenseSource(updatedForm.expenseSource);
+        setSelectedClass(updatedForm.class);
+        setSelectedStudentName(updatedForm.student);
+    };
+
+    // Loading & Error states
+    if (isLoading || isClassLoading || isStudentLoading || isMembersLoading) return <div className="flex justify-center items-center h-screen">
+        <span className="loading loading-spinner loading-lg"><BounceLoading gap={5} /></span>
+
+    </div>
+        ;
+    if (error) return <p className="text-red-600">ডেটা লোড করতে সমস্যা হয়েছে।</p>;
+
+
+
+
+
+
     return (
-        <div>
-            fkfj
+        <div className="p-4 flex flex-col items-center justify-center sm:p-6 lg:p-8 min-h-screen max-w-96 mx-auto bg-gradient-to-br to-indigo-100 font-sans">
+            {currentStudent?.profileImageUrl && (
+                <div className="mb-4">
+                    <img
+                        src={currentStudent.profileImageUrl}
+                        alt=""
+                        className="w-40 h-40 object-cover rounded"
+                    />
+                </div>
+            )}
+
+            {/* {selectedIncomeSource === "বেতন" && unpaidMonths.length === 0 && (
+                <div className="text-red-600 bg-red-50 border p-2 mt-2 rounded text-center">
+                    এই শিক্ষার্থীর জন্য কোনো বকেয়া মাস পাওয়া যায়নি।
+                </div>
+            )} */}
+
+
+
+
+
+            {/* {selectedIncomeSource &&
+                selectedClass &&
+                (
+                    <div className="text-red-600 bg-red-50 border p-2 mt-2 rounded text-center">
+                        <p>
+                            {selectedClass} শ্রেণীর {selectedIncomeSource} হচ্ছে{" "}
+                            {admissionFee} টাকা
+                        </p>
+                    </div>
+                )} */}
+
+
+
+
+
+
+
+
+            {/* {selectedIncomeSource === "বেতন" && selectedClass && currentStudent && unpaidMonths.length > 0 && (
+                <div className="col-span-2 bg-yellow-50 p-3 rounded border text-gray-700 text-center mb-4">
+                    <p><strong>বকেয়া মাস:</strong> <span className="text-red-700">{unpaidMonths.join(", ")}</span></p>
+                    <p><strong>বেতন বকেয়া:</strong> {totalDue} টাকা</p>
+                    <p>-----------------------------</p>
+                    <p><strong>সর্বমোট বকেয়া:</strong> {totalDue} টাকা</p>
+                </div>
+            )} */}
+
+            <div className="w-full">
+                <ReusableForm
+                    endpoint="/expenses"
+                    fields={CollectionFields}
+                    onSuccess={handleSuccess}
+                    initialValues={initialValues}
+                    buttonText="expenses যুক্ত করুন"
+                    styleMode="modern"
+                    onChange={handleFormChange}
+                    successMessage={successMessage}
+                    setSuccessMessage={setSuccessMessage}
+                    buttons={[
+                        { type: "navigate", label: "সকল khoroch", to: "/accounts-dashboard/expenses" },
+                    ]}
+                />
+            </div>
         </div>
+
     );
 };
 
 export default AddExpenses;
+
