@@ -46,6 +46,7 @@ import AllMembers from '../pages/Accounts-Dashboard/Members/AllMembers'
 import AddExpenses from '../pages/Accounts-Dashboard/Add-Expenses/AddExpenses'
 import Expenses from '../pages/Accounts-Dashboard/Add-Expenses/Expenses'
 import CollectionReport from '../pages/Accounts-Dashboard/Add-Collection/Collection-Report/CollectionReport'
+import StudentsCollection from '../pages/Accounts-Dashboard/Add-Collection/Students-Collection/StudentsCollection'
 
 
 
@@ -161,6 +162,7 @@ export const router = createBrowserRouter([
           { path: 'expense-category', element: <CreateMemeber />},
           { path: 'expenses', element: <Expenses />},
           { path: 'collection-report', element: <CollectionReport />},
+          { path: 'student-collection', element: <StudentsCollection />},
 
           
         

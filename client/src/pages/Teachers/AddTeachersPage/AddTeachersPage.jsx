@@ -15,7 +15,7 @@ const AddTeachersPage = () => {
         joiningDate: "",
         profileImage: null,
         phone: "",
-       
+       salary: "",
         address: "",
         nidPdf: null,
         birthCertificatePdf: null,
@@ -67,7 +67,7 @@ const AddTeachersPage = () => {
 
 
             const newTeachers = {
-                teachersId: formData.studentId,
+                teachersId: formData.teachersId,
                 name: formData.name,
                 designation: formData.designation,
                 class: formData.class,
@@ -76,7 +76,7 @@ const AddTeachersPage = () => {
                 group: formData.group,
                 joiningDate: formData.joiningDate,
                 phone: formData.phone,
-              
+                salary: formData.salary,
                 address: formData.address,
                 profileImageUrl,
                 documents
@@ -86,13 +86,14 @@ const AddTeachersPage = () => {
             if (res.data.insertedId || res.data.acknowledged) {
                 alert("✅ ডাটাবেসে নতুন শিক্ষক যুক্ত হয়েছে!");
                 setFormData({
-                    studentId: "",
+                    teachersId: "",
                     name: "",
                     designation: "",
                     roll: "",
                     class: "",
                     session: "",
                     group: "",
+                    salary: "",
                     joiningDate: "",
                     profileImage: null,
                     phone: "",
@@ -101,10 +102,10 @@ const AddTeachersPage = () => {
                     birthCertificatePdf: null,
                 });
             } else {
-                alert("❌ ছাত্র যুক্ত করা যায়নি।");
+                alert("❌ শিক্ষক যুক্ত করা যায়নি।");
             }
         } catch (error) {
-            console.error("❌ Student upload failed:", error);
+            console.error("❌ teacher upload failed:", error);
             alert("❌ সমস্যা হয়েছে!");
         }
     };
@@ -119,7 +120,7 @@ const AddTeachersPage = () => {
             <div className="max-w-4xl mx-auto border px-4 py-6">
                 <h1 className="text-2xl font-semibold text-center mb-6">নতুন শিক্ষক যুক্ত করুন</h1>
                 <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" name="studentId" placeholder="আইডি" value={formData.studentId} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
+                    <input type="text" name="teachersId" placeholder="আইডি" value={formData.teachersId} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
                     <input type="text" name="name" placeholder="নাম" value={formData.name} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
 
                     {/* <select name="class" value={formData.class} onChange={handleChange} className="input input-bordered w-full p-2 border rounded">
@@ -165,6 +166,7 @@ const AddTeachersPage = () => {
                     <input type="text" name="phone" placeholder="ফোন নম্বর" value={formData.phone} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
                     {/* <input type="text" name="guardianName" placeholder="অভিভাবকের নাম" value={formData.guardianName} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" /> */}
                     <input type="text" name="address" placeholder="ঠিকানা" value={formData.address} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
+                    <input type="text" name="salary" placeholder="বেতন" value={formData.salary} onChange={handleChange} className="input input-bordered w-full p-2 border rounded" />
                     <div className="md:col-span-2">
                         <label className="block mb-1 text-sm">প্রোফাইল ছবি</label>
                         <input type="file" name="profileImage" accept="image/*" onChange={handleFileChange} className="input input-bordered w-full p-2 border rounded" />

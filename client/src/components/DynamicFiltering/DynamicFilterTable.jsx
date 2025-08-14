@@ -1,6 +1,5 @@
 /* eslint-disable react/prop-types */
-/* eslint-disable react/prop-types */
-import  { useState, useMemo, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import {
   Box,
   Paper,
@@ -21,7 +20,7 @@ import {
 
 // Helper to filter by date range
 const isWithinDateRange = (dateStr, start, end) => {
-  if (!dateStr) return true; // If dateField is null or empty, it always matches
+  if (!dateStr) return true;
   const date = new Date(dateStr);
   if (start && new Date(start) > date) return false;
   if (end && new Date(end) < date) return false;
@@ -29,45 +28,53 @@ const isWithinDateRange = (dateStr, start, end) => {
 };
 
 const DynamicFilterTable = ({
-  data,
-  dateField = null, // e.g., 'orderDate', 'createdAt'
-  includeKeys = null, // e.g., ['category', 'status']
-  excludeKeys = [], // e.g., ['id', 'description']
+  data = [], // Used only to generate filter options
+  tabledata = [], // Actual data to filter and display
+  dateField = null,
+  includeKeys = null,
+  excludeKeys = [],
 }) => {
-  // Unified state for all filters
+
+
+
+
   const [filterState, setFilterState] = useState({
-    columnFilters: {}, // Stores filters for dynamic columns
-    dateRange: { from: "", to: "" }, // Stores date range
-    // Add other filter types here later (e.g., searchTerm, sort)
+    columnFilters: {},
+    dateRange: { from: "", to: "" },
   });
 
-  // Determine filterable keys
+  // Determine which keys to show filters for
   const filterKeys = useMemo(() => {
     if (!data || data.length === 0) return [];
     const allKeys = Object.keys(data[0]);
 
     let keys = includeKeys
       ? allKeys.filter((key) => includeKeys.includes(key))
-      : allKeys.filter((key) => typeof data[0][key] === "string" || typeof data[0][key] === "number"); // Include numbers for filtering if not specified
+      : allKeys.filter((key) => typeof data[0][key] === "string" || typeof data[0][key] === "number");
 
-    // Remove unwanted keys and the dateField itself from column filters
     if (excludeKeys.length > 0) {
       keys = keys.filter((key) => !excludeKeys.includes(key));
     }
     if (dateField) {
       keys = keys.filter((key) => key !== dateField);
     }
+// Always exclude 'amount'
+  keys = keys.filter((key) => key !== 'amount');
 
     return keys;
   }, [data, includeKeys, excludeKeys, dateField]);
 
-  // Memoize options for each filter key to avoid re-calculation
-  const getFilterOptions = useCallback((key) => {
-    const options = new Set(data.map((item) => item[key]).filter(Boolean));
-    return Array.from(options);
-  }, [data]);
+  console.log("Filter Keys:", filterKeys);
 
-  // Handler for all filter changes (column filters and date range)
+  // Get unique options for dropdown filters
+  const getFilterOptions = useCallback(
+    (key) => {
+      const options = new Set(data.map((item) => item[key]).filter(Boolean));
+      return Array.from(options);
+    },
+    [data]
+  );
+
   const handleFilterChange = useCallback((type, key, value) => {
     setFilterState((prevState) => {
       if (type === "column") {
@@ -91,7 +98,6 @@ const DynamicFilterTable = ({
     });
   }, []);
 
-  // Handler to clear all filters
   const handleClearFilters = useCallback(() => {
     setFilterState({
       columnFilters: {},
@@ -99,48 +105,52 @@ const DynamicFilterTable = ({
     });
   }, []);
 
-  // Filter the data based on current filterState
+  // Apply filters to tabledata (not data)
   const filteredData = useMemo(() => {
     const { columnFilters, dateRange } = filterState;
-    return data.filter((item) => {
-      // Check column filters
-      const matchColumnFilters = Object.entries(columnFilters).every(
-        ([key, value]) => !value || String(item[key]) === String(value) // Convert to string for consistent comparison
+    return tabledata.filter((item) => {
+      const matchColumns = Object.entries(columnFilters).every(
+        ([key, value]) => !value || String(item[key]) === String(value)
       );
 
-      // Check date range filter
       const matchDate =
         dateField && item[dateField]
           ? isWithinDateRange(item[dateField], dateRange.from, dateRange.to)
           : true;
 
-      return matchColumnFilters && matchDate;
+      return matchColumns && matchDate;
     });
-  }, [data, filterState, dateField]);
+  }, [tabledata, filterState, dateField]);
 
-  // Determine columns to display in the table header
+  // Compute total amount from filtered data
+  const totalAmount = useMemo(() => {
+    return filteredData.reduce((sum, item) => {
+      const value = parseFloat(item.amount);
+      return !isNaN(value) ? sum + value : sum;
+    }, 0);
+  }, [filteredData]);
+
+  console.log(filteredData)
+
+  // Determine columns to display
   const columns = useMemo(() => {
-    if (!data || data.length === 0) return [];
-    // If includeKeys is specified, use only those. Otherwise, use all keys.
-    const allDisplayKeys = includeKeys ? includeKeys : Object.keys(data[0]);
+    if (!tabledata || tabledata.length === 0) return [];
+    const allDisplayKeys = includeKeys ? includeKeys : Object.keys(tabledata[0]);
 
-    // Filter out excludeKeys from display
     let displayColumns = allDisplayKeys.filter((key) => !excludeKeys.includes(key));
 
-    // Ensure dateField is at the beginning if specified and not excluded
     if (dateField && !displayColumns.includes(dateField)) {
-        displayColumns = [dateField, ...displayColumns];
+      displayColumns = [dateField, ...displayColumns];
     } else if (dateField && displayColumns.includes(dateField) && displayColumns[0] !== dateField) {
-        // If dateField is in the list but not first, move it to the front
-        displayColumns = [dateField, ...displayColumns.filter(key => key !== dateField)];
+      displayColumns = [dateField, ...displayColumns.filter((key) => key !== dateField)];
     }
-    
+
     return displayColumns;
-  }, [data, includeKeys, excludeKeys, dateField]);
+  }, [tabledata, includeKeys, excludeKeys, dateField]);
 
   return (
     <Box sx={{ p: 2 }}>
-      {/* Filter Section */}
+      {/* Filters */}\
       <Box
         sx={{
           display: "flex",
@@ -150,10 +160,10 @@ const DynamicFilterTable = ({
           p: 2,
           border: "1px solid #e0e0e0",
           borderRadius: 1,
-          alignItems: "flex-end", // Aligns items at the bottom
+          alignItems: "flex-end",
         }}
       >
-        <Typography variant="h6" component="div" sx={{ width: '100%', mb: 1 }}>
+        <Typography variant="h6" sx={{ width: "100%", mb: 1 }}>
           Filter Data
         </Typography>
 
@@ -163,9 +173,7 @@ const DynamicFilterTable = ({
               label="Date From"
               type="date"
               value={filterState.dateRange.from}
-              onChange={(e) =>
-                handleFilterChange("date", "from", e.target.value)
-              }
+              onChange={(e) => handleFilterChange("date", "from", e.target.value)}
               InputLabelProps={{ shrink: true }}
               sx={{ minWidth: 180 }}
             />
@@ -183,16 +191,16 @@ const DynamicFilterTable = ({
         {filterKeys.map((key) => (
           <FormControl key={key} sx={{ minWidth: 180 }}>
             <InputLabel id={`${key}-select-label`}>
-             {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())} {/* Makes "someKey" -> "Some Key" */}
+              {key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}
             </InputLabel>
             <Select
               labelId={`${key}-select-label`}
               value={filterState.columnFilters[key] || ""}
-              label={`Filter by ${key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}`}
+              label={`Filter by ${key}`}
               onChange={(e) => handleFilterChange("column", key, e.target.value)}
             >
               <MenuItem value="">
-                <em>All {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}</em>
+                <em>All</em>
               </MenuItem>
               {getFilterOptions(key).map((option) => (
                 <MenuItem key={option} value={option}>
@@ -207,16 +215,16 @@ const DynamicFilterTable = ({
           Clear Filters
         </Button>
       </Box>
-
-      {/* Table Section */}
-      <Paper elevation={3} sx={{ overflow: 'hidden' }}>
-        <TableContainer sx={{ maxHeight: 600 }}> {/* Added max height for scrollability */}
-          <Table stickyHeader aria-label="dynamic filter table">
+<div className="flex w-40 mx-auto "><h1  className="bg-green-500">Total: {totalAmount.toFixed()} TAKA</h1></div>
+      {/* Table */}
+      <Paper elevation={3}>
+        <TableContainer sx={{ maxHeight: 600 }}>
+          <Table stickyHeader>
             <TableHead>
               <TableRow>
                 {columns.map((key) => (
-                  <TableCell key={key} sx={{ fontWeight: 'bold' }}>
-                    {key.replace(/([A-Z])/g, ' $1').replace(/^./, (str) => str.toUpperCase())}
+                  <TableCell key={key} sx={{ fontWeight: "bold" }}>
+                    {key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase())}
                   </TableCell>
                 ))}
               </TableRow>
@@ -227,9 +235,7 @@ const DynamicFilterTable = ({
                   <TableRow key={idx} hover>
                     {columns.map((key) => (
                       <TableCell key={key}>
-                        {entry[key] !== undefined && entry[key] !== null
-                          ? entry[key].toString() // Ensure data is rendered as string
-                          : "-"}
+                        {entry[key] !== undefined && entry[key] !== null ? entry[key].toString() : "-"}
                       </TableCell>
                     ))}
                   </TableRow>
@@ -243,6 +249,15 @@ const DynamicFilterTable = ({
                   </TableCell>
                 </TableRow>
               )}
+              {/* Total Row */}
+              {filteredData.length > 0 && (
+                <TableRow>
+                  <TableCell colSpan={columns.length - 1} sx={{ textAlign: "right", fontWeight: "bold" }}>
+                    Total Amount
+                  </TableCell>
+                  <TableCell sx={{ fontWeight: "bold" }}>{totalAmount.toFixed(2)}</TableCell>
+                </TableRow>
+              )}
             </TableBody>
           </Table>
         </TableContainer>
@@ -252,6 +267,7 @@ const DynamicFilterTable = ({
 };
 
 export default DynamicFilterTable;
+
 
 // import { useState, useMemo } from "react";
 // import { format } from "date-fns";

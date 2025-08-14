@@ -11,7 +11,7 @@ const { google } = require('googleapis');
 const upload = multer({ dest: 'uploads/' });
 
 // Auth config
-const KEYFILEPATH = path.join(__dirname, '../../client/config/google-service-account.json');
+const KEYFILEPATH = path.join(__dirname, '../../client/config/madinatul-ulum-madrasa-98a1d0c55c69.json');
 const SCOPES = ['https://www.googleapis.com/auth/drive.file'];
 
 const auth = new google.auth.GoogleAuth({

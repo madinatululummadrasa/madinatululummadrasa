@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "madinatul-ulum-madrasa",
+  "private_key_id": "98a1d0c55c69ea8123ae39b419f4150f0bdf5703",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC8gf8/nBojsmR2\nyJrkCkc1kFFusPMn+V9ocspGBEUYJ1zZKsoy2dal0GUpio8ZRIY6FSeUBjbk3MIw\nOkLSbUpP789MBAg/3aUeFrO7apDiHZga9T+32wxzjiCkISsGMkTVA39qvbdTa5HT\nt5U2Xkf5DBkty38iHjdmZyOWGspi6ovtrF3l8X40Mn1xVRV6E+hTBtUML/T/TONA\n3ivQJgCq12GVIIAhVUfFCaMRacl7hkdnjpX1VG9Tb891dFTw8vZp2CME6ECdmgvN\nQylC90FohyRs35i92QB2Wh9VEtfdQW3eyVuCWVNzOf0cxEjwgkb3CP2q0jBr/aoD\nILjzhDaLAgMBAAECggEABqooYgpLHhKHuVMqBIej1MN5Z1kSx7uGgYMiV4goHXA5\nDjPbeiGNadWz2Xj5PFLZ1ZeJxGgOSOaXoQGoF3t7XtcjEPDJHFMpLCao/fvP7vhq\njZD/2P3XOnfFwuJxGOonEZ/ObCqintA/vlpzwTxG4XuF9tCxMu9vxotZvpMhWeP9\nUol0oJZ1jhoDxO9kOoc52/nn/ZM22p3nM/reuM7Ufp19pWHInVN0+u+NBM9MOtPf\njEo+MZ0ohBaBKW/euyUNoLxHIvuuJ7j2qRBqJhADOmGuxDm1S2FZzliv765uGQwM\npThEl4zX6FkuWclEaxJGqiHKe6pYj6Tc0WFk5pmKvQKBgQDoAQXTHC3mpbZPz5Lp\naB7wAePAT0r9rpfvahGH6GPWLace/9sKMAuCeiO38jXUD+stzflEWPfgaMZJcbgi\nm2uc1qL7PCpgwUezNwp1EhWZL4yl9EmPYoDYAFTTr2WZ8Kpv0ertM2oO+UuWbmuE\nix98yW63wBsncn78BdZq7AlYHQKBgQDQAUlkKBP494xzxVdpyO/8bO54IJvsxTQO\nBL2lsLNSSC6ON9CcYqZzxDah/wXhzTCJ49PpDXDhGkRHgULUIbXjpK/c+bA5/xlc\naGLvS/zcDT+hCEZRw4vhnLc7KzG7UjONkK5UTZXUD6WpWaDlv+m+6BNbr+5n8Aav\nUBy5I5YYxwKBgHYsfzEHO4IuimygyK5HMOsDq2S7fvE0y4NRvdhCUQg5fNTXclUA\nH/y4BhWeNDjuWtacAgoEX05ZUBb869QE4o2i7qWWAegCy2jH8nWrXoEGrVei1Q1K\nGWLs2EhzIQeGhOosPMPR2oYCCbR4Th/XVZSUbeb+3VX8hh4NQyh3TlMpAoGAAX6w\n31ZmZlipGr/lU+5MwzypLhXV6Qq1yBACqOkvML0yEHWYOzd+SMC1P87MZQYLfkIz\n6K3fDM8ahIUKTOn9G6i4Vtc4jAIoVYCujVe3doFl3qtnjfjgzXtJ2dQCpHz/v9m1\nVwfDtuVx5Fivjlclv+h9EyCdjwOrmKDzw+TclEsCgYEAwBvxhu6mXnEokPcGMDYo\nRW0K/GBDTTsl0ikkxMpdWJ0NaSO9Zu2nUZlVOtDUHntLMMxPdC6hh9q48hyt37IO\nOsG32rC4V+j/Z+GgvMIF+xmMyVIIh6komkt6FW8/a0wyIMj1/+yklaNwneAas8g8\niOXSavqZrdRJRbjlelkKhYE=\n-----END PRIVATE KEY-----\n",
+  "client_email": "madinatululum@madinatul-ulum-madrasa.iam.gserviceaccount.com",
+  "client_id": "112779273640905885762",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/madinatululum%40madinatul-ulum-madrasa.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
