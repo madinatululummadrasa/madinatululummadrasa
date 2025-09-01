@@ -15,12 +15,10 @@ const AddExpenses = () => {
         key: ["expenseCategories"],
         url: "/expenses/expenses-category",
     });
-
     const { data: className = [], isLoading: isClassLoading } = useFetchQuery({
         key: ["className"],
         url: "/classes",
     });
-
     const { data: students = [], isLoading: isStudentLoading } = useFetchQuery({
         key: ["students"],
         url: "/students",
@@ -37,17 +35,15 @@ const AddExpenses = () => {
 
 
     const [SelectedExpenseSource, setSelectedExpenseSource] = useState("");
-
     const [formData, setFormData] = useState({});
-
-
     const [successMessage, setSuccessMessage] = useState("");
     const [selectedClass, setSelectedClass] = useState("");
-    const [selectedStudentName, setSelectedStudentName] = useState("");
+    const [selectedTeacher, setSelectedTeacher] = useState("");
+    const [selectedStudentList, setSelectedStudentList] = useState("");
     const [selectedStudentNames, setSelectedStudentNames] = useState([]); // for dropdown
-    const [selectedStudentList, setSelectedStudentList] = useState([]); // actual object
+    const [SelectedTeacherData, setSelectedTeacherData] = useState([]); // actual object
     const [form, setForm] = useState({});
-
+    console.log("Form Data:", SelectedTeacherData[0]?._id);
     const [selectedMember, setSelectedMember] = useState("");
     const [selectedMemberList, setSelectedMemberList] = useState("");
 
@@ -70,8 +66,6 @@ const AddExpenses = () => {
             setSelectedMember(formData.donorName);
         }
     }, [formData?.donorName, selectedMember]);
-
-
     useEffect(() => {
         if (selectedClass) {
             const dropdownNames = students
@@ -80,22 +74,31 @@ const AddExpenses = () => {
             setSelectedStudentNames(dropdownNames);
         }
     }, [selectedClass, students]);
-
     useEffect(() => {
-        if (selectedClass && selectedStudentName) {
-            const selected = students.filter(
-                student => student.class === selectedClass && student.name === selectedStudentName
-            );
-            setSelectedStudentList(selected);
+        if (selectedTeacher && SelectedTeacherData[0]) {
+            setFormData(prev => ({
+                ...prev,
+                salary: SelectedTeacherData[0].salary
+            }));
+            setForm(prev => ({
+                ...prev,
+                salary: SelectedTeacherData[0].salary
+            }));
         }
-    }, [selectedClass, selectedStudentName, students]);
-
+    }, [selectedTeacher, SelectedTeacherData]);
     useEffect(() => {
         if (selectedMember) {
             const selected = members.filter(member => member.name === selectedMember);
             setSelectedMemberList(selected);
         }
     }, [selectedMember, members]);
+    useEffect(() => {
+        if (selectedTeacher) {
+            const selected = teachers.filter(teacher => teacher.name === selectedTeacher);
+            setSelectedTeacherData(selected);
+        }
+    }, [selectedTeacher, teachers]);
+
 
 
     const currentStudent = selectedStudentList?.[0];
@@ -109,22 +112,17 @@ const AddExpenses = () => {
 
     const totalMonthlyDue = classFee * unpaidMonths.length;
     const totalDue = totalMonthlyDue;
-    // const preDue = parseFloat(selectedStudentList[0]?.preDue || 0);
+
 
     const currentPay = parseFloat(form?.amount || 0);
-    // const remainingDue = Math.max(totalDue + preDue - currentPay, 0);
-
-    // Fields
-
-
-
 
 
     const extraFields = [];
     if (SelectedExpenseSource === "স্টাফ বেতন") {
-       extraFields.push(
-            { name: "student", label: "শিক্ষকের নাম", type: "select", options: teachers.map(t => t.name) }
+        extraFields.push(
+            { name: "teacher", label: "শিক্ষকের নাম", type: "select", options: teachers.map(t => t.name) }
         );
+
     } else if (SelectedExpenseSource === "বেতন") {
         extraFields.push(
             { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
@@ -135,7 +133,7 @@ const AddExpenses = () => {
             { name: "class", label: "শ্রেণির নাম", type: "select", options: className.map(c => c.className) },
             { name: "student", label: "শিক্ষার্থীর নাম", type: "select", options: selectedStudentNames }
         );
-    } 
+    }
     const CollectionFields = [
         { name: "expenseDate", label: " খরচের তারিখ", type: "date", required: true },
         { name: "expenseSource", label: "খরচের খাত", required: true, type: "select", options: expenseCategories.map(c => c.Name) },
@@ -155,6 +153,7 @@ const AddExpenses = () => {
         month: currentMonthName,
         amount: "",
         details: "",
+        salary: '',
         collector: user?.displayName || "",
         class: "",
         student: "",
@@ -162,40 +161,39 @@ const AddExpenses = () => {
 
     const sendTransaction = useMutateData({
         method: "patch",
-        invalidateKey: ["students", "collections"],
-        successMsg: "কালেকশন সফলভাবে যোগ হয়েছে!",
-        errorMsg: "কালেকশন যোগ করতে ব্যর্থ!",
+        invalidateKey: ["teachers", "expenses"],
+        successMsg: "expenses সফলভাবে যোগ হয়েছে!",
+        errorMsg: "expense যোগ করতে ব্যর্থ!",
     });
+
 
     const handleSuccess = () => {
         alert("Expense added successfully!");
-        
 
 
-        if (!SelectedExpenseSource) return toast.error("আয়ের খাত নির্বাচন করুন");
+        if (!SelectedExpenseSource) return toast.error("expenses খাত নির্বাচন করুন");
         if (!form.amount || isNaN(currentPay)) return toast.error("সঠিক পরিমাণ লিখুন");
 
-        // sendTransaction.mutate({
-        //     url: `/students/student/${currentStudent?.studentId}`,
-        //     data: {
-        //         name: selectedIncomeSource,
-        //         amount: currentPay,
-        //         month: form.month,
-        //         collector: form.collector,
-        //         monthsCovered: selectedIncomeSource === "বেতন" ? unpaidMonths : [],
-        //         classFee,
-        //         totalMonthlyDue,
-        //         paidForMonths: paidMonths,
+        sendTransaction.mutate({
+            url: `/teachers/teacher/${SelectedTeacherData[0]?.teachersId}`,
+            data: {
+                name: SelectedExpenseSource,
+                amount: currentPay,
+                month: form.month,
+                collector: form.collector,
+                classFee,
+                totalMonthlyDue,
+                paidForMonths: paidMonths,
 
 
-        //     },
-        // });
+            },
+        });
 
-        setSuccessMessage("কালেকশন সফলভাবে যোগ হয়েছে!");
+        setSuccessMessage("expense সফলভাবে যোগ হয়েছে!");
         setFormData({});
         setForm("");
         setSelectedClass("");
-        setSelectedStudentName("");
+        setSelectedTeacher("");
     };
 
     const handleFormChange = (updatedForm) => {
@@ -203,7 +201,8 @@ const AddExpenses = () => {
         setForm(updatedForm);
         setSelectedExpenseSource(updatedForm.expenseSource);
         setSelectedClass(updatedForm.class);
-        setSelectedStudentName(updatedForm.student);
+        setSelectedTeacher(updatedForm.teacher);
+
     };
 
     // Loading & Error states
@@ -211,7 +210,6 @@ const AddExpenses = () => {
         <span className="loading loading-spinner loading-lg"><BounceLoading gap={5} /></span>
 
     </div>
-        ;
     if (error) return <p className="text-red-600">ডেটা লোড করতে সমস্যা হয়েছে।</p>;
 
 
@@ -241,16 +239,18 @@ const AddExpenses = () => {
 
 
 
-            {/* {selectedIncomeSource &&
-                selectedClass &&
+            {SelectedExpenseSource &&
+                selectedTeacher &&
                 (
-                    <div className="text-red-600 bg-red-50 border p-2 mt-2 rounded text-center">
-                        <p>
-                            {selectedClass} শ্রেণীর {selectedIncomeSource} হচ্ছে{" "}
-                            {admissionFee} টাকা
-                        </p>
+                    <div className="text-red-600 bg-red-50 border text-left p-2 mb-4 mt-2 rounded ">
+                        <p > নামঃ {selectedTeacher}    </p>
+                        <p > বেতন : {SelectedTeacherData[0]?.salary || ""} </p>
+
+
+
+
                     </div>
-                )} */}
+                )}
 
 
 

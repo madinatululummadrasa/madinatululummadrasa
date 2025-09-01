@@ -227,22 +227,6 @@ useEffect(() => {
   if (error) return <p className="text-red-600">ডেটা লোড করতে সমস্যা হয়েছে।</p>;
 
 
-
-  // let log = 0;
-
-
-  // if (selectedIncomeSource === "ভর্তি ফি") {
-  //   log = admissionFee;
-
-  // } else if (selectedIncomeSource === "বেতন") {
-  //   if (selectedClass === "শিশু") admissionFee = 50;
-  //   else admissionFee = 100;
-  // } else {
-  //   admissionFee = "N/A";
-  // }
-
-
-
   return (
     <div className="p-4 flex flex-col items-center justify-center sm:p-6 lg:p-8 min-h-screen max-w-96 mx-auto bg-gradient-to-br to-indigo-100 font-sans">
       {currentStudent?.profileImageUrl && (

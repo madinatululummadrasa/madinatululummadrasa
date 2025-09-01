@@ -25,7 +25,7 @@ const ReusableForm = ({
 
   useEffect(() => {
     setFormData(initialValues);
-  }, []);
+  }, [  ]);
 
   useEffect(() => {
     if (firstFieldRef.current) {
@@ -151,6 +151,7 @@ const ReusableForm = ({
             type={field.type || "text"}
             {...commonProps}
             ref={index === 0 ? firstFieldRef : null}
+            readOnly={field.readOnly || false}
           />
         )}
 

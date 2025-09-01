@@ -29,7 +29,7 @@ module.exports = (db) => {
       res.status(500).send({ message: 'Failed to get students' });
     }
   });
-
+ 
 
   // router.patch('/student/:id', async (req, res) => {
   //   const studentId = req.params.id; // e.g. "M24"
